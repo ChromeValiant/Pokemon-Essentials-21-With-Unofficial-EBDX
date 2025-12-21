@@ -665,3 +665,37 @@ MultipleForms.register(:TERAPAGOS, {
     next [pkmn.form, 1]
   }
 })
+
+# Zygarde - Mega Zygarde form.
+#-------------------------------------------------------------------------------
+MultipleForms.register(:ZYGARDE, {
+  "changePokemonOnMegaEvolve" => proc { |battler, battle|
+    if GameData::Move.exists?(:NIHILLIGHT)
+      if [4, 5].include?(battler.form)
+        battler.eachMoveWithIndex do |m, i|
+          next if m.id != :COREENFORCER
+          pokemon_move = battler.pokemon.moves[i]
+          pokemon_move.id = :NIHILLIGHT
+          battler_move = Battle::Move.from_pokemon_move(battle, pokemon_move)
+          battler.moves[i] = battler_move
+          if battle.choices[battler.index][1] == i
+            battle.choices[battler.index][2] = battler_move 
+            battle.pbDisplay(_INTL("{1}'s {2} transform into {3}!", battler.pbThis,
+                              GameData::Move.get(:COREENFORCER).name, 
+                              GameData::Move.get(:NIHILLIGHT).name
+                            ))
+            break
+          end
+        end
+      end
+    end
+  },
+  "getMegaMoves" => proc { |pkmn|
+    next { :COREENFORCER => :NIHILLIGHT }
+  },
+  "changePokemonOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    if GameData::Move.exists?(:COREENFORCER) && endBattle
+      pkmn.moves.each { |move| move.id = :COREENFORCER if move.id == :NIHILLIGHT }
+    end
+  }
+})

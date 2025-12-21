@@ -33,6 +33,8 @@ class Battle::AI
     2  => [:CLEARAMULET],
   }
 
+  HP_HEAL_ITEMS[:CANARIBREAD] = 100
+
   #===============================================================================
   # Battle_AI
   #===============================================================================
@@ -626,6 +628,13 @@ class Battle::AI::AIMove
       return 100 if @ai.target.effects[PBEffects::GlaiveRush] > 0
     end
     return paldea_rough_accuracy
+  end
+
+  # Added evasion check for Nihil Light
+  alias za_apply_rough_accuracy_modifiers apply_rough_accuracy_modifiers
+  def apply_rough_accuracy_modifiers(user, target, calc_type, modifiers)
+    za_apply_rough_accuracy_modifiers(user, target, calc_type, modifiers)
+    modifiers[:evasion_stage] = 0 if function_code == "IgnoreTargetDefSpDefEvaStatStagesHitFairyType"   # Nihil Light
   end
 end
 

@@ -1,11 +1,22 @@
 Name = Generation 9 Pack
-Version = 3.3.2
+Version = 3.3.3
 Essentials = 21.1
 Requires = v21.1 Hotfixes,1.0.9
 Website = https://www.eeveeexpo.com/threads/5817/
 Credits = Caruban
 
 # Change logs
+#############################################
+# 3.3.3
+#############################################
+# - Added New Mega Evolution forms PBS from base Pokemon Legends Z-A
+# - Added Nihil Light move PBS
+# - Added new alias for apply_rough_accuracy_modifiers to bypass evasion modifier of Nihil Light
+# - Added several new mega stone and mega pokemon form sprites
+# - Added the Commander's ability effect condition to allow Mega Evolution
+# - Fixed error when catching a pokemon at Pokemon Safari
+# - Fixed Fillet Away's target from NearOthers to User
+# - Fixed the unstopable ability condition from AIBattler instead of Battler for Doodle AI move handler
 #############################################
 # 3.3.2
 #############################################

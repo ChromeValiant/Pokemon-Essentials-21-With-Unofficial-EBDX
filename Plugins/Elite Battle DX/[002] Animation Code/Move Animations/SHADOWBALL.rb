@@ -12,6 +12,12 @@ EliteBattle.defineMoveAnimation(:SHADOWBALL) do
     cy = y2 - (y2 - y1)*0.5
   end
   fp = {}
+  #
+  fp["bg"] = Sprite.new(@viewport)
+  fp["bg"].bitmap = Bitmap.new(@viewport.width,@viewport.height)
+  fp["bg"].bitmap.fill_rect(0,0,fp["bg"].bitmap.width,fp["bg"].bitmap.height,Color.new(76,0,154))
+  fp["bg"].opacity = 0
+  #
   for j in 0...16
     fp["p#{j}"] = Sprite.new(@viewport)
     fp["p#{j}"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb175_2")
@@ -42,11 +48,18 @@ EliteBattle.defineMoveAnimation(:SHADOWBALL) do
   fp["circle"].zoom_x = 0
   fp["circle"].zoom_y = 0
   fp["circle"].z = 20
-  pbSEPlay("Anim/Heal4")
+  pbSEPlay("EBDX/Anim/ghost1", 40)
+  #
+  16.times do
+    fp["bg"].opacity += 15
+    @scene.wait(1,true)
+  end
+  #
   for i in 0...64
     fp["circle"].zoom_x += 0.125 if fp["circle"].zoom_x < 1
     fp["circle"].zoom_y += 0.125 if fp["circle"].zoom_y < 1
     fp["circle"].angle += 8
+	pbSEPlay("EBDX/Anim/ghost3", 50) if i%8==0
     for j in 0...16
       next if j > i/4
       if fp["p#{j}"].ox >= -16
@@ -100,7 +113,7 @@ EliteBattle.defineMoveAnimation(:SHADOWBALL) do
   end
   fp["circle"].visible = false
   fp["circle2"].z = @targetSprite.z + 1
-  pbSEPlay("Anim/Flash")
+  pbSEPlay("EBDX/Anim/ghost2")
   8.times do
     fp["circle2"].x += (x1 - fp["circle2"].x)*0.5
     fp["circle2"].y -= (fp["circle2"].y - y1)*0.5

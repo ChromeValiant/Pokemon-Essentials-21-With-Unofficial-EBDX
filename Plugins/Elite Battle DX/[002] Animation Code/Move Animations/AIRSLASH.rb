@@ -1,5 +1,17 @@
 #-------------------------------------------------------------------------------
-#  Air Slash
+#  AIRCUTTER
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:AIRCUTTER) do
+  EliteBattle.playMoveAnimation(:AIRSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  AERIALACE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:AERIALACE) do
+  EliteBattle.playMoveAnimation(:AIRSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  AIRSLASH
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:AIRSLASH) do
   # inital configuration

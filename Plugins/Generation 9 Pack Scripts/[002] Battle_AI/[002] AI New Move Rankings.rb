@@ -778,9 +778,8 @@ Battle::AI::Handlers::MoveEffectScore.add("UserMakeSubstituteSwitchOut",
 Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("SetUserAlliesAbilityToTargetAbility",
   proc { |move, user, target, ai, battle|
     will_fail = true
-    # battle.allSameSideBattlers(user.index).each do |b|
     ai.each_same_side_battler(user.side) do |b, i|
-      next if b.ability != target.ability && !b.unstoppableAbility? &&
+      next if b.ability != target.ability && !b.battler.unstoppableAbility? &&
               b.has_active_item?(:ABILITYSHIELD)
       will_fail = false
       break

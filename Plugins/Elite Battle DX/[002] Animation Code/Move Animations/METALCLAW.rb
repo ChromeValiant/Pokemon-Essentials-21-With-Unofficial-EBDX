@@ -36,7 +36,8 @@ EliteBattle.defineMoveAnimation(:METALCLAW) do
   shake = 4
   for i in 0...32
     @targetSprite.still
-    pbSEPlay("EBDX/Anim/iron5") if i == 4 || i == 16
+    #pbSEPlay("EBDX/Anim/iron5") if i == 4 || i == 16
+    pbSEPlay("EBDX/Anim/iron5") if i == 0 || i == 16
     for j in 1..2
       next if (j-1)>(i/12)
       fp["claw#{j}"].src_rect.x += 82 if fp["claw#{j}"].src_rect.x < 82*3 && i%2==0

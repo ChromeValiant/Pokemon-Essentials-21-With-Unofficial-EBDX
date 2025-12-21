@@ -83,7 +83,7 @@ EliteBattle.defineMoveAnimation(:BULLETSEED) do
       y2 = cy - 8*@targetSprite.zoom_y*0.5 + rndy[j]*@targetSprite.zoom_y*0.5
       fp["#{j}"].x += (x2 - x0)*0.1
       fp["#{j}"].y += (y2 - y0)*0.1
-      fp["#{j}"].opacity += 51
+      fp["#{j}"].opacity += 51 if fp["#{j}"].opacity <= 255 && i < 30
       fp["#{j}"].angle = -Math.atan(1.0*(y2-y0)/(x2-x0))*180/Math::PI + (rand(4)==0 ? 180 : 0)
       nextx = fp["#{j}"].x# + (x2 - x0)*0.1
       nexty = fp["#{j}"].y# + (y2 - y0)*0.1
@@ -93,6 +93,9 @@ EliteBattle.defineMoveAnimation(:BULLETSEED) do
         fp["#{j}"].z = @targetSprite.z + 1 if nextx < cx && nexty > cy
       end
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
+	  if i >= 30
+			fp["#{j}"].opacity -= 30 if fp["#{j}"].opacity > 0
+	  end
     end
     if i >= 30
       @targetSprite.ox += shake

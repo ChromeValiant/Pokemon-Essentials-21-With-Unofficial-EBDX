@@ -81,6 +81,8 @@ EliteBattle.defineMoveAnimation(:GUNKSHOT) do
       fp["#{j}"].tone.gray += 8
       fp["#{j}"].opacity -= 16
     end
+	pbSEPlay("Anim/Bubble1",100) if i%5==0
+	pbSEPlay("Anim/Bubble2",100) if i%10==0
     for l in 0...12
       next if i < 16
       next if l>((i-16)/4)

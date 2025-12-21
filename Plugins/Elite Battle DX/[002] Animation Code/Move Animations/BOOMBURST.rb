@@ -30,7 +30,10 @@ EliteBattle.defineMoveAnimation(:BOOMBURST) do
     dx.push(0)
     dy.push(0)
   end
+  # setup help counter
+  cntHlp = []
   for i in 0...72
+	cntHlp[i] = 0
     fp["#{i}2"] = Sprite.new(@viewport)
     fp["#{i}2"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb612_1")
     fp["#{i}2"].ox = fp["#{i}2"].bitmap.width/2
@@ -93,13 +96,18 @@ EliteBattle.defineMoveAnimation(:BOOMBURST) do
       end
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
       next if j>(i)
+	  cntHlp[j] += 1
       x0 = dx[j]
       y0 = dy[j]
       x2 = cx - 8*@targetSprite.zoom_x*0.5 + rndx[j]*@targetSprite.zoom_x*0.5
       y2 = cy - 8*@targetSprite.zoom_y*0.5 + rndy[j]*@targetSprite.zoom_y*0.5
       fp["#{j}"].x += (x2 - x0)*0.1
       fp["#{j}"].y += (y2 - y0)*0.1
-      fp["#{j}"].opacity += 51
+	  if cntHlp[j] > 15
+		fp["#{j}"].opacity -= 51 
+	  else
+		fp["#{j}"].opacity += 51 
+	  end
       fp["#{j}"].angle = -Math.atan(1.0*(y2-y0)/(x2-x0))*180/Math::PI + (rand(4)==0 ? 180 : 0)
       nextx = fp["#{j}"].x# + (x2 - x0)*0.1
       nexty = fp["#{j}"].y# + (y2 - y0)*0.1

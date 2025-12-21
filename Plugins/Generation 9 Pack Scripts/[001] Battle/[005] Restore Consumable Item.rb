@@ -103,7 +103,7 @@ module Battle::CatchAndStoreMixin
   #-----------------------------------------------------------------------------
   alias stolen_pbRecordAndStoreCaughtPokemon pbRecordAndStoreCaughtPokemon
   def pbRecordAndStoreCaughtPokemon
-    if Settings::RESTORE_ITEMS_AFTER_BATTLE
+    if Settings::RESTORE_ITEMS_AFTER_BATTLE && !pbInSafari?
       # Iterates through each captured Pokemon and returns its initial item.
       # Deletes the party's stolen item data of returned item so it isn't sent to the bag.
       @caughtPokemon.each_with_index do |pkmn, i|

@@ -1,5 +1,4 @@
-﻿# See the documentation on the wiki to learn how to edit this file.
-#-------------------------------
+﻿#-------------------------------
 [POKEMONTRAINER_Red]
 Name = Pokémon Trainer
 Gender = Male
@@ -39,6 +38,7 @@ BaseMoney = 32
 Name = Beauty
 Gender = Female
 BaseMoney = 56
+PokeBall = LOVEBALL
 #-------------------------------
 [BIKER]
 Name = Biker
@@ -54,6 +54,7 @@ BaseMoney = 32
 Name = Bug Catcher
 Gender = Male
 BaseMoney = 16
+PokeBall = NETBALL
 #-------------------------------
 [BURGLAR]
 Name = Burglar
@@ -80,6 +81,7 @@ BaseMoney = 48
 Name = Fisherman
 Gender = Male
 BaseMoney = 32
+PokeBall = LUREBALL
 #-------------------------------
 [GAMBLER]
 Name = Gambler
@@ -91,6 +93,7 @@ SkillLevel = 32
 Name = Gentleman
 Gender = Male
 BaseMoney = 72
+PokeBall = LUXURYBALL
 #-------------------------------
 [HIKER]
 Name = Hiker
@@ -107,6 +110,7 @@ Name = Lady
 Gender = Female
 BaseMoney = 160
 SkillLevel = 72
+PokeBall = LUXURYBALL
 #-------------------------------
 [PAINTER]
 Name = Painter
@@ -122,6 +126,7 @@ BaseMoney = 64
 Name = Pokémon Breeder
 Gender = Female
 BaseMoney = 48
+PokeBall = FRIENDBALL
 #-------------------------------
 [PROFESSOR]
 Name = Professor
@@ -142,11 +147,13 @@ BaseMoney = 48
 Name = Sailor
 Gender = Male
 BaseMoney = 32
+PokeBall = DIVEBALL
 #-------------------------------
 [SCIENTIST]
 Name = Scientist
 Gender = Male
 BaseMoney = 48
+PokeBall = REPEATBALL
 #-------------------------------
 [SUPERNERD]
 Name = Super Nerd
@@ -162,6 +169,7 @@ BaseMoney = 40
 Name = Black Belt
 Gender = Male
 BaseMoney = 32
+PokeBall = ULTRABALL
 #-------------------------------
 [CRUSHGIRL]
 Name = Crush Girl
@@ -182,11 +190,13 @@ BaseMoney = 16
 Name = Cool Trainer
 Gender = Male
 BaseMoney = 60
+PokeBall = ULTRABALL
 #-------------------------------
 [COOLTRAINER_F]
 Name = Cool Trainer
 Gender = Female
 BaseMoney = 60
+PokeBall = ULTRABALL
 #-------------------------------
 [YOUNGSTER]
 Name = Youngster
@@ -223,24 +233,28 @@ Name = Swimmer
 Gender = Male
 BaseMoney = 16
 SkillLevel = 32
+PokeBall = DIVEBALL
 #-------------------------------
 [SWIMMER_F]
 Name = Swimmer
 Gender = Female
 BaseMoney = 16
 SkillLevel = 32
+PokeBall = DIVEBALL
 #-------------------------------
 [SWIMMER2_M]
 Name = Swimmer
 Gender = Male
 BaseMoney = 16
 SkillLevel = 32
+PokeBall = DIVEBALL
 #-------------------------------
 [SWIMMER2_F]
 Name = Swimmer
 Gender = Female
 BaseMoney = 16
 SkillLevel = 32
+PokeBall = DIVEBALL
 #-------------------------------
 [TUBER_M]
 Name = Tuber
@@ -271,6 +285,7 @@ Name = Cool Couple
 Gender = Unknown
 BaseMoney = 72
 SkillLevel = 48
+PokeBall = ULTRABALL
 #-------------------------------
 [CRUSHKIN]
 Name = Crush Kin
@@ -282,6 +297,7 @@ Name = Sis and Bro
 Gender = Unknown
 BaseMoney = 16
 SkillLevel = 48
+PokeBall = DIVEBALL
 #-------------------------------
 [TWINS]
 Name = Twins
@@ -293,21 +309,25 @@ Name = Young Couple
 Gender = Unknown
 BaseMoney = 60
 SkillLevel = 32
+PokeBall = LOVEBALL
 #-------------------------------
 [TEAMROCKET_M]
 Name = Team Rocket
 Gender = Male
 BaseMoney = 32
+PokeBall = DUSKBALL
 #-------------------------------
 [TEAMROCKET_F]
 Name = Team Rocket
 Gender = Female
 BaseMoney = 32
+PokeBall = DUSKBALL
 #-------------------------------
 [ROCKETBOSS]
 Name = Rocket Boss
 Gender = Male
 BaseMoney = 100
+PokeBall = ULTRABALL
 #-------------------------------
 [LEADER_Brock]
 Name = Gym Leader
@@ -371,6 +391,7 @@ Gender = Female
 BaseMoney = 100
 BattleBGM = Battle Elite
 VictoryBGM = Battle victory leader
+PokeBall = ULTRABALL
 #-------------------------------
 [ELITEFOUR_Bruno]
 Name = Elite Four
@@ -378,6 +399,7 @@ Gender = Male
 BaseMoney = 100
 BattleBGM = Battle Elite
 VictoryBGM = Battle victory leader
+PokeBall = ULTRABALL
 #-------------------------------
 [ELITEFOUR_Agatha]
 Name = Elite Four
@@ -385,6 +407,7 @@ Gender = Female
 BaseMoney = 100
 BattleBGM = Battle Elite
 VictoryBGM = Battle victory leader
+PokeBall = ULTRABALL
 #-------------------------------
 [ELITEFOUR_Lance]
 Name = Elite Four
@@ -392,6 +415,7 @@ Gender = Male
 BaseMoney = 100
 BattleBGM = Battle Elite
 VictoryBGM = Battle victory leader
+PokeBall = ULTRABALL
 #-------------------------------
 [CHAMPION]
 Name = Champion
@@ -399,3 +423,4 @@ Gender = Male
 BaseMoney = 100
 BattleBGM = Battle Champion
 VictoryBGM = Battle victory leader
+PokeBall = ULTRABALL

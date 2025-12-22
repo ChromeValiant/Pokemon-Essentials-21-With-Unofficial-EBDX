@@ -1,5 +1,4 @@
-﻿# See the documentation on the wiki to learn how to edit this file.
-#-------------------------------
+﻿#-------------------------------
 [001]   # Intro
 Name = Intro
 #-------------------------------
@@ -7,14 +6,14 @@ Name = Intro
 Name = Lappet Town
 Outdoor = true
 ShowArea = true
+LocationSign = Pt town
 MapPosition = 0,13,12
 BattleBack = field
 #-------------------------------
 [003]   # Player's house
-Name = Manu's house
+Name = \PN's house
 HealingSpot = 2,8,8
 MapPosition = 0,13,12
-WildBattleBGM = Battle Champion
 #-------------------------------
 [004]   # Pokémon Lab
 Name = Pokémon Lab
@@ -24,6 +23,7 @@ MapPosition = 0,13,12
 Name = Route 1
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,13,11
 BattleBack = field
 #-------------------------------
@@ -35,6 +35,7 @@ MapPosition = 0,13,11
 Name = Cedolan City
 Outdoor = true
 ShowArea = true
+LocationSign = Pt city
 MapPosition = 0,13,10
 MapSize = 2,11
 #-------------------------------
@@ -98,6 +99,7 @@ MapPosition = 0,13,10
 Name = Route 2
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 Weather = Rain,100
 MapPosition = 0,14,8
 BattleBack = field
@@ -107,6 +109,7 @@ MapSize = 1,11
 Name = Lerucean Town
 Outdoor = true
 ShowArea = true
+LocationSign = Pt town
 MapPosition = 0,15,8
 #-------------------------------
 [024]   # Lerucean Town Poké Center
@@ -130,6 +133,7 @@ MapPosition = 0,15,8
 Name = Natural Park
 Outdoor = true
 ShowArea = true
+LocationSign = Pt park
 MapPosition = 0,16,8
 BattleBack = field
 Flags = MossRock,BugContest
@@ -149,12 +153,15 @@ Flags = BugContestReception
 Name = Route 3
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,14,6
 BattleBack = field
 MapSize = 2,1101
 #-------------------------------
 [034]   # Ice Cave
-Name = Route 3
+Name = Ice Cave
+ShowArea = true
+LocationSign = Pt cave
 Bicycle = true
 MapPosition = 0,15,6
 BattleBack = cave1
@@ -165,6 +172,7 @@ Flags = IceRock
 Name = Ingido Plateau
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,13,6
 #-------------------------------
 [036]   # Pokémon League entrance
@@ -187,6 +195,7 @@ Flags = DisableBoxLink
 Name = Route 4
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,11,6
 BattleBack = field
 MapSize = 2,11
@@ -195,6 +204,7 @@ MapSize = 2,11
 Name = Route 4
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 BicycleAlways = true
 MapPosition = 0,11,6
 #-------------------------------
@@ -202,6 +212,7 @@ MapPosition = 0,11,6
 Name = Route 5
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 BicycleAlways = true
 MapPosition = 0,11,7
 MapSize = 1,111
@@ -210,6 +221,7 @@ MapSize = 1,111
 Name = Route 6
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,11,10
 BattleBack = field
 MapSize = 2,11
@@ -218,6 +230,7 @@ MapSize = 2,11
 Name = Route 6
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 BicycleAlways = true
 MapPosition = 0,11,10
 #-------------------------------
@@ -230,6 +243,7 @@ MapPosition = 0,12,6
 Name = Route 7
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 Weather = Rain,0
 MapPosition = 0,15,10
 BattleBack = rocky
@@ -237,7 +251,9 @@ MapSize = 2,11
 Environment = Rock
 #-------------------------------
 [049]   # Rock Cave 1F
-Name = Route 7
+Name = Rock Cave
+ShowArea = true
+LocationSign = Pt cave
 Bicycle = true
 MapPosition = 0,16,10
 BattleBack = cave1
@@ -245,7 +261,9 @@ Environment = Cave
 Flags = Magnetic,DistortionWorld
 #-------------------------------
 [050]   # Rock Cave B1F
-Name = Route 7
+Name = Rock Cave
+ShowArea = true
+LocationSign = Pt cave
 Bicycle = true
 MapPosition = 0,16,10
 DarkMap = true
@@ -254,7 +272,9 @@ Environment = Cave
 Flags = Magnetic,DistortionWorld
 #-------------------------------
 [051]   # Dungeon
-Name = Route 7
+Name = Rock Cave
+ShowArea = true
+LocationSign = Pt cave
 Bicycle = true
 MapPosition = 0,16,10
 Dungeon = true
@@ -266,6 +286,7 @@ Flags = Magnetic,DistortionWorld,ScaleWildEncounterLevels
 Name = Battle Frontier
 Outdoor = true
 ShowArea = true
+LocationSign = Pt city
 MapPosition = 0,17,10
 #-------------------------------
 [053]   # Battle Frontier Poké Center
@@ -336,6 +357,7 @@ Flags = DisableBoxLink
 Name = Safari Zone
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,12,12
 BattleBack = field
 #-------------------------------
@@ -347,6 +369,7 @@ MapPosition = 0,12,12
 Name = Safari Zone
 Outdoor = true
 ShowArea = true
+LocationSign = Pt forest
 MapPosition = 0,12,12
 SafariMap = true
 BattleBack = forest
@@ -356,6 +379,7 @@ Environment = Forest
 Name = Route 8
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 MapPosition = 0,13,13
 DiveMap = 70
 BattleBack = field
@@ -374,6 +398,7 @@ MapPosition = 0,13,13
 Name = Berth Island
 Outdoor = true
 ShowArea = true
+LocationSign = Pt lake
 Weather = Storm,50
 MapPosition = 0,18,17
 BattleBack = field
@@ -383,6 +408,7 @@ Flags = DistortionWorld
 Name = Faraday Island
 Outdoor = true
 ShowArea = true
+LocationSign = Pt lake
 MapPosition = 0,22,16
 BattleBack = field
 Flags = DistortionWorld

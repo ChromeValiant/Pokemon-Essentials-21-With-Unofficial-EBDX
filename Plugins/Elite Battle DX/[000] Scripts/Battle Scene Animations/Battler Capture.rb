@@ -213,7 +213,7 @@ class Battle::Scene
       spritePoke.resetParticles
       spritePoke.charged = false
       self.wait(40)
-      pbSEPlay("Battle ball drop", 80)
+      pbSEPlay("Battle catch click", 80)
       pokeball.color = Color.new(0, 0, 0, 0)
       fp = {}
       for j in 0...3

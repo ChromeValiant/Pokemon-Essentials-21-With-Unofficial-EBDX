@@ -1,169 +1,208 @@
-# Pokemon-Essentials-21-With-Unofficial-EBDX
+Pokémon is owned by: The Pokémon Company, Nintendo, & affiliated with Game Freak
 
-- Credits:
+==============================================================
+## CREDITS: Pokemon Essentials v21.1
 
-EBDX (Essentials v19.1) + Pokémon Essentials:
-- Luka S.J.
-- Maruno
-- Marin
-- Pokecheck.org
-- PinkCatDragon
-- Tebited15
-- BadSamaritan
-- WolfPP
-- redblueyellow
-- Damien
-- Issei Hyoudou
-- Nasasu
-- luckygirl88
+"Pokémon Essentials" was created by:
+    Flameguru
+    Poccil (Peter O.)
+    Maruno
 
-Port to v20.1:
+With contributions from:
+    AvatarMonkeyKirby
+    Marin
+    Boushy
+    MiDas Mike
+    Brother1440
+    Near Fantastica
+    FL.
+    PinkMan
+    Genzai Kawakami
+    Popper
+    Help-14
+    Rataime
+    IceGod64
+    SoundSpawn
+    Jacob O. Wobbrock
+    the__end
+    KitsuneKouta
+    Venom12
+    Lisa Anthony
+    Wachunga
+    Luka S.J.
+    and everyone else who helped out
 
-- Manurocker95
+MKXP by Roza
 
-================================================================
-Gen 8 Pack:
+"RPG Maker XP" by: Enterbrain
 
-Battler Sprites:
-Gen 1-5 Pokemon Sprites      - veekun
-Gen 6 Pokemon Sprites        - All Contributors To Smogon X/Y Sprite Project
-Gen 7 Pokemon Sprites        - All Contributors To Smogon Sun/Moon Sprite Project
-Gen 8 Pokemon Sprites        - All Contributors To Smogon  Sword/Shield Sprite Project
+=============================================================
+## CREDITS: Elite Battle: DX
+- Original by Luka S.J., ported to v21.1 by Manurocker95
 
-Overworld Sprites
-Gen 6+ Berry Tree Overworlds - Anarlaurendil
-Gen 6 Pokemon Overworlds     - princess-pheonix, LunarDusk, Wolfang62, TintjeMadelintje101, piphybuilder88
-Gen 7 Pokemon Overworlds     - Larry Turbo, princess-pheonix
-Gen 8 Pokemon Overworlds     - SageDeoxys, Wolfang62, LarryTurbo, tammyclaydon
-Gen 1-5 Pokemon Overworlds   - MissingLukey, help-14, Kymoyonian, cSc-A7X, 2and2makes5, Pokegirl4ever, Fernandojl, Silver-Skies, TyranitarDark, Getsuei-H, Kid1513, Milomilotic11, Kyt666, kdiamo11, Chocosrawlooid, Syledude, Gallanty, Gizamimi-Pichu, 2and2makes5, Zyon17,LarryTurbo, spritesstealer, LarryTurbo
+Sprites:
+    GameFreak | Original sprites from B/W/2 games
+    Pokecheck.org | Ripping the sprites from B2/W2 roms
+    PinkCatDragon | GIF to PNG conversion
+    Tebited15, WolfPP, Issei Hyoudou, Nasasu, luckygirl88 | B/W styled trainer Red/Leaf sprites
+    WolfPP | B/W styled trainer Leaf sprite
+    Spriters-Resource (redblueyellow), Damien, WolfPP | Gen 5 ball sprites
 
-Icon Sprites
-Gen 1-6 Pokemon Icon Sprites - Alaguesia
-Gen 7 Pokemon Icon Sprites   - Marin, MapleBranchWing, Contributors to the DS Styled Gen 7+ Repository
-Gen 8 Icon Sprites           - Larry Turbo, Leparagon
+Sound Effects:
+    GameFreak | Original sound effects from B/W/2 games
+    BadSamaritan | Ripping the sound effects
 
-Cry Credits:
-Gen 1-6 Pokemon Cries        - Rhyden
-Gen 7 Pokemon Cries          - Marin, Rhyden
-Gen 8 Pokemon Cries          - Zeak6464
+Other:
+    Luka S.J. | Elite Battle: DX
+    Pokémon Essentials | Base system
+    Maruno, Marin, Golisopod User | General help, support, and bouncing off ideas
+    PinkCatDragon | GIF to PNG conversion
 
-Script Credits:
-Golisopod User, Luka S.J.
+EBDX v21.1 port add-ons & fixes:
+	Aprogergely for the hatching scene fix
+	NikDie for the animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
+	SceoFlash13 for hotfixes while using frame-based animations.
+	Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
 
-Compilation of Resources:
-Golisopod User, UberDunsparce
+==============================================================
+## CREDITS: Pokemon World Tournament
+	Luka S.J., DerxwnaKapsyla, Vendily, Manurocker95
 
-================================================================
-Gen 9 Pack
+==============================================================
+## CREDITS: Animated Pokemon System by Lucidious89
+https://eeveeexpo.com/resources/1544/
 
-Script Gen 9 and Adapting PLA for v20:
+    Plugin Credits:
+
+    Creator: Lucidious89
+    Based on the Generation 8 Pack by Golisopod User and EBDX by Luka S.J.
+
+
+    Sprite Credits:
+    Battler Sprites
+
+        Gen 1-5: Luka S.J.
+        Gen 6: All Contributors To Smogon X/Y Sprite Project
+        Gen 7: All Contributors To Smogon Sun/Moon Sprite Project
+        Gen 8: All Contributors To Smogon Sword/Shield Sprite Project
+        Gen 9: All Contributors To Smogon Scarlet/Violet Sprite Project
+        Contributors to the original "Sprites Animados" spanish plugin:
+        Tenshi of War, DPertierra, Skyflyer, Hellfire_raptor, Antiant, AshnixsLaw, AyanoCloud, Azrita, BR0DE0, Caruban, Creobnil, DanEx, Diegotoon20, dimbly, ekurepu, Ebaru, EricLostie, Falcon7, Federico97_ez, Fleimer_, Franark122k, Hellfire0raptor, HM100, HyperactiveFlummi, iametrine, Involuntary-Twitch, ItsYugen, jinta, justnyxnow, KingOfThe-X-Roads, kiriaura, Legitimate Username, localghost, lucasomi, MallowOut, mangalos810, MCH4R1Z4RD, N-Kin, NoelleMBrooks, Noobiess, Nolo33, OldSoulja, OmegalingYT, PKMarioG, PomPomKing, Poki Papillon, PumpkinPastel, RetroNC, RadicalCharizard, seleccion, SelenaArmorclaw, SkidMarc25, Snivy101, Sopita_Yorita, SoulWardenInfinity, TheAetherPlayer, TheCynicalPoet, Typhlito, uppababy
+        Other Contributors: Lucidious89, Regis, Rod, kayzering
+
+    Icon Sprites
+
+        Gen 1-6: Alaguesia, harveydentmd
+        Gen 7: Marin, MapleBranchWing, Contributors to the DS Styled Gen 7+ Repository
+        Gen 8: Larry Turbo, Leparagon
+        Gen 1-8 (Shiny): StarrWolf, Pokemon Shattered Light Team
+        PLA Icons: LuigiTKO
+        Gen 9: ezerart, JordanosArt
+        Resource Compilation: Golisopod User, UberDunsparce, Caruban
+
+
+    Footprint Sprites
+
+        Gen 6: भाग्य ज्योति
+        Gen 7-8: WolfPP
+        Gen 9 & PLA: Caruban
+        Resource Compilation: komeiji514
+
+
+==============================================================
+## CREDITS: Gen 9 Pack
+https://eeveeexpo.com/resources/1101/
+
+Scripts:
 -Caruban
+-Lucidious89
+-Eskiss (Legend Plate script based on)
+-StCooler (Original PLA Expansion script for Gen 8 Project in v18 and Status sprites)
+-PorousMist and curryofthepast (Adapting the PLA Expansion script script for v19.1 use)
 
-PBS for Gen 9:
+PBS:
 -Caruban
+-Lucidious89
 -PorousMist (Updated the abilities, items, and moves description)
 -DJChaos (TM Items)
+-Futuresushi (Shortened abilities and moves description)
 
-Pokemon Gen 9 Battler Sprites:
-The-King-Of-Roads-X, Mak, leParagon, Caruban, Azria, Mashirosakura, Katten, jinxed, OldSoulja
+Pokemon Battler Sprites:
+-Gen 1-5 Pokemon Sprites	- veekun
+-Gen 6 Pokemon Sprites		- All Contributors To Smogon X/Y Sprite Project
+-Gen 7 Pokemon Sprites		- All Contributors To Smogon Sun/Moon Sprite Project
+-Gen 8 Pokemon Sprites		- All Contributors To Smogon Sword/Shield Sprite Project
+-PLA Pokemon Sprites		- Smogon Gen8 Sprite Project
+(https://www.smogon.com/forums/threads/smogon-sprite-project.3647722/)
+Blaquaza, KingOfThe-X-Roads, KattenK, Travis, G.E.Z., SpheX, Hematite, SelenaArmorclaw
+-Gen 9 Pokemon Sprites		- KingOfThe-X-Roads, Mak, Caruban, jinxed, leParagon, Sopita_Yorita, Azria, Mashirosakura,
+JordanosArt, Abnayami, OldSoulja, Katten, Divaruta 666, Clara, Skyflyer, AshnixsLaw, ace_stryfe
+-Gen 9 Vanilla style sprites	- KingOfThe-X-Roads, Mak, Caruban, jinxed, leParagon, Sopita_Yorita, Azria, Mashirosakura, JordanosArt, Scept, NanaelJustice, SoyChim, KRLW890, AnonAlpaca, PokeJminer, Red7246, Carmanekko, Eduar, Lykeron, GriloKapu10, Mesayas, Erkey830, QDylm, PorousMist, OldSoulja, AlexandreV2.0, Z-nogyroP, lennybitao, Ruben1986, GRAFAIAIMX
+Blaquaza, KattenK, Travis, G.E.Z., SpheX, Hematite
 
-Battler Sprites QC:
-leParagon
+Pokemon Icon Sprites:
+-Gen 1-6 Pokemon Icon Sprites	- Alaguesia, harveydentmd
+-Gen 7 Pokemon Icon Sprites	- Marin, MapleBranchWing, Contributors to the DS Styled Gen 7+ Repository
+-Gen 8 Icon Sprites		- Larry Turbo, Leparagon
+-Shiny Icon Sprites		- StarrWolf, Pokemon Shattered Light Team
+-PLA Pokemon Icon Sprites	- LuigiTKO
+-Shiny PLA Pokemon Icon Sprites	- StarrWolf (recolored from LuigiTKO icons)
+-Gen 9 Icon Sprites		- ezerart, JordanosArt
+-Shiny Gen 9 Icon Sprites	- ezerart, JordanosArt
+-PLA Vanilla Icon Sprites	- LuigiTKO, Pikafan2000, Cesare_CBass, Vent, Cesare_Cbass, MultiDiegoDani, leParagon, JWNutz
+and thanks for 
+Pokémon Icons Act 2.9 - Teracristalizando
+(https://whackahack.com/foro/threads/pokemon-icons-act-2-9-teracristalizando-07-08-2022.63896/)
+-Gen 9 Vanilla Icon Sprites	- Vent, Katten, leParagon, Cesare_CBass, AlexandreV2.0, Carmanekko, GRAFAIAIMX
+also thanks to Axel Loquendo, CarmaNekko, Divaruta 666, Okyo, JLauz735, and ClaraDragon for
+Iconos 9na Gen gba completos (https://whackahack.com/foro/threads/iconos-9na-gen-gba-completos-act-04-03-2023.67908/)
 
-Pokemon Gen 9 icons:
-ezerart
+Pokemon Gen 9 Overworld sprites:
+-Gen 1-5 Pokemon Overworlds	- MissingLukey, help-14, Kymoyonian, cSc-A7X, 2and2makes5, Pokegirl4ever, Fernandojl, Silver-Skies, TyranitarDark, Getsuei-H, Kid1513, Milomilotic11, Kyt666, kdiamo11, Chocosrawlooid, Syledude, Gallanty, Gizamimi-Pichu, 2and2makes5, Zyon17,LarryTurbo, spritesstealer, LarryTurbo
+-Gen 6+ Berry Tree Overworlds	- Anarlaurendil
+-Gen 6 Pokemon Overworlds	- princess-pheonix, LunarDusk, Wolfang62, TintjeMadelintje101, piphybuilder88
+-Gen 7 Pokemon Overworlds	- Larry Turbo, princess-pheonix
+-Gen 8 Pokemon Overworlds	- SageDeoxys, Wolfang62, LarryTurbo, tammyclaydon
+-PLA Pokemon Overworlds		- Boonzeet, DarkusShadow, princess-phoenix, Ezeart, WolfPP
+-Gen 9 Pokemon Overworlds	- Azria, DarkusShadow, EduarPokeN, Carmanekko, StarWolff, Caruban
 
-Pokemon Gen 9 Followers:
-Azria, DarkusShadow 
+Pokemon Footprints :
+-Gen PLA-9 Pokemon Footprints	- Caruban
 
-Pokemon Gen 9 Cries:
-Edited from Lightblade Absol Gen 9 Cries compilation video
+Pokemon Cries:
+-Gen 1-6 Pokemon Cries		- Rhyden
+-Gen 7 Pokemon Cries		- Marin, Rhyden
+-Gen 8 Pokemon Cries		- Zeak6464
+-PLA Pokemon Cries		- Morningdew
+-Gen 9 Pokemon Cries		- 
+Edited from Lightblade's Absol Gen 9 Cries compilation video
 https://www.youtube.com/watch?v=KV6k3G62oT0
+Edited from HeroLinik's Pokemon Scarlet and Violet - Walking Wake and Iron Leaves Cries video
+https://www.youtube.com/watch?v=weH2W3mQ35Y
+Edited from HeroLinik's Pokemon Scarlet and Violet - All Teal Mask Cries video
+https://www.youtube.com/watch?v=pQr9z4ryE40
+Edited from Joya in UK's Indigo Disk Cries video
+https://www.youtube.com/watch?v=2Qqr9IzgcKE
 
-Gen 9 item icons:
--lichenprincess (Tera Orb, Bamboos, Tera Shards, Mirror Herb, Loaded Dice, Leader Crest, and Kubfu Scrolls, Booster Energy, Gimmighoul coin, TM Material, Kofu's Wallet, Sandwich, Herba Mysticas)
--Caruban (Punching Glove, Auspicious Armor, Malicious Armor, Ability Shield, Clear Amulet, Covert Cloak, Scarlet&Violet Book)
-
-Original Pokémon: Legends Arceus Expansion Script :
--StCooler (Original script for Gen 8 Project in v18 and Status sprites)
--PorousMist and curryofthepast (Adapting the script for v19.1 use)
-
-PLA item icons :
--AztecCroc, 3DJackArt, Caruban, lichenprincess
-
-Pokemon cries ripped:
--Morningdew
+Item sprites:
+-Gen 9 item sprites	- lichenprincess, Caruban, jinxed
+-PLA item sprites	- AztecCroc, 3DJackArt, Caruban, lichenprincess
 
 Pokeballs battle animation and summary icon:
 -Caruban
 -WolfPP (Beast ball battle animation)
 
-PLA Pokémon icons:
--LuigiTKO
+Compilation of Resources:
+-Gen 9 Pack		- Caruban
+-Gen 8/9 Resized Sprites- http404error
+-Gen 8 Pack		- Golisopod User, UberDunsparce
 
-Follower
--Boonzeet
--DarkusShadow
--princess-phoenix
--Ezeart
--WolfPP
-
-PLA Sprites from Smogon Gen8 Sprite Project :
-(https://www.smogon.com/forums/threads/smogon-sprite-project.3647722/)
--Blaquaza, KingOfThe-X-Roads, KattenK, Travis, G.E.Z., SpheX, Hematite
-
-Animated gen 6 and Megas:
-
-Diegotoon20
-Snivy101
-Typhlito
-Legitimate Username
-Ayanocloud
-N-Kin
-Turtleye
-Siiilver
-Wyverii
-Branflakes325
-princessofmusic
-Layell
-branflakes
-Falgaia
-aXl
-Wobblebuns
-N-Kin
-zerudez
-Brylark
-princess-phoenix
-TrainerSplash
-Gnomowladny
-Gardow
-RockAdam
-
-Vanilla Style Version
-Pokémon sprites:
-KingOfThe-X-Roads, Mak, Red7246, Vent, Caruban, leParagon, Sopita_Yorita, Z-nogyroP, 
-Alxndre~◇, Mashirosakura, NanaelJustice, KRLW890
-Blaquaza, KattenK, Travis, G.E.Z., SpheX, Hematite
-
-Gen 9 Icons:
-Vent, Katten, leParagon, Cesare_CBass, Alxndre~◇, Jordanos11
-
-PLA Icons:
-LuigiTKO, Pikafan2000, Cesare_CBass, Vent, Cesare_Cbass, MultiDiegoDani, leParagon, JWNutz
-and thanks for 
-Pokémon Icons Act 2.9 - Teracristalizando
-(https://whackahack.com/foro/threads/pokemon-icons-act-2-9-teracristalizando-07-08-2022.63896/)
-
-Walking Wake and Iron Leaves sprites:
-Jordanos11
-
-Terapagos, munkidogi, okidogi, Fezandipiti sprites:
-Ruben1986
-
-Full Sprites Credit List:
+Full PLA-Gen 9 Sprites Credit List:
 https://docs.google.com/spreadsheets/d/1T-KC-4XDOeFKq0Z6tfN6Sz4JIlpaK7B8A0lbmBg9fNY/edit?usp=sharing
-
-EBDX Extra moves: NikDie
 
 And let me know if there is someone that I forget to mentions here.
 
+## Legends Z-A - Mega Dimension sprites
+- Créditos a Luis779 por los iconos
+- Incluye las versiones shiny de los iconos de Pokémon Showdown de las megas de Dragonite, Victreebel, Hawlucha, Malamar y los iniciales de Kalos (créditos a Ezerart)
+- Créditos a Rauru (Pepsiman) por el icono de mega absol Z y Luis779 por los demas

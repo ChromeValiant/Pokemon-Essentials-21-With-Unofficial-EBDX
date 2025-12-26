@@ -19,7 +19,7 @@ GameData::Status.register({
   :id            => :DROWSY,
   :name          => _INTL("Drowsy"),
   :animation     => "Drowsy",
-  :icon_position => 5
+  :icon_position => 0
 })
 
 #-------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ GameData::Status.register({
   :id            => :FROSTBITE,
   :name          => _INTL("Frostbite"),
   :animation     => "Frostbite",
-  :icon_position => 6
+  :icon_position => 4
 })
 
 

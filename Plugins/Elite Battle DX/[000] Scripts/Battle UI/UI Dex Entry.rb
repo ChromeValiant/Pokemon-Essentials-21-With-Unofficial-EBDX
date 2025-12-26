@@ -93,22 +93,22 @@ class EliteBattle_Pokedex
       indexText = sprintf("%03d", indexNumber)
     end
     # push text into array
-    textpos.push([_INTL("{1}   {2}", indexText, species_data.name), 262, 30, 0, base, shadow])
-    textpos.push([_INTL("Height"), 274, 158, 0, base, shadow])
-    textpos.push([_INTL("Weight"), 274, 190, 0, base, shadow])
+    textpos.push([_INTL("{1}   {2}", indexText, species_data.name), 262, 42, 0, base, shadow])
+    textpos.push([_INTL("Height"), 274, 168, 0, base, shadow])
+    textpos.push([_INTL("Weight"), 274, 200, 0, base, shadow])
     # Pokemon kind
-    textpos.push([_INTL("{1} Pokémon", species_data.category), 262, 66, 0, base, shadow])
+    textpos.push([_INTL("{1} Pokémon", species_data.category), 262, 78, 0, base, shadow])
     # height and weight
     height = species_data.height
     weight = species_data.weight
     if System.user_language[3..4] == "US"   # If the user is in the United States
       inches = (height/0.254).round
       pounds = (weight/0.45359).round
-      textpos.push([_ISPRINTF("{1:d}'{2:02d}''", inches/12, inches%12), 482, 158, 1, base, shadow])
-      textpos.push([_ISPRINTF("{1:4.1f} lbs.", pounds/10.0), 482, 190, 1, base, shadow])
+      textpos.push([_ISPRINTF("{1:d}'{2:02d}''", inches/12, inches%12), 482, 170, 1, base, shadow])
+      textpos.push([_ISPRINTF("{1:4.1f} lbs.", pounds/10.0), 482, 202, 1, base, shadow])
     else
-      textpos.push([_ISPRINTF("{1:.1f} m", height/10.0), 482, 158, 1, base, shadow])
-      textpos.push([_ISPRINTF("{1:.1f} kg", weight/10.0), 482, 190, 1, base, shadow])
+      textpos.push([_ISPRINTF("{1:.1f} m", height/10.0), 482, 168, 1, base, shadow])
+      textpos.push([_ISPRINTF("{1:.1f} kg", weight/10.0), 482, 200, 1, base, shadow])
     end
     # Pokédex entry text
     drawTextEx(overlay, 32, 250, Graphics.width - 60, 4, species_data.pokedex_entry, base, shadow)
@@ -122,7 +122,7 @@ class EliteBattle_Pokedex
     # Draw the type icon(s)
     type1 = GameData::Type.get(species_data.types[0]).icon_position
     type2 = species_data.types[1] ? GameData::Type.get(species_data.types[1]).icon_position : type1
-    height = @typebitmap.height/GameData::Type.values.length
+    height = 26 #@typebitmap.height/GameData::Type.values.length
     type1rect = Rect.new(0, type1*height, @typebitmap.width, height)
     type2rect = Rect.new(0, type2*height, @typebitmap.width, height)
     overlay.blt(292, 122, @typebitmap, type1rect)
@@ -197,7 +197,8 @@ class EliteBattle_Pokedex
       Graphics.update
     end
     # play cry
-    GameData::Species.cry_filename_from_pokemon(@pokemon)
+	Pokemon.play_cry(@species, @form)
+    #GameData::Species.cry_filename_from_pokemon(@pokemon)
     # begin loop
     loop do
       Graphics.update

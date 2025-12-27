@@ -63,6 +63,7 @@ EBDX v21.1 port add-ons & fixes:
 	NikDie for the animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
 	SceoFlash13 for hotfixes while using frame-based animations.
 	Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
+	Ghasty_001 for Weather optimization
 
 ==============================================================
 ## CREDITS: Pokemon World Tournament

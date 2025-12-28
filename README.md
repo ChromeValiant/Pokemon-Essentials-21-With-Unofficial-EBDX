@@ -205,6 +205,28 @@ And let me know if there is someone that I forget to mentions here.
 
 ==============================================================
 
+## CREDITS: Animated Sprites by Ghasty001
+- [Link](https://github.com/Ghasty001/Animated_sprites_by_Ghasty001)
+- "original" refers to Ghasty_001's work :)
+
+**Armarouge**
+Base front sprites by *KingOfThe-X-Roads*. Credit to *lennybitao* for that second frame with the cannon arms. Good Charcadet and ceruledge sprite animations can be found in the Deluxe Battle Kit, but I can't link you the name of the creator.
+
+**Mega Ampharos**
+Base sprites was made by *Branflakes325, Layell, Wyverii* on Smogon's Sprite Project.
+
+**Mega Beedrill (back)**
+Basecksprite by *Sleet* on Smogon's Sprite Project.
+
+**Mega Victreebel (front)**
+All original animations and sprites!
+
+**Mega Absol Z**
+All original animations and sprites! Back might need touchups.
+
+**Mega Meganium**
+The base front was made by *kiriaura* over on its Deviant-Art, while the back is original.
+
 ## CREDITS: Legends Z-A base game and Mega Dimension sprites from Spanish / La Base de Sky
 - Animated battle sprites: specified in "Créditos_Sprites_Megas ZA_y_DLC_Actualizado.xlsx" (RetroNC, Pepsiman, Robert, Aronousqui, and more)
 - icons Z-A base game: Créditos a Luis779 por los iconos y Incluye las versiones shiny de los iconos de Pokémon Showdown de las megas de Dragonite, Victreebel, Hawlucha, Malamar y los iniciales de Kalos (créditos a Ezerart)

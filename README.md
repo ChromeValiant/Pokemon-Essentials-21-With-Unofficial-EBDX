@@ -206,5 +206,6 @@ And let me know if there is someone that I forget to mentions here.
 ==============================================================
 
 ## CREDITS: Legends Z-A base game and Mega Dimension sprites from Spanish / La Base de Sky
-- Z-A base game: Créditos a Luis779 por los iconos y Incluye las versiones shiny de los iconos de Pokémon Showdown de las megas de Dragonite, Victreebel, Hawlucha, Malamar y los iniciales de Kalos (créditos a Ezerart)
-- Mega Dimension: Créditos a Rauru (Pepsiman) por el icono de mega absol Z y Luis779 por los demas
+- Animated battle sprites: specified in "Créditos_Sprites_Megas ZA_y_DLC_Actualizado.xlsx" (RetroNC, Pepsiman, Robert, Aronousqui, and more)
+- icons Z-A base game: Créditos a Luis779 por los iconos y Incluye las versiones shiny de los iconos de Pokémon Showdown de las megas de Dragonite, Victreebel, Hawlucha, Malamar y los iniciales de Kalos (créditos a Ezerart)
+- icons Mega Dimension: Créditos a Rauru (Pepsiman) por el icono de mega absol Z y Luis779 por los demas

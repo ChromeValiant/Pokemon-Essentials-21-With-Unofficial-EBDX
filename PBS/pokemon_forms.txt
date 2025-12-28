@@ -3261,3 +3261,199 @@ Height = 1.7
 Weight = 77.0
 Shape = Head
 Pokedex = In this form, Terapagos resembles the world as the ancients saw it, and its Terastal energy is abnormally amplified.
+
+# G-max forms (from Lucidious89's Deluxe Battle Kit: Dynamax Add-on)
+#-------------------------------
+[VENUSAUR,2]
+FormName = Gigantamax
+Height = 24.0
+Pokedex = In battle, this Pokémon swings around two thick vines. If these vines slammed into a 10-story building, they could easily topple it.
+#-------------------------------
+[CHARIZARD,3]
+FormName = Gigantamax
+Height = 28.0
+Pokedex = This colossal, flame-winged figure of a Charizard was brought about by Gigantamax energy.
+Generation = 8
+#-------------------------------
+[BLASTOISE,2]
+FormName = Gigantamax
+Height = 25.0
+Pokedex = Water fired from this Pokémon's central main cannon has enough power to blast a hole into a mountain.
+Generation = 8
+#-------------------------------
+[BUTTERFREE,1]
+FormName = Gigantamax
+Height = 17.0
+Pokedex = Crystallized Gigantamax energy makes up this Pokémon's blindingly bright and highly toxic scales.
+Generation = 8
+#-------------------------------
+[PIKACHU,17]
+FormName = Gigantamax
+Height = 21.0
+Pokedex = Its Gigantamax power expanded, forming its supersized body and towering tail.
+Generation = 8
+#-------------------------------
+[MEOWTH,3]
+FormName = Gigantamax
+Height = 33.0
+Pokedex = Its body has grown incredibly long and the coin on its forehead has grown incredibly large all thanks to Gigantamax power.
+Generation = 8
+#-------------------------------
+[MACHAMP,1]
+FormName = Gigantamax
+Height = 25.0
+Pokedex = The Gigantamax energy coursing through its arms makes its punches hit as hard as bomb blasts.
+Generation = 8
+#-------------------------------
+[GENGAR,2]
+FormName = Gigantamax
+Height = 20.0
+Pokedex = It lays traps, hoping to steal the lives of those it catches. If you stand in front of its mouth, you'll hear your loved ones' voices calling out to you.
+Generation = 8
+#-------------------------------
+[KINGLER,1]
+FormName = Gigantamax
+Height = 19.0
+Pokedex = The flow of Gigantamax energy has spurred this Pokémon's left pincer to grow to an enormous size. That claw can pulverize anything.
+Generation = 8
+#-------------------------------
+[LAPRAS,1]
+FormName = Gigantamax
+Height = 24.0
+Pokedex = Over 5,000 people can ride on its shell at once. And it's a very comfortable ride, without the slightest shaking or swaying.
+Generation = 8
+#-------------------------------
+[EEVEE,2]
+FormName = Gigantamax
+Height = 18.0
+Pokedex = Gigantamax energy upped the fluffiness of the fur around Eevee's neck. The fur will envelop a foe, capturing its body and captivating its mind.
+Generation = 8
+#-------------------------------
+[SNORLAX,1]
+FormName = Gigantamax
+Height = 35.0
+Pokedex = Gigantamax energy has affected stray seeds and even pebbles that got stuck to Snorlax, making them grow to a huge size.
+Generation = 8
+#-------------------------------
+[GARBODOR,1]
+FormName = Gigantamax
+Height = 21.0
+Pokedex = Due to Gigantamax energy, this Pokémon's toxic gas has become much thicker, congealing into masses shaped like discarded toys.
+Generation = 8
+#-------------------------------
+[MELMETAL,1]
+FormName = Gigantamax
+Height = 25.0
+Pokedex = In a distant land, there are legends about a cyclopean giant. In fact, the giant was a Melmetal that was flooded with Gigantamax energy.
+Generation = 8
+#-------------------------------
+[RILLABOOM,1]
+FormName = Gigantamax
+Height = 28.0
+Pokedex = Gigantamax energy has caused Rillaboom's stump to grow into a drum set that resembles a forest.
+#-------------------------------
+[CINDERACE,1]
+FormName = Gigantamax
+Height = 27.0
+Pokedex = Gigantamax energy can sometimes cause the diameter of this Pokémon's fireball to exceed 300 feet.
+#-------------------------------
+[INTELEON,1]
+FormName = Gigantamax
+Height = 40.0
+Pokedex = Gigantamax Inteleon's Water Gun move fires at Mach 7. As the Pokémon takes aim, it uses the crest on its head to gauge wind and temperature.
+#-------------------------------
+[CORVIKNIGHT,1]
+FormName = Gigantamax
+Height = 14.0
+Pokedex = Imbued with Gigantamax energy, its wings can whip up winds more forceful than any a hurricane could muster. The gusts blow everything away.
+#-------------------------------
+[ORBEETLE,1]
+FormName = Gigantamax
+Height = 14.0
+Pokedex = Its brain has grown to a gargantuan size, as has the rest of its body. This Pokémon's intellect and psychic abilities are overpowering.
+#-------------------------------
+[DREDNAW,1]
+FormName = Gigantamax
+Height = 24.0
+Pokedex = It responded to Gigantamax energy by becoming bipedal. First it comes crashing down on foes, and then it finishes them off with its massive jaws.
+#-------------------------------
+[COALOSSAL,1]
+FormName = Gigantamax
+Height = 42.0
+Pokedex = Its body is a colossal stove. With Gigantamax energy stoking the fire, this Pokémon's flame burns hotter than 3,600 degrees Fahrenheit.
+#-------------------------------
+[FLAPPLE,1]
+FormName = Gigantamax
+Height = 24.0
+Pokedex = Under the influence of Gigantamax energy, it produces much more sweet nectar, and its shape has changed to resemble a giant apple.
+#-------------------------------
+[APPLETUN,1]
+FormName = Gigantamax
+Height = 24.0
+Pokedex = Due to Gigantamax energy, this Pokémon's nectar has thickened. The increased viscosity lets the nectar absorb more damage than before.
+#-------------------------------
+[SANDACONDA,1]
+FormName = Gigantamax
+Height = 22.0
+Pokedex = Sand swirls around its body with such speed and power that it could pulverize a skyscraper.
+#-------------------------------
+[TOXTRICITY,2]
+FormName = Gigantamax
+Height = 24.0
+Pokedex = Out of control after its own poison penetrated its brain, it tears across the land in a rampage, contaminating the earth with toxic sweat.
+#-------------------------------
+[TOXTRICITY,3]
+PokedexForm = 2
+Abilities = PUNKROCK,MINUS
+Moves = 0,SPARK,1,LEER,1,GROWL,1,ACID,1,THUNDERSHOCK,1,FLAIL,1,ACIDSPRAY,1,BELCH,1,NOBLEROAR,1,NUZZLE,1,TEARFULLOOK,4,CHARGE,8,SHOCKWAVE,12,SCARYFACE,16,TAUNT,24,SCREECH,28,SWAGGER,32,TOXIC,36,DISCHARGE,40,POISONJAB,44,OVERDRIVE,48,BOOMBURST,52,MAGNETICFLUX
+UngmaxForm = 1
+#-------------------------------
+[CENTISKORCH,1]
+FormName = Gigantamax
+Height = 75.0
+Pokedex = The heat that comes off a Gigantamax Centiskorch may destabilize air currents. Sometimes it can even cause storms.
+#-------------------------------
+[HATTERENE,1]
+FormName = Gigantamax
+Height = 26.0
+Pokedex = Beams like lightning shoot down from its tentacles. It's known to some as the Raging Goddess.
+#-------------------------------
+[GRIMMSNARL,1]
+FormName = Gigantamax
+Height = 32.0
+Pokedex = Gigantamax energy has caused more hair to sprout all over its body. With the added strength, it can jump over the world's tallest building.
+#-------------------------------
+[ALCREMIE,63]
+FormName = Gigantamax
+Height = 30.0
+Pokedex = It launches swarms of missiles, each made of cream and loaded with 100,000 kilocalories. Get hit by one of these, and your head will swim.
+#-------------------------------
+[COPPERAJAH,1]
+FormName = Gigantamax
+Height = 23.0
+Pokedex = After this Pokémon has Gigantamaxed, its massive nose can utterly demolish large structures with a single smashing blow.
+#-------------------------------
+[DURALUDON,1]
+FormName = Gigantamax
+Height = 43.0
+Pokedex = It's grown to resemble a skyscraper. Parts of its towering body glow due to a profusion of energy.
+#-------------------------------
+[ETERNATUS,1]
+FormName = Eternamax
+BaseStats = 255,115,250,130,125,250
+Height = 100.0
+Shape = Serpentine
+Pokedex = Infinite amounts of energy pour from this Pokémon's enlarged core, warping the surrounding space-time.
+#-------------------------------
+[URSHIFU,2]
+FormName = Gigantamax Single Strike Style
+Height = 29.0
+Pokedex = The energy released by this Pokémon's fists forms shock waves that can blow away Dynamax Pokémon in just one hit.
+#-------------------------------
+[URSHIFU,3]
+FormName = Gigantamax Rapid Strike Style
+Types = FIGHTING,WATER
+Moves = 0,SURGINGSTRIKES,1,FOCUSENERGY,1,ENDURE,1,ROCKSMASH,1,AQUAJET,1,LEER,12,AERIALACE,16,SCARYFACE,20,HEADBUTT,24,BRICKBREAK,28,DETECT,32,BULKUP,36,IRONHEAD,40,DYNAMICPUNCH,44,COUNTER,48,CLOSECOMBAT,52,FOCUSPUNCH
+Height = 26.0
+Pokedex = As it waits for the right moment to unleash its Gigantamax power, this Pokémon maintains a perfect one-legged stance. It won't even twitch.
+UngmaxForm = 1

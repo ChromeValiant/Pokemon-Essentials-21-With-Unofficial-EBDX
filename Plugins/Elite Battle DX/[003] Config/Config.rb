@@ -94,6 +94,9 @@ module EliteBattle
 
   # As EBDX uses custom intros, setting this to false will use default Essentials intros
   USE_EBDX_BATTLE_INTROS = true
+  
+  # If true, battler names, gender, and level will use the font from the Gen 5 games (credit: bonzairob @ 3dPE)
+  BW_DATABOX_FONT = true
 end
 #-------------------------------------------------------------------------------
 # Adds additional "camera" vectors for when the camera is idling

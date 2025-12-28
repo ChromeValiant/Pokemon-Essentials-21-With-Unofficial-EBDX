@@ -64,6 +64,7 @@ EBDX v21.1 port add-ons & fixes:
 	SceoFlash13 for hotfixes while using frame-based animations.
 	Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
 	Ghasty_001 for Weather optimization
+	bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
 
 ==============================================================
 ## CREDITS: Pokemon World Tournament

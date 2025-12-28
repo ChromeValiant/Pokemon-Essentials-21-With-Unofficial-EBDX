@@ -395,7 +395,7 @@ class DataBoxEBDX  <  SpriteWrapper
     str = "#{self.hp}/#{@battler.totalhp}"
     @sprites["textHP"].bitmap.clear
 
-    textpos = [[str, @sprites["textHP"].bitmap.width + @hpTextX, @hpTextY,1,Color.white,Color.new(0,0,0,125)]]
+    textpos = [[str, @sprites["textHP"].bitmap.width + @hpTextX, @hpTextY,1,Color.white,Color.new(0,0,0)]]
     pbDrawTextPositions(@sprites["textHP"].bitmap,textpos) if @showhp
   end
   #-----------------------------------------------------------------------------
@@ -435,17 +435,21 @@ class DataBoxEBDX  <  SpriteWrapper
 	if @pokemon.shadowPokemon?
 		color = Color.new(105,73,136)
 	end
-    pbDrawOutlineText(@sprites["textName"].bitmap,18-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,Color.new(0,0,0,125),0)
+	if EliteBattle::BW_DATABOX_FONT
+		@sprites["textName"].bitmap.font.name = "Truth And Ideals - Fighting Ideals" # H3 edit
+		@sprites["textName"].bitmap.font.size = 24 # H3 edit
+	end
+    pbDrawOutlineText(@sprites["textName"].bitmap,18-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,Color.white,Color.new(0,0,0),0)
     # writes the Pokemon's gender
     x = @sprites["textName"].bitmap.text_size(str).width + 18
     str = ""
     str = _INTL("♂") if @pokemon.gender == 0 && !@hidden
     str = _INTL("♀") if @pokemon.gender == 1 && !@hidden
     color = (@pokemon.gender == 0) ? Color.new(53,107,208) : Color.new(180,37,77)
-    pbDrawOutlineText(@sprites["textName"].bitmap,x-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,Color.new(0,0,0,125),0)
+    pbDrawOutlineText(@sprites["textName"].bitmap,x-o-2,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,Color.new(0,0,0),0)
     # writes the Pokemon's level
     str = "Lv.#{@battler.level}"
-    pbDrawOutlineText(@sprites["textName"].bitmap,18+o+20,7,@sprites["textName"].bitmap.width-40-2,@sprites["textName"].bitmap.height,str,Color.white,Color.new(0,0,0,125),2)
+    pbDrawOutlineText(@sprites["textName"].bitmap,18+o+20,7,@sprites["textName"].bitmap.width-40-2,@sprites["textName"].bitmap.height,str,Color.white,Color.new(0,0,0),2)
     # changes the Mega symbol graphics (depending on Mega or Primal)
     if @battler.mega?
       @sprites["mega"].bitmap = @megaBmp.clone

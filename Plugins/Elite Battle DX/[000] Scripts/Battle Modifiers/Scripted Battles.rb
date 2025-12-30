@@ -132,7 +132,7 @@ class Battle::Scene
         elsif key.include?("last") || key.include?("afterLast") || key.include?("beforeLast")
           lin = key.include?("Opp") ? 1 : 0
           format = @battle.doublebattle? ? 2 : 1 # H3 edit: Fix to apply for doubles :)
-          if @battle.pbParty(lin).length > format && @battle.pbAbleCount(lin) == format
+          if @battle.pbParty(lin).length > format && @battle.pbAbleCount(lin) <= format
             pbTrainerSpeak(@battle.midspeech[index][key], nil, index)
             @battle.midspeech[index][key] = nil
             @battle.midspeech[index].delete(key)

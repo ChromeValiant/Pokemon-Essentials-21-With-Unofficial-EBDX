@@ -1,0 +1,7 @@
+Name         = EBDX Stat Boost Overlay
+Version      = 1.2
+Website      = https://reliccastle.com/members/7217/
+Requires     = Luka's Scripting Utilities,3.2
+Requires     = Elite Battle: DX
+Conflicts    = Elite Battle System
+Credits      = Phantombass,Luka S.J.,GameFreak,Pokecheck.org,PinkCatDragon,Tebited15, WolfPP, Issei Hyoudou, Nasasu, luckygirl88 ,WolfPP,Spriters-Resource (redblueyellow), Damien, WolfPP,BadSamaritan,Maruno, Marin, Golisopod User

@@ -65,6 +65,7 @@ EBDX v21.1 port add-ons & fixes:
 	Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
 	Ghasty_001 for Weather optimization
 	bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
+	phantombass: EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/); v21.1 bugs resolved by me (ChromeValiant)
 
 ==============================================================
 ## CREDITS: Pokemon World Tournament

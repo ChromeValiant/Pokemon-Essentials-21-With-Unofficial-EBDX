@@ -29,7 +29,7 @@ class Battle::Scene
     # special trainer intro graphic
     @sprites["trainer_Anim"] = ScrollingSprite.new(@viewport)
     # tries to resolve the bitmap before assigning it
-    base = pbResolveBitmap("Graphics/EBDX/Transitions/Common/#{base}") ? base : "outdoor"
+    base = pbResolveBitmap("Graphics/EBDX/Transitions/Common/#{base}") ? base : (EliteBattle.outdoor_map? ? "outdoor" : "indoor")
     # check if there is an assigned background for the trainer intro
     if @battle.opponent
       tt = GameData::TrainerType.get(@battle.opponent[0].trainer_type)

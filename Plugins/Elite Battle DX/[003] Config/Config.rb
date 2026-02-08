@@ -87,7 +87,7 @@ module EliteBattle
   DEFAULT_FRAMERATE = 40
 
   # Apply extra offsets based to pbShowOpponent and pbHideOpponent (still in test).
-  USE_TRAINER_OUT_OF_PLACE_HOTFIX = true
+  USE_TRAINER_OUT_OF_PLACE_HOTFIX = false
 
   # If true, it always check the species count in GameData. If the full count is detected to be less than expected, it reinitilize the pokemon species list.
   TRY_TO_ALWAYS_INITIALIZE = true

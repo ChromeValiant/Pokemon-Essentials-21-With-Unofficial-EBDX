@@ -219,7 +219,7 @@ def pbCheckPokemonBitmapFiles(params)
       species_id = EliteBattle.GetSpeciesID(species)
       bitmapFileName = sprintf("#{folder}#{dir}/%s%s%s%s", species_id, form_str, gender_str, shadow_str)
       ret = pbResolveBitmap(bitmapFileName)
-      echoln "#{bitmapFileName} - #{ret}"
+      #echoln "#{bitmapFileName} - #{ret}"
       return bitmapFileName if ret
     end
 	# END http404error / Re:Union refactor :)

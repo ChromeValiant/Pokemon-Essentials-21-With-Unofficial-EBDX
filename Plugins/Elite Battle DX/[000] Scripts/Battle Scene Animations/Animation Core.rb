@@ -552,7 +552,7 @@ class AnimationHelperEBDX
       # increment by delta
       @cur_frame += 1.0/(self.delta*40.0)
       # register animation for end of life if all components have finished
-      @fin_frame = @cur_frame + (@buffer*Graphics.frame_rate)/(self.delta*40.0) if @all_finished && @fin_frame < 0
+      @fin_frame = @cur_frame + (@buffer*Graphics.ebdx_frame_rate)/(self.delta*40.0) if @all_finished && @fin_frame < 0
     end
     # dispose of the components
     self.dispose
@@ -602,7 +602,7 @@ class AnimationHelperEBDX
   #  utility functions
   #-----------------------------------------------------------------------------
   def dispose; @components.keys.each { |k| @components[k].dispose }; end
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   def elapsed(comp, local = false)
     # get the number of frames elapsed from the component animation start
     return @cur_frame - comp.start if !comp.with_hit || local

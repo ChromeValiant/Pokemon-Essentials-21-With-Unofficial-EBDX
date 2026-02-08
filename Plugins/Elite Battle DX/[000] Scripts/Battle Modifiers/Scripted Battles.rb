@@ -178,9 +178,12 @@ class Battle::Scene
     # show opponent Trainer on screen
     clearMessageWindow
     pbShowOpponent(index, true, file) if (@battle.opponent && @battle.opponent[index]) || !file.nil?
-    # display message
+    # display message (http404error change)
     for m in msg
-      @battle.pbDisplayPaused(m)
+      m.strip!
+      m.gsub!("\n", " ")
+      m.gsub!("  ", " ")
+      @battle.pbDisplayPaused(_INTL(m))
     end
     clearMessageWindow
     # hide opponent Trainer off screen

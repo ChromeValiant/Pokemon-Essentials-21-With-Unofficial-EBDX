@@ -154,7 +154,7 @@ class PartyLineupEBDX
   #-----------------------------------------------------------------------------
   #  dispose and check for disposal
   #-----------------------------------------------------------------------------
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   def disposed?; return @disposed; end
   def dispose
     return if @disposed

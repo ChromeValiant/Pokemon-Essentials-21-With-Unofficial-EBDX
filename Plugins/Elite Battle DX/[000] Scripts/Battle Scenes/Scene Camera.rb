@@ -26,7 +26,7 @@ class Battle::Scene
     # trick for clearing message windows
     if @inMoveAnim.is_a?(Numeric)
       @inMoveAnim += 1
-      if @inMoveAnim > Graphics.frame_rate*0.5
+      if @inMoveAnim > Graphics.ebdx_frame_rate*0.5
         clearMessageWindow
         @inMoveAnim = false
       end
@@ -68,7 +68,7 @@ class Battle::Scene
           @sprites["pokemon_#{i}"].energyUpdate
           @sprites["dataBox_#{i}"].update if @sprites["dataBox_#{i}"] && @sprites["pokemon_#{i}"].loaded
         end
-        if !@orgPos.nil? && @idleTimer > (@lastMotion.nil? ? EliteBattle::BATTLE_MOTION_TIMER*Graphics.frame_rate : EliteBattle::BATTLE_MOTION_TIMER*Graphics.frame_rate*0.5) && @vector.finished? && !@safaribattle
+        if !@orgPos.nil? && @idleTimer > (@lastMotion.nil? ? EliteBattle::BATTLE_MOTION_TIMER*Graphics.ebdx_frame_rate : EliteBattle::BATTLE_MOTION_TIMER*Graphics.ebdx_frame_rate*0.5) && @vector.finished? && !@safaribattle
           @vector.inc = 0.005*(rand(4)+1)
           a = EliteBattle.random_vector(@battle, @lastMotion)
           @lastMotion = rand(a.length)
@@ -122,41 +122,51 @@ class Battle::Scene
   #  scene wait with animation
   #-----------------------------------------------------------------------------
   def wait(frames = 1, align = false, &block)
-    frames = Graphics.frame_rate if frames < 1 && frames > 0
-    mult = Graphics.frame_rate/$EliteBattleTargetFramerate
-    frames = frames * mult
-
-    if EliteBattle::USE_DELTA_TIME_HOTFIX
-      if frames <= 1
-        wait_old(frames, align, &block)
-      else  
-        duration = frames.to_f / Graphics.frame_rate
-        duration = 0.01 if duration <= 0
-        
-        pbWaitFix(duration, align, &block)
-      end 
-    else
-      wait_old(frames, align, &block)
-    end
-  end
-
-  # duration is in seconds
-  def pbWaitFix(duration, align = false, &block)
-    timer_start = System.uptime
-    until System.uptime - timer_start >= duration
-      animateScene(align, &block)
-      Graphics.update if !EliteBattle.get(:smAnim)
-    end
-  end
-
-
-  def wait_old(frames = 1, align = false, &block)
+    # call your trusty singleton waiter - one waiter per battle handles most animation timings (except some intro ones where the scene isn't in scope yet, I guess)
+    @waiter = EbdxWaiter.new if !@waiter || @waiter.is_too_stale?
     frames_to_wait = frames.to_i
     frames_to_wait.times do
       animateScene(align, &block)
-      Graphics.update if !EliteBattle.get(:smAnim)
+      @waiter.wait(1, true, false) if !EliteBattle.get(:smAnim)
     end
+
+    # ignore all this silly port stuff
+    # frames = 1 if frames < 1 && frames > 0
+    # mult = Graphics.frame_rate/EliteBattle::DEFAULT_FRAMERATE
+    # frames = frames * mult
+
+    # if EliteBattle::USE_DELTA_TIME_HOTFIX
+    #   if frames <= 1
+    #     wait_old(frames, align, &block)
+    #   else  
+    #     duration = frames.to_f / Graphics.frame_rate
+    #     duration = 0.01 if duration <= 0
+        
+    #     pbWaitFix(duration, align, &block)
+    #   end 
+    # else
+    #   wait_old(frames, align, &block)
+    # end
   end
+
+  # # duration is in seconds
+  # def pbWaitFix(duration, align = false, &block)
+  #   timer_start = System.uptime
+  #   until System.uptime - timer_start >= duration
+  #     animateScene(align, &block)
+  #     Graphics.update if !EliteBattle.get(:smAnim)
+  #   end
+  # end
+
+
+  # def wait_old(frames = 1, align = false, &block)
+  #   waiter = EbdxWaiter.new
+  #   frames_to_wait = frames.to_i
+  #   frames_to_wait.times do
+  #     animateScene(align, &block)
+  #     waiter.wait if !EliteBattle.get(:smAnim)
+  #   end
+  # end
   #-----------------------------------------------------------------------------
   #  sets scene vector
   #-----------------------------------------------------------------------------

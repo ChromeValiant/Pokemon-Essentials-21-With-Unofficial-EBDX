@@ -266,7 +266,7 @@ class Battle::Scene
     # play ME
     pbMEPlay(me)
     # wait for audio frames to complete
-    frames = (getPlayTime("Audio/ME/#{me}") * Graphics.frame_rate).ceil + 4
+    frames = (getPlayTime("Audio/ME/#{me}") * Graphics.ebdx_frame_rate).ceil + 4
     self.wait(frames)
     pbMEStop
     # return scene to normal

@@ -43,8 +43,6 @@ class EliteBattle_BasicTrainerAnimations
   # first variant trainer battle animation
   #-----------------------------------------------------------------------------
   def anim1
-    multFPS = 1/Graphics.frame_rate
-    multFPS = 0.01 if multFPS <= 0
     # load ball sprite
     ball = Sprite.new(@viewport)
     ball.bitmap = pbBitmap("Graphics/EBDX/Transitions/Common/ball")
@@ -52,19 +50,18 @@ class EliteBattle_BasicTrainerAnimations
     ball.zoom_x = 0
     ball.zoom_y = 0
     # spin ball into place
+    waiter = EbdxWaiter.new
     16.delta_add.times do
       ball.angle += 22.5/self.delta
       ball.zoom_x += 0.0625/self.delta
       ball.zoom_y += 0.0625/self.delta
-      pbWait(multFPS)
+      waiter.wait
     end
     ball.angle = 0
     ball.zoom = 1
     # take screenshot
     bmp = Graphics.snap_to_bitmap
-    multFPS2 = 8.delta_add/Graphics.frame_rate
-    multFPS2 = 0.01 if multFPS2 <= 0
-    pbWait(multFPS2)
+    pbWait(0.2)
     # dispose ball sprite
     ball.dispose
     # black background
@@ -85,7 +82,7 @@ class EliteBattle_BasicTrainerAnimations
     16.delta_add.times do
       field1.x -= (@viewport.width/16)/self.delta
       field2.x += (@viewport.width/16)/self.delta
-      pbWait(multFPS)
+      waiter.wait
     end
     field1.x = -@viewport.width
     field2.x = @viewport.width
@@ -99,8 +96,6 @@ class EliteBattle_BasicTrainerAnimations
   # second variant trainer battle animation
   #-----------------------------------------------------------------------------
   def anim2
-    multFPS = 1/Graphics.frame_rate
-    multFPS = 0.01 if multFPS <= 0
     # take screenshot and draw black background
     bmp = Graphics.snap_to_bitmap
     black = Sprite.new(@viewport)
@@ -132,10 +127,11 @@ class EliteBattle_BasicTrainerAnimations
     ball2.zoom_x = 0.5
     ball2.zoom_y = 0.5
     # move ballsprites on screen
+    waiter = EbdxWaiter.new
     16.delta_add.times do
       ball1.x -= (@viewport.width/8)/self.delta
       ball2.x += (@viewport.width/8)/self.delta
-      pbWait(multFPS)
+      waiter.wait
     end
     # move screenshots
     32.delta_add.times do
@@ -143,7 +139,7 @@ class EliteBattle_BasicTrainerAnimations
       field1.y -= (@viewport.height/32)/self.delta
       field2.x += (@viewport.width/16)/self.delta
       field2.y += (@viewport.height/32)/self.delta
-      pbWait(multFPS)
+      waiter.wait
     end
     @viewport.color = Color.black
     # dispose unused sprites
@@ -157,8 +153,7 @@ class EliteBattle_BasicTrainerAnimations
   # third variant trainer battle animation
   #-----------------------------------------------------------------------------
   def anim3
-    multFPS = 1/Graphics.frame_rate
-    multFPS = 0.01 if multFPS <= 0
+    waiter = EbdxWaiter.new
     # hash to store all sprites
     balls = {}
     rects = {}
@@ -190,7 +185,7 @@ class EliteBattle_BasicTrainerAnimations
         balls["#{i}"].angle -= ((i%2==0) ? 32 : -32)/self.delta
         rects["#{i}"].zoom_x += 12/self.delta
       end
-      pbWait(multFPS)
+      waiter.wait
     end
     @viewport.color = Color.black
     # disposes unused sprites
@@ -216,6 +211,7 @@ class EliteBattle_BasicTrainerAnimations
     @sprites["bg2"].blur_sprite(3)
     @sprites["bg2"].center!(true)
     @sprites["bg2"].opacity = 0
+    waiter = EbdxWaiter.new
     # creates rainbow rings
     for i in 1..2
       z = [0.35, 0.1]
@@ -248,7 +244,7 @@ class EliteBattle_BasicTrainerAnimations
         @sprites["glow1"].zoom_x += 0.02/self.delta
         @sprites["glow1"].zoom_y += 0.02/self.delta
       end
-      Graphics.update
+      waiter.graphics_update
     end
     @viewport.color = Color.new(255, 255, 255, 0)
     # second part of animation
@@ -265,7 +261,7 @@ class EliteBattle_BasicTrainerAnimations
       if i >= 32.delta_add
         @viewport.color.alpha += 16/self.delta
       end
-      Graphics.update
+      waiter.graphics_update
     end
     @viewport.color = Color.white
     # disposes of the elements
@@ -277,15 +273,14 @@ class EliteBattle_BasicTrainerAnimations
   # displays the animation for the evil team logo (can be standalone)
   #-----------------------------------------------------------------------------
   def evilTeam(viewport = nil, trainerid = -1)
-    multFPS = 1/Graphics.frame_rate
-    multFPS = 0.01 if multFPS <= 0
+    waiter = EbdxWaiter.new
     @viewport = viewport if !@viewport && !viewport.nil?
     @sprites = {} if !@sprites
     @viewport.color = Color.new(0, 0, 0, 0)
     # fades viewport to black
     8.delta_add.times do
       @viewport.color.alpha += 32/self.delta
-      pbWait(multFPS)
+      waiter.wait
     end
     @viewport.color.alpha = 255
     bitmaps = [
@@ -392,7 +387,7 @@ class EliteBattle_BasicTrainerAnimations
         @sprites["e1_#{j}"].opacity += speed[j]/self.delta
         @sprites["e1_#{j}"].ox -=  [1, speed[j]/self.delta].max
       end
-      pbWait(multFPS)
+      waiter.wait
     end
     # configures logo graphic
     @sprites["logo"].color = Color.white
@@ -435,7 +430,7 @@ class EliteBattle_BasicTrainerAnimations
       @sprites["ring2"].zoom_y += 0.2/self.delta if @sprites["ring2"].zoom_y < 3
       @sprites["ring2"].opacity -= 16/self.delta
       @sprites["bg2"].angle += 2/self.delta if $PokemonSystem.screensize < 2
-      pbWait(multFPS)
+      waiter.wait
     end
     # disposes all sprites
     pbDisposeSpriteHash(@sprites)
@@ -444,7 +439,7 @@ class EliteBattle_BasicTrainerAnimations
       @viewport.color.red -= (255/8.0)/self.delta
       @viewport.color.green -= (255/8.0)/self.delta
       @viewport.color.blue -= (255/8.0)/self.delta
-      pbWait(multFPS)
+      waiter.wait
     end
     @viewport.color = Color.black
     EliteBattle.set(:colorAlpha, 255)
@@ -454,14 +449,12 @@ class EliteBattle_BasicTrainerAnimations
   # plays Team Skull styled intro animation
   #-----------------------------------------------------------------------------
   def teamSkull(viewport = nil, trainerid = -1)
-    multFPS = 1/Graphics.frame_rate
-    multFPS = 0.01 if multFPS <= 0
     @viewport = viewport if !@viewport && !viewport.nil?
     # set up initial variables
     @sprites = {} if !@sprites
     @fpIndex = 0
     @spIndex = 0
-    pbWait(multFPS * 4)
+    pbWait(0.1)
     # get list of required graphics
     bitmaps = [
       "Graphics/EBDX/Transitions/Skull/background",
@@ -586,6 +579,7 @@ class EliteBattle_BasicTrainerAnimations
       @sprites["sp#{j}"].z = 99999
     end
     # begin animation
+    waiter = EbdxWaiter.new
     for i in 0...32
       @viewport.color.alpha -= 16
       @sprites["logo"].zoom_x -= 1/32.0
@@ -620,7 +614,7 @@ class EliteBattle_BasicTrainerAnimations
         @sprites["shine"].zoom_y += 0.02
       end
       @fpIndex += 1
-      Graphics.update
+      waiter.wait
     end
     @viewport.color = Color.new(0,0,0,0)
     for i in 0...128
@@ -709,7 +703,7 @@ class EliteBattle_BasicTrainerAnimations
         @spIndex += 1
       end
       @viewport.color.alpha += 16 if i >= 112
-      Graphics.update
+      waiter.wait
     end
     # dispose all sprites
     pbDisposeSpriteHash(@sprites)
@@ -717,7 +711,7 @@ class EliteBattle_BasicTrainerAnimations
     return true
   end
   #-----------------------------------------------------------------------------
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   #-----------------------------------------------------------------------------
 end
 #===============================================================================
@@ -850,7 +844,7 @@ class IntegratedVSSequence
   #-----------------------------------------------------------------------------
   def color; end
   def color=(val); end
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   #-----------------------------------------------------------------------------
 end
 
@@ -973,6 +967,7 @@ class SunMoonBattleTransitions
   def start
     @started = true
     return if self.disposed?
+    waiter = EbdxWaiter.new
     # fades in viewport
     16.times do
       @viewport.color.alpha -= 16 if @viewport.color.alpha > 0
@@ -985,7 +980,7 @@ class SunMoonBattleTransitions
       end
       @sprites["trainer_"].opacity += 32
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     @sprites["trainer_"].zoom_x = 1
     @sprites["trainer_"].zoom_y = 1
@@ -994,7 +989,7 @@ class SunMoonBattleTransitions
       @sprites["trainer_"].tone.all -= 16
       @sprites["background"].reduceAlpha(16)
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # wait
     maxf = [8, @frames*2].max
@@ -1007,15 +1002,14 @@ class SunMoonBattleTransitions
         @sprites["trainer_"].tone.all -= 16
         @sprites["background"].reduceAlpha(16)
       end
-      self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # flashes trainer
     for i in 0...10
       @sprites["trainer_"].tone.all -= 51*(i < 5 ? -1 : 1)
       @sprites["background"].speed = 4 if i == 4
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # wraps glow around trainer
     16.times do
@@ -1024,7 +1018,7 @@ class SunMoonBattleTransitions
       @sprites["glow"].y -= @viewport.height/16
       @sprites["glow2"].src_rect.height += @viewport.height/16
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # flashes viewport
     @viewport.color = Color.new(255,255,255,0)
@@ -1034,7 +1028,7 @@ class SunMoonBattleTransitions
         @sprites["glow2"].tone.all += 32
       end
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # party line up animation
     if @scene.battle.trainerBattle?
@@ -1054,12 +1048,12 @@ class SunMoonBattleTransitions
       @viewport.color.alpha += 32
       @sprites["trainer_"].tone.all += 255.0/4
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     4.times do
       @viewport.color.alpha += 32
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # returns everything to normal
     for i in 0...8
@@ -1067,8 +1061,7 @@ class SunMoonBattleTransitions
       @sprites["trainer_"].tone.all -= 255.0/8 if @sprites["trainer_"].tone.all > 0
       @sprites["shade"].opacity += 32
       @sprites["shade"].x -= 4
-      self.update
-      Graphics.update
+      waiter.graphics_update
     end
   end
   #-----------------------------------------------------------------------------
@@ -1092,6 +1085,7 @@ class SunMoonBattleTransitions
     obmp = pbBitmap("Graphics/EBDX/Transitions/Common/ballTransition")
     @sprites["background"].speed = 24
     # zooms in ball graphic overlay
+    waiter = EbdxWaiter.new
     for i in 0..20
       @sprites["overlay"].bitmap.clear
       ox = (1 - zoom)*viewport.width*0.5
@@ -1106,7 +1100,7 @@ class SunMoonBattleTransitions
       @sprites["overlay"].opacity += 64
       zoom -= 4.0/20
       self.update
-      Graphics.update
+      waiter.graphics_update
     end
     # disposes of current sprites
     self.dispose
@@ -1164,7 +1158,7 @@ class SunMoonBattleTransitions
   #-----------------------------------------------------------------------------
   def color; end
   def color=(val); end
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   #-----------------------------------------------------------------------------
   # fetches secondary parameters for the animations
   #-----------------------------------------------------------------------------
@@ -1282,25 +1276,26 @@ class ClassicVSSequence
   #-----------------------------------------------------------------------------
   def start
     return if self.disposed?
+    waiter = EbdxWaiter.new
     for i in 0...16.delta_add
       @sprites["backdrop"].opacity += 32/self.delta if @sprites["backdrop"].opacity < 255
       @sprites["streak"].x -= (@viewport.width/8)/self.delta if @sprites["streak"].x > 0
       @sprites["streak"].x = 0 if @sprites["streak"].x < 0
       @sprites["trainer"].x -= (@viewport.width/16)/self.delta
-      self.wait
+      waiter.wait
     end
     @sprites["backdrop"].opacity = 255
     @sprites["trainer"].x = (@viewport.width - 40) + @viewport.width%16
-    self.wait(4.delta_add)
+    waiter.wait(4)
     8.delta_add.times do
       @sprites["vs"].zoom -= (1.0/8)/self.delta
       @sprites["vs"].opacity += 32/self.delta
-      self.wait
+      waiter.wait
     end
     @sprites["vs"].zoom = 1
     @sprites["vs"].opacity = 255
     self.show
-    self.wait((Graphics.frame_rate*2).round)
+    waiter.wait(80)
     self.finish
   end
   #-----------------------------------------------------------------------------
@@ -1337,10 +1332,11 @@ class ClassicVSSequence
   #-----------------------------------------------------------------------------
   def finish
     return if self.disposed?
+    waiter = EbdxWaiter.new
     @viewport.color = Color.new(0, 0, 0, 0)
     16.delta_add.times do
       @viewport.color.alpha += 32/self.delta
-      self.wait
+      waiter.wait
     end
     @viewport.color = Color.black
     self.dispose
@@ -1361,41 +1357,6 @@ class ClassicVSSequence
   #-----------------------------------------------------------------------------
   def color; end
   def color=(val); end
-  def delta; return Graphics.frame_rate/40.0; end
-  #-----------------------------------------------------------------------------
-  #  wait for frame skip
-  #-----------------------------------------------------------------------------
-  def wait_old(frames = 1)
-    frames.times do
-      self.update
-      Graphics.update
-    end
-  end
-  # duration is in seconds
-  def pbWaitFix(duration)
-    timer_start = System.uptime
-    until System.uptime - timer_start >= duration
-      # do sth
-      self.update
-      Graphics.update
-    end
-  end
-  def wait(frames = 1)
-    mult = Graphics.frame_rate/$EliteBattleTargetFramerate
-    frames = frames * mult
-
-    if EliteBattle::USE_DELTA_TIME_HOTFIX
-      if frames <= 0
-        self.update
-        Graphics.update
-      else 
-        duration = frames.to_f / Graphics.frame_rate
-        duration = 0.01 if duration <= 0
-        pbWaitFix(duration)
-      end
-    else
-      wait_old(frames)
-    end
-  end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   #-----------------------------------------------------------------------------
 end

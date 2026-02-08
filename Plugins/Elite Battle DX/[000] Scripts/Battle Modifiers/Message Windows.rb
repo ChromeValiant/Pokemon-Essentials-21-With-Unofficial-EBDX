@@ -13,11 +13,10 @@ module EliteBattle
     cmdwindow.x = Graphics.width - cmdwindow.width
     cmdwindow.z = 99999
     # main loop
+	waiter = EbdxWaiter.new # http404error change :)
     loop do
       # updates graphics, input and OW
-      Graphics.update
-      Input.update
-      pbUpdateSceneMap
+      waiter.wait # http404error change :)
       # updates the two windows
       cmdwindow.update
       msgwindow.update if !msgwindow.nil?
@@ -216,7 +215,6 @@ class Battle::Scene
           return cw.index
         end
       end
-      #pbWait(1)
     end
     pbShowAllDataboxes
   end
@@ -261,8 +259,8 @@ class Battle::Scene
     window.x = Graphics.width - window.width
     pbPlayDecisionSE()
     loop do
-      Graphics.update
-      Input.update
+      pbGraphicsUpdate # http404error fix
+      pbInputUpdate # http404error fix
       window.update
       animateScene
       if Input.trigger?(Input::C)

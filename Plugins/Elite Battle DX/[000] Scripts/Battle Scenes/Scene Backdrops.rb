@@ -292,11 +292,11 @@ class BattleSceneRoom
       @toggle *= -1 if @wind < 65 || (@wind >= 70 && @toggle < 0)
     else
       @wWait += 1
-      if @wWait > Graphics.frame_rate*5
+      if @wWait > Graphics.ebdx_frame_rate*5
         mod = @toggle*(2 + (@wind >= 88 && @wind <= 92 ? 2 : 0))
         @wind -= mod
         @toggle *= -1 if @wind <= 80 || @wind >= 100
-        @wWait = 0 if @wWait > Graphics.frame_rate*5 + 33
+        @wWait = 0 if @wWait > Graphics.ebdx_frame_rate*5 + 33
       end
     end
     # additional metrics
@@ -472,97 +472,72 @@ class BattleSceneRoom
       eval("delete" + wth[0]) unless proceed
       eval("draw"  + wth[0]) if proceed
     end
-    @weather = @battle.pbWeather # credit: Ghasty_001
   end
   #-----------------------------------------------------------------------------
   # frame update for the weather particles
   #-----------------------------------------------------------------------------
-  # optimization tip from Ghasty_001
   def updateWeather
-    self.setWeather if @weather != @battle.pbWeather
-    if @weather == :Hail
-      # snow particles
-      for j in 0...72
-        next if !@sprites["w_snow#{j}"]
-        if @sprites["w_snow#{j}"].opacity <= 0
-          z = rand(32)
-          @sprites["w_snow#{j}"].param = 0.24 + 0.01*rand(z/2)
-          @sprites["w_snow#{j}"].ey = -rand(64)
-          @sprites["w_snow#{j}"].ex = 32 + rand(@sprites["bg"].bitmap.width - 64)
-          @sprites["w_snow#{j}"].end_x = @sprites["w_snow#{j}"].ex
-          @sprites["w_snow#{j}"].toggle = rand(2) == 0 ? 1 : -1
-          @sprites["w_snow#{j}"].speed = 1 + 2/((rand(5) + 1)*0.4)
-          @sprites["w_snow#{j}"].z = z - (@focused ? 0 : 100)
-          @sprites["w_snow#{j}"].opacity = 255
-        end
-        min = @sprites["bg"].bitmap.height/4
-        max = @sprites["bg"].bitmap.height/2
-        scale = (2*Math::PI)/((@sprites["w_snow#{j}"].bitmap.width/64.0)*(max - min) + min)
-        @sprites["w_snow#{j}"].opacity -= @sprites["w_snow#{j}"].speed/self.delta
-        @sprites["w_snow#{j}"].ey += [1, @sprites["w_snow#{j}"].speed/self.delta].max
-        @sprites["w_snow#{j}"].ex = @sprites["w_snow#{j}"].end_x + @sprites["w_snow#{j}"].bitmap.width*0.25*Math.sin(@sprites["w_snow#{j}"].ey*scale)*@sprites["w_snow#{j}"].toggle
+    self.setWeather
+    harsh = [:HEAVYRAIN, :HARSHSUN].include?(@battle.pbWeather)
+    # snow particles
+    for j in 0...72
+      next if !@sprites["w_snow#{j}"]
+      if @sprites["w_snow#{j}"].opacity <= 0
+        z = rand(32)
+        @sprites["w_snow#{j}"].param = 0.24 + 0.01*rand(z/2)
+        @sprites["w_snow#{j}"].ey = -rand(64)
+        @sprites["w_snow#{j}"].ex = 32 + rand(@sprites["bg"].bitmap.width - 64)
+        @sprites["w_snow#{j}"].end_x = @sprites["w_snow#{j}"].ex
+        @sprites["w_snow#{j}"].toggle = rand(2) == 0 ? 1 : -1
+        @sprites["w_snow#{j}"].speed = 1 + 2/((rand(5) + 1)*0.4)
+        @sprites["w_snow#{j}"].z = z - (@focused ? 0 : 100)
+        @sprites["w_snow#{j}"].opacity = 255
       end
-    elsif @weather == :Rain || @weather == :HeavyRain
-      harsh = [:HEAVYRAIN].include?(@battle.pbWeather)
-      # rain particles
-      for j in 0...72
-        next if !@sprites["w_rain#{j}"]
-        if @sprites["w_rain#{j}"].opacity <= 0
-          z = rand(32)
-          @sprites["w_rain#{j}"].param = 0.24 + 0.01*rand(z/2)
-          @sprites["w_rain#{j}"].ox = 0
-          @sprites["w_rain#{j}"].ey = -rand(64)
-          @sprites["w_rain#{j}"].ex = 32 + rand(@sprites["bg"].bitmap.width - 64)
-          @sprites["w_rain#{j}"].speed = 3 + 2/((rand(5) + 1)*0.4)
-          @sprites["w_rain#{j}"].z = z - (@focused ? 0 : 100)
-          @sprites["w_rain#{j}"].opacity = 255
-        end
-        @sprites["w_rain#{j}"].opacity -= @sprites["w_rain#{j}"].speed*(harsh ? 3 : 2)/self.delta
-        @sprites["w_rain#{j}"].ox += [1, @sprites["w_rain#{j}"].speed*(harsh ? 8 : 6)/self.delta].max
+      min = @sprites["bg"].bitmap.height/4
+      max = @sprites["bg"].bitmap.height/2
+      scale = (2*Math::PI)/((@sprites["w_snow#{j}"].bitmap.width/64.0)*(max - min) + min)
+      @sprites["w_snow#{j}"].opacity -= @sprites["w_snow#{j}"].speed/self.delta
+      @sprites["w_snow#{j}"].ey += [1, @sprites["w_snow#{j}"].speed/self.delta].max
+      @sprites["w_snow#{j}"].ex = @sprites["w_snow#{j}"].end_x + @sprites["w_snow#{j}"].bitmap.width*0.25*Math.sin(@sprites["w_snow#{j}"].ey*scale)*@sprites["w_snow#{j}"].toggle
+    end
+    # rain particles
+    for j in 0...72
+      next if !@sprites["w_rain#{j}"]
+      if @sprites["w_rain#{j}"].opacity <= 0
+        z = rand(32)
+        @sprites["w_rain#{j}"].param = 0.24 + 0.01*rand(z/2)
+        @sprites["w_rain#{j}"].ox = 0
+        @sprites["w_rain#{j}"].ey = -rand(64)
+        @sprites["w_rain#{j}"].ex = 32 + rand(@sprites["bg"].bitmap.width - 64)
+        @sprites["w_rain#{j}"].speed = 3 + 2/((rand(5) + 1)*0.4)
+        @sprites["w_rain#{j}"].z = z - (@focused ? 0 : 100)
+        @sprites["w_rain#{j}"].opacity = 255
       end
-    elsif @weather == :AcidRain
-      # acid rain particles
-      for j in 0...72
-        next if !@sprites["w_acid_rain#{j}"]
-        if @sprites["w_acid_rain#{j}"].opacity <= 0
-          z = rand(32)
-          @sprites["w_acid_rain#{j}"].param = 0.24 + 0.01*rand(z/2)
-          @sprites["w_acid_rain#{j}"].ox = 0
-          @sprites["w_acid_rain#{j}"].ey = -rand(64)
-          @sprites["w_acid_rain#{j}"].ex = 32 + rand(@sprites["bg"].bitmap.width - 64)
-          @sprites["w_acid_rain#{j}"].speed = 3 + 2/((rand(5) + 1)*0.4)
-          @sprites["w_acid_rain#{j}"].z = z - (@focused ? 0 : 100)
-          @sprites["w_acid_rain#{j}"].opacity = 255
-        end
-        @sprites["w_acid_rain#{j}"].opacity -= @sprites["w_acid_rain#{j}"].speed*2/self.delta
-        @sprites["w_acid_rain#{j}"].ox += [1, @sprites["w_acid_rain#{j}"].speed*6/self.delta].max
+      @sprites["w_rain#{j}"].opacity -= @sprites["w_rain#{j}"].speed*(harsh ? 3 : 2)/self.delta
+      @sprites["w_rain#{j}"].ox += [1, @sprites["w_rain#{j}"].speed*(harsh ? 8 : 6)/self.delta].max
+    end
+    # sun particles
+    for j in 0...3
+      next if !@sprites["w_sunny#{j}"]
+      #next if j > @shine["count"]/6
+      @sprites["w_sunny#{j}"].zoom_x += 0.04*[0.5, 0.8, 0.7][j]/self.delta
+      @sprites["w_sunny#{j}"].zoom_y += 0.03*[0.5, 0.8, 0.7][j]/self.delta
+      @sprites["w_sunny#{j}"].opacity += (@sprites["w_sunny#{j}"].zoom_x < 1 ? 8 : -12)/self.delta
+      if @sprites["w_sunny#{j}"].opacity <= 0
+        @sprites["w_sunny#{j}"].zoom_x = 0
+        @sprites["w_sunny#{j}"].zoom_y = 0
+        @sprites["w_sunny#{j}"].opacity = 0
       end
-    elsif @weather == :Sun || @weather == :HarshSun || @sunny
-      harsh = [:HARSHSUN].include?(@battle.pbWeather)
-      # sun particles
-      for j in 0...3
-        next if !@sprites["w_sunny#{j}"]
-        #next if j > @shine["count"]/6
-        @sprites["w_sunny#{j}"].zoom_x += 0.04*[0.5, 0.8, 0.7][j]/self.delta
-        @sprites["w_sunny#{j}"].zoom_y += 0.03*[0.5, 0.8, 0.7][j]/self.delta
-        @sprites["w_sunny#{j}"].opacity += (@sprites["w_sunny#{j}"].zoom_x < 1 ? 8 : -12)/self.delta
-        if @sprites["w_sunny#{j}"].opacity <= 0
-          @sprites["w_sunny#{j}"].zoom_x = 0
-          @sprites["w_sunny#{j}"].zoom_y = 0
-          @sprites["w_sunny#{j}"].opacity = 0
-        end
-      end
-    elsif @weather == :Sandstorm
-      # sandstorm particles
-      for j in 0...2
-        next if !@sprites["w_sand#{j}"]
-        @sprites["w_sand#{j}"].update
-      end
-      # fog particles
-      for j in 0...2
-        next if !@sprites["w_fog#{j}"]
-        @sprites["w_fog#{j}"].update
-      end
+    end
+    # sandstorm particles
+    for j in 0...2
+      next if !@sprites["w_sand#{j}"]
+      @sprites["w_sand#{j}"].update
+    end
+    # fog particles
+    for j in 0...2
+      next if !@sprites["w_fog#{j}"]
+      @sprites["w_fog#{j}"].update
     end
   end
   #-----------------------------------------------------------------------------
@@ -1005,7 +980,7 @@ class BattleSceneRoom
   #-----------------------------------------------------------------------------
   # battler sprite positioning
   #-----------------------------------------------------------------------------
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   def scale_y; return @sprites["bg"].zoom_y; end
   def battler(i); return @sprites["battler#{i}"]; end
   def trainer(i); return @sprites["trainer_#{i}"]; end

@@ -1,24 +1,62 @@
 #===============================================================================
 #  Main battle animation processing
 #===============================================================================
+
+# http404error's EBDX timing fix
+# Due to v21 pbWait now calling Graphics.update as fast as the game FPS, the timing of pbWait gets
+# disrupted during more visually complex EBDX animations because that update ends up taking a
+# measurable amount of extra time per frame.
+# Therefore, for these animations, track the total elapsed time instead, to prevent accumulated error.
+# Well, there will still be accumulated float addition error, but, you know...
+class EbdxWaiter
+  def initialize
+    @each_duration = 0.025 # 1/40
+    @timer_end = System.uptime
+  end
+
+  def wait(frames = 1, accept_input = true, intro_anim = true)
+    @timer_end += frames * @each_duration
+    #echoln "We are overdue already! @timer_end: #{@timer_end}" if System.uptime >= @timer_end
+    until System.uptime >= @timer_end
+      Graphics.update
+      Input.update if accept_input
+      pbUpdateSceneMap if intro_anim
+    end
+  end
+
+  def graphics_update(frames = 1)
+    @timer_end += frames * @each_duration
+    until System.uptime >= @timer_end
+      Graphics.update
+    end
+  end
+
+  def is_too_stale?
+    if System.uptime >= @timer_end + 2.0
+      echoln "snapped time!" 
+      print_me
+    end
+    return System.uptime >= @timer_end + 2.0 # if too long since last wait ended, for some reason, snap to present
+  end
+
+  def print_me
+    echoln "timer end: #{@timer_end}"
+    echoln "uptime: #{System.uptime}"
+  end
+end
+
+# I don't know why Graphics.frame_rate is sometimes different on different devices. It doesn't seem tied to the actual monitor refresh or power level of the computer.
+module Graphics
+  def self.ebdx_frame_rate
+    return 40
+  end
+end
+
 alias pbBattleAnimation_ebdx pbBattleAnimation unless defined?(pbBattleAnimation_ebdx)
 def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   $game_temp.in_battle = true
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
   viewport.z = 99999
-   
-  multFPS = 1/Graphics.frame_rate
-  multFPS = 0.01 if multFPS <= 0
-  # flashes viewport to gray a few times.
-   viewport.color = Color.white
-   2.times do
-     viewport.color.alpha = 0
-     for i in 0...16.delta_add
-       viewport.color.alpha += (32 * (i < 8.delta_add ? 1 : -1)).delta_sub(false)
-       pbWait(multFPS)
-     end
-   end
-   viewport.color.alpha = 0
 
   # Set up audio
   playingBGS = nil
@@ -33,6 +71,7 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
       $game_system.bgm_position = $game_temp.memorized_bgm_position
     end
   end
+
   # Play battle music
   # checks if battle BGM is registered for species or trainer
   mapBGM = EliteBattle.get_map_data(:BGM)
@@ -45,6 +84,19 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   bgm = trBGM if !trBGM.nil?
   bgm = pbGetWildBattleBGM([]) if !bgm
   pbBGMPlay(bgm)
+   
+  # flashes viewport to gray a few times.
+  waiter = EbdxWaiter.new
+  viewport.color = Color.white
+  2.times do
+    viewport.color.alpha = 0
+    for i in 0...16.delta_add
+      viewport.color.alpha += (32 * (i < 8.delta_add ? 1 : -1)).delta_sub(false)
+      waiter.wait
+    end
+  end
+  viewport.color.alpha = 0
+
   # Determine location of battle
   location = 0   # 0=outside, 1=inside, 2=cave, 3=water
   if $PokemonGlobal.surfing || $PokemonGlobal.diving
@@ -131,10 +183,9 @@ end
   # Fade back to the overworld in 0.4 seconds
   viewport.color = Color.black
   timer_start = System.uptime
+  waiter = EbdxWaiter.new
   loop do
-    Graphics.update
-    Input.update
-    pbUpdateSceneMap
+    waiter.wait
     viewport.color.alpha = 255 * (1 - ((System.uptime - timer_start) / 0.4))
     break if viewport.color.alpha <= 0
   end
@@ -158,9 +209,7 @@ def pbBattleAnimationOriginal(bgm = nil, battletype = 0, foe = nil)
   end
   # stops currently playing ME
   pbMEFade(0.25)
-  multFPS2 = 8/Graphics.frame_rate
-  multFPS2 = 0.01 if multFPS2 <= 0
-  pbWait(multFPS2)
+  pbWait(0.25)
   pbMEStop
   # checks if battle BGM is registered for species or trainer
   mapBGM = EliteBattle.get_map_data(:BGM)
@@ -180,13 +229,12 @@ def pbBattleAnimationOriginal(bgm = nil, battletype = 0, foe = nil)
   viewport.z = 99999
   # flashes viewport to gray a few times.
   viewport.color = Color.white
-  multFPS =1/Graphics.frame_rate
-  multFPS = 0.01 if multFPS <= 0
+  waiter = EbdxWaiter.new
   2.times do
     viewport.color.alpha = 0
     for i in 0...16.delta_add
       viewport.color.alpha += (32 * (i < 8.delta_add ? 1 : -1)).delta_sub(false)
-      pbWait(multFPS)
+      waiter.wait
     end
   end
   viewport.color.alpha = 0
@@ -218,11 +266,10 @@ def pbBattleAnimationOriginal(bgm = nil, battletype = 0, foe = nil)
   $PokemonEncounters.reset_step_count
   # fades in viewport
   viewport.color = Color.new(0, 0, 0)
+  waiter = EbdxWaiter.new
   for j in 0...16
     viewport.color.alpha -= 32.delta_sub(false)
-    Graphics.update
-    Input.update
-    pbUpdateSceneMap
+    waiter.wait
   end
   viewport.color.alpha = 0
   viewport.dispose

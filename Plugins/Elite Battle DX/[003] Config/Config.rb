@@ -84,7 +84,7 @@ module EliteBattle
   USE_DELTA_TIME_HOTFIX = false
 
   #Target framerate to check the current Graphics.frame_rate. Duration for pbWait is calculated by frames / current fps and the multiplier by current fps / target rate. 60/60 = 1 so mult doesn't apply.
-  DEFAULT_FRAMERATE = 60
+  DEFAULT_FRAMERATE = 40
 
   # Apply extra offsets based to pbShowOpponent and pbHideOpponent (still in test).
   USE_TRAINER_OUT_OF_PLACE_HOTFIX = true

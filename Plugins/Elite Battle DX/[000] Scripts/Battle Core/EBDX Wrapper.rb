@@ -48,7 +48,7 @@ class BitmapEBDX
   #-----------------------------------------------------------------------------
   #  returns proper object values when requested
   #-----------------------------------------------------------------------------
-  def delta; return Graphics.frame_rate/40.0; end
+  def delta; return Graphics.ebdx_frame_rate/40.0; end
   def length; return @totalFrames; end
   def disposed?; return @bitmaps.length < 1; end
   def dispose

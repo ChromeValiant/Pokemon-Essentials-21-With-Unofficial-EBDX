@@ -127,7 +127,7 @@ class AnimatedSprite < Sprite
     @animname = pbBitmapName(animname)
     @realframes = 0
     @frameskip = [1, frameskip].max
-    @frameskip *= Graphics.frame_rate / 20
+    @frameskip *= Graphics.ebdx_frame_rate / 20
     raise _INTL("Frame width is 0") if framewidth == 0
     raise _INTL("Frame height is 0") if frameheight == 0
     begin
@@ -160,7 +160,7 @@ class AnimatedSprite < Sprite
     @animname = pbBitmapName(animname)
     @realframes = 0
     @frameskip = [1, frameskip].max
-    @frameskip *= Graphics.frame_rate / 20
+    @frameskip *= Graphics.ebdx_frame_rate / 20
     begin
       @animbitmap = AnimatedBitmap.new(animname).deanimate
     rescue

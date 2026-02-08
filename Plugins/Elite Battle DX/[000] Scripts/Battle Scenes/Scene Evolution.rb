@@ -87,10 +87,8 @@ class PokemonEvolutionScene
     @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z = 99999
     @viewport.color = Color.new(0,0,0,0)
-    # initial fading transition
-    multFPS = 8/Graphics.frame_rate
-    multFPS = 0.01 if multFPS <= 0
-    16.times { @viewport.color.alpha += 16; pbWait(multFPS) }
+    # initial fading transition - all waits removed...
+    16.times { @viewport.color.alpha += 16 }
     # initializes bars for cutting the screen off
     @sprites["bar1"] = Sprite.new(@viewport)
     @sprites["bar1"].create_rect(@viewport.width,@viewport.height/2,Color.black)
@@ -213,13 +211,14 @@ class PokemonEvolutionScene
   def pbEndScreen
     $game_temp.message_window_showing = false if $game_temp
     @viewport.color = Color.new(0,0,0,0)
+    waiter = EbdxWaiter.new
     16.times do
-      Graphics.update
+      waiter.graphics_update
       self.update
       @viewport.color.alpha += 16
     end
     pbDisposeSpriteHash(@sprites)
-    16.times { @viewport.color.alpha -= 16; Graphics.update }
+    16.times { @viewport.color.alpha -= 16; waiter.graphics_update }
     @viewport.dispose
   end
   #-----------------------------------------------------------------------------
@@ -228,8 +227,9 @@ class PokemonEvolutionScene
   def glow
     t = 0
     pbSEPlay("Anim/Ice1")
+    waiter = EbdxWaiter.new
     16.times do
-      Graphics.update
+      waiter.graphics_update
       self.update(false)
       @sprites["shine"].zoom_x += 0.08
       @sprites["shine"].zoom_y += 0.08
@@ -240,7 +240,7 @@ class PokemonEvolutionScene
       @sprites["bar2"].y -= 3
     end
     16.times do
-      Graphics.update
+      waiter.graphics_update
       self.update(false)
       @sprites["shine"].zoom_x -= 0.02
       @sprites["shine"].zoom_y -= 0.02
@@ -266,8 +266,9 @@ class PokemonEvolutionScene
     @sprites[srt].zoom_x = 1
     @sprites[srt].zoom_y = 1
     @sprites[srt].tone = Tone.new(0,0,0)
+    waiter = EbdxWaiter.new
     for i in 0...(cancel ? 32 : 64)
-      Graphics.update
+      waiter.graphics_update
       @viewport.color.alpha -= cancel ? 8 : 4
       self.update(true,true)
     end
@@ -289,7 +290,7 @@ class PokemonEvolutionScene
       @sprites["p#{j}"].speed = 2 + rand(5)
     end
     for i in 0...64
-      Graphics.update
+      waiter.graphics_update
       self.update
       for j in 0...64
         @sprites["p#{j}"].opacity += (i < 32 ? 2 : -2)*@sprites["p#{j}"].speed
@@ -307,8 +308,9 @@ class PokemonEvolutionScene
   def pbEvolution(cancancel = true)
     # stops BGM and displays message
     pbBGMStop()
+    waiter = EbdxWaiter.new
     16.times do
-      Graphics.update
+      waiter.graphics_update
       self.update
       @sprites["bar1"].y -= @sprites["bar1"].bitmap.height/16
       @sprites["bar2"].y += @sprites["bar2"].bitmap.height/16
@@ -320,7 +322,7 @@ class PokemonEvolutionScene
     @sprites["msgwindow"].visible = false
     # plays Pokemon's cry
     GameData::Species.play_cry(@pokemon)
-    GameData::Species.cry_length(@pokemon.species, @pokemon.form).ceil.times { Graphics.update; self.update }
+    GameData::Species.cry_length(@pokemon.species, @pokemon.form).ceil.times { waiter.graphics_update; self.update }
     pbBGMPlay("EBDX/Evolution")
     canceled = false
     # beginning glow effect
@@ -335,7 +337,7 @@ class PokemonEvolutionScene
       k1 *= -1 if i%(32/s) == 0
       k2 *= -1 if i%(16) == 0
       s *= 2 if i%64 == 0 && i > 0 && s < 8
-      Graphics.update
+      waiter.graphics_update
       Input.update
       self.update(false)
       self.updateParticles
@@ -389,8 +391,9 @@ class PokemonEvolutionScene
     # plays Pokemon's cry
     pbBGMStop()
     GameData::Species.play_cry_from_species(@newspecies)
+    waiter = EbdxWaiter.new
     frames.times do
-      Graphics.update
+      waiter.graphics_update
       self.update
     end
     pbMEPlay("EBDX/Capture Success")
@@ -399,7 +402,7 @@ class PokemonEvolutionScene
     newspeciesname = GameData::Species.get(@newspecies).name
     oldspeciesname = GameData::Species.get(@pokemon.species).name
     @sprites["msgwindow"].visible = true
-    pbMessageDisplay(@sprites["msgwindow"], _INTL("\\se[]Congratulations! Your {1} evolved into {2}!\\wt[80]", @pokemon.name, newspeciesname)) { self.update }
+    pbMessageDisplay(@sprites["msgwindow"], _INTL("\\se[]Congratulations! Your {1} evolved into {2}!\\wt[80]", @pokemon.name, newspeciesname)){ self.update }
     @sprites["msgwindow"].text = ""
     # Check for consumed item and check if Pokémon should be duplicated
     pbEvolutionMethodAfterEvolution

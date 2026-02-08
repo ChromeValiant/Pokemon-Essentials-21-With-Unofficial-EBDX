@@ -193,7 +193,7 @@ class Battle::Scene
     vector = EliteBattle.get_vector(:MAIN, @battle)
     @vector.force
     @vector.set(vector)
-    mult = Graphics.frame_rate/$EliteBattleTargetFramerate
+    mult = Graphics.ebdx_frame_rate/EliteBattle::DEFAULT_FRAMERATE 
     @vector.inc = 0.1 * mult
     # fade necessary sprites into scene
     for i in 0...22.delta_add
@@ -340,7 +340,9 @@ class Battle::Scene
   #  updates scene graphics
   #-----------------------------------------------------------------------------
   def pbGraphicsUpdate
-    Graphics.update
+    #Graphics.update
+    @waiter = EbdxWaiter.new if !@waiter || @waiter.is_too_stale?
+    @waiter.graphics_update
   end
   def pbUpdate(cw = nil)
     pbGraphicsUpdate

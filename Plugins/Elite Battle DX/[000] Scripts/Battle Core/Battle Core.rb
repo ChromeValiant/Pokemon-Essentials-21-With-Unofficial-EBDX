@@ -154,6 +154,7 @@ class Battle
   def pbCommandPhase
     # displays trainer dialogue if applicable
     @scene.pbTrainerBattleSpeech("turnStart", "rand")
+	@scene.pbTrainerBattleSpeech("everyTurnStart") # http404error addition :)
     pbCommandPhase_ebdx
     @scene.idleTimer = -1
   end
@@ -165,6 +166,7 @@ class Battle
     ret = pbEndOfRoundPhase_ebdx
     # displays trainer dialogue if applicable
     @scene.pbTrainerBattleSpeech("turnEnd", "rand")
+	@scene.pbTrainerBattleSpeech("everyTurnEnd") # http404error addition :)
     return ret
   end
   #-----------------------------------------------------------------------------
@@ -199,8 +201,21 @@ class Battle
     @scene.pbTrainerBattleSpeech("loss") if @decision == 2
     ret = pbEndOfBattle_ebdx
     # reset all the EBDX queues
-    EliteBattle.reset(:nextBattleScript, :wildSpecies, :wildLevel, :wildForm, :nextBattleBack, :nextUI, :nextBattleData,
-                     :wildSpecies, :wildLevel, :wildForm, :setBoss, :cachedBattler, :tviewport)
+    EliteBattle.reset(
+      :nextBattleScript,
+      :wildSpecies,
+      :wildLevel,
+      :wildForm,
+      :nextBattleBack,
+      :nextUI,
+      :nextBattleData,
+      :wildSpecies,
+      :wildLevel,
+      :wildForm,
+      :setBoss,
+      :cachedBattler,
+      :tviewport
+    )
     EliteBattle.set(:setBoss, false)
     EliteBattle.set(:colorAlpha, 0)
     EliteBattle.set(:smAnim, false)

@@ -136,8 +136,9 @@ class PokemonEggHatch_Scene
     # stops BGM and displays message
     pbBGMStop()
     pbMEPlay("EBDX/Evolution Start")
+    waiter = EbdxWaiter.new
     16.times do
-      Graphics.update
+      waiter.graphics_update
       self.update
       @sprites["bar1"].y -= @sprites["bar1"].bitmap.height/16
       @sprites["bar2"].y += @sprites["bar2"].bitmap.height/16
@@ -255,7 +256,7 @@ class PokemonEggHatch_Scene
     pbBGMStop()
     GameData::Species.play_cry(@pokemon)
     frames.times do
-      Graphics.update
+      waiter.graphics_update
       self.update
     end
     pbMEPlay("EBDX/Capture Success")
@@ -276,38 +277,39 @@ class PokemonEggHatch_Scene
   # frame wait function
   #-----------------------------------------------------------------------------
   def wait_old(frames = 1)
+    waiter = EbdxWaiter.new
     frames.times do
-      Graphics.update
+      waiter.graphics_update
       self.update
     end
   end
 
   # duration is in seconds
-  def pbWaitFix(duration)
-    timer_start = System.uptime
-    until System.uptime - timer_start >= duration
-      # do sth
-      self.update
-      Graphics.update
-    end
-  end
+  # def pbWaitFix(duration)
+  #   timer_start = System.uptime
+  #   until System.uptime - timer_start >= duration
+  #     # do sth
+  #     self.update
+  #     Graphics.update
+  #   end
+  # end
 
   def wait(frames = 1)
-    mult = Graphics.frame_rate/$EliteBattleTargetFramerate
-    frames = frames * mult
+    # mult = Graphics.ebdx_frame_rate/EliteBattle::DEFAULT_FRAMERATE 
+    # frames = frames * mult
     
-    if EliteBattle::USE_DELTA_TIME_HOTFIX
-      if frames <= 0
-        self.update
-        Graphics.update
-      else  
-        duration = frames.to_f / Graphics.frame_rate
-        duration = 0.01 if duration <= 0
-        pbWaitFix(duration)
-      end 
-    else
+    # if EliteBattle::USE_DELTA_TIME_HOTFIX
+    #   if frames <= 0
+    #     self.update
+    #     Graphics.update
+    #   else  
+    #     duration = frames.to_f / Graphics.ebdx_frame_rate
+    #     duration = 0.01 if duration <= 0
+    #     pbWaitFix(duration)
+    #   end 
+    # else
       wait_old(frames)
-    end
+    # end
   end
   #-----------------------------------------------------------------------------
   # close animation sequence

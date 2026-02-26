@@ -439,7 +439,7 @@ class DataBoxEBDX  <  SpriteWrapper
 		@sprites["textName"].bitmap.font.name = "Truth And Ideals - Fighting Ideals" # H3 edit
 		@sprites["textName"].bitmap.font.size = 24 # H3 edit
 	end
-    pbDrawOutlineText(@sprites["textName"].bitmap,18-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,Color.white,Color.new(0,0,0),0)
+    pbDrawOutlineText(@sprites["textName"].bitmap,18-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,Color.new(0,0,0),0)
     # writes the Pokemon's gender
     x = @sprites["textName"].bitmap.text_size(str).width + 18
     str = ""

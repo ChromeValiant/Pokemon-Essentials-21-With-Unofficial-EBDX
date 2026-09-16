@@ -87,7 +87,7 @@ class BagWindowEBDX
     @scene = scene
     @battle = scene.battle
     $lastUsed = 0 if $lastUsed.nil?; @lastUsed = $lastUsed
-    @index = 0; @oldindex = -1; @item = 0; @olditem = -1
+    @index = 0; @oldindex = -1; @item = 0; @olditem = -1; @oldback = false
     @finished = false
     @disposed = true
     @page = -1; @selPocket = 0
@@ -301,61 +301,131 @@ class BagWindowEBDX
     end
     @sprites["name"].x += @sprites["name"].width/10 if @sprites["name"].x < -24
     @sprites["pocket5"].src_rect.y += 1 if @sprites["pocket5"].src_rect.y < 0
-    # process item selection
-    if Input.trigger?(Input::LEFT) && !@back
-      if ![0, 2, 4].include?(@item)
-        @item -= (@item%2 == 0) ? 5 : 1
-      else
-        @item -= 1 if @item < 0
+
+    # Mouse and keyboard input action support
+    start_idx = @page * 6
+    end_idx = [start_idx + 6, @pocket.length].min
+    
+    # Check if page scrolling/sliding is currently animating
+    animating = false
+    for i in start_idx...end_idx
+      target_x = @xpos[i] - @page * @viewport.width
+      if (@items["#{i}"].x - target_x).abs > 16
+        animating = true
+        break
       end
-      @item = 0 if @item < 0
-    elsif Input.trigger?(Input::RIGHT) && !@back
-      if @page < (@pocket.length)/6
-        @item += (@item%2 == 1) ? 5 : 1
-      else
-        @item += 1 if @item < @pocket.length - 1
-      end
-      @item = @pocket.length - 1 if @item > @pocket.length - 1
-    elsif Input.trigger?(Input::UP)
-      if @back
-        @item += 4 if (@item%6) < 2
-        @back = false
-      else
-        @item -= 2
-        if (@item%6) > 3
-          @item += 6
-          @back = true
-        end
-      end
-      @item = 0 if @item < 0
-      @item = @pocket.length-1 if @item > @pocket.length-1
-      @sprites["pocket5"].src_rect.y -= 6 if @back
-    elsif Input.trigger?(Input::DOWN)
-      if @back
-        @item -= 4 if (@item%6) > 3
-        @back = false
-      else
-        @item += 2
-        if (@item%6) < 2
-          @item -= 6
-          @back = true
-        end
-        @back = true if @item > @pocket.length - 1
-      end
-      @item = @pocket.length - 1 if @item > @pocket.length - 1
-      @item = 0 if @item < 0
-      @sprites["pocket5"].src_rect.y -= 6 if @back
     end
-    # confirm or cancel input
-    if (@back && Input.trigger?(Input::C)) || Input.trigger?(Input::B)
+
+    buttons = {}
+    buttons[:back] = @sprites["pocket5"]
+    if !animating
+      for i in start_idx...end_idx
+        buttons[i] = @items["#{i}"]
+      end
+    end
+    
+    current_sel = @back ? :back : @item
+    
+    action, val = Mouse::UISelection.input_action(buttons, current_sel)
+    case action
+    when :highlight
+      if val == :back
+        @back = true
+      else
+        @back = false
+        @item = val
+      end
+    when :select
+      if val == :back
+        pbSEPlay("EBDX/SE_Select3")
+        @selPocket = 0
+        @page = -1; @oldindex = -1
+        @back = false; @doubleback = true
+      else
+        self.intoPocket
+      end
+    when :cancel
       pbSEPlay("EBDX/SE_Select3")
       @selPocket = 0
       @page = -1; @oldindex = -1
       @back = false; @doubleback = true
+    when :scroll_up
+      old_item = @item
+      if @back
+        @back = false
+        @item = [(@item / 6 - 1) * 6, 0].max
+      else
+        @item -= 6
+        @item = 0 if @item < 0
+      end
+      @item = 0 if @item < 0
+      @item = @pocket.length - 1 if @item > @pocket.length - 1
+      pbSEPlay("EBDX/SE_Select1") if @item != old_item || @back
+    when :scroll_down
+      old_item = @item
+      if @back
+        @back = false
+        @item = [(@item / 6 + 1) * 6, @pocket.length - 1].min
+      else
+        @item += 6
+        @item = @pocket.length - 1 if @item > @pocket.length - 1
+      end
+      @item = 0 if @item < 0
+      @item = @pocket.length - 1 if @item > @pocket.length - 1
+      pbSEPlay("EBDX/SE_Select1") if @item != old_item || @back
+    end
+
+    if action.nil?
+      # process item selection
+      if Input.trigger?(Input::LEFT) && !@back
+        if ![0, 2, 4].include?(@item)
+          @item -= (@item%2 == 0) ? 5 : 1
+        else
+          @item -= 1 if @item < 0
+        end
+        @item = 0 if @item < 0
+      elsif Input.trigger?(Input::RIGHT) && !@back
+        if @page < (@pocket.length)/6
+          @item += (@item%2 == 1) ? 5 : 1
+        else
+          @item += 1 if @item < @pocket.length - 1
+        end
+        @item = @pocket.length - 1 if @item > @pocket.length - 1
+      elsif Input.trigger?(Input::UP)
+        if @back
+          @item += 4 if (@item%6) < 2
+          @back = false
+        else
+          @item -= 2
+          if (@item%6) > 3
+            @item += 6
+            @back = true
+          end
+        end
+        @item = 0 if @item < 0
+        @item = @pocket.length-1 if @item > @pocket.length-1
+        @sprites["pocket5"].src_rect.y -= 6 if @back
+      elsif Input.trigger?(Input::DOWN)
+        if @back
+          @item -= 4 if (@item%6) > 3
+          @back = false
+        else
+          @item += 2
+          if (@item%6) < 2
+            @item -= 6
+            @back = true
+          end
+          @back = true if @item > @pocket.length - 1
+        end
+        @item = @pocket.length - 1 if @item > @pocket.length - 1
+        @item = 0 if @item < 0
+        @sprites["pocket5"].src_rect.y -= 6 if @back
+      end
     end
     # refresh selected values if index has changed
-    if @item != @olditem
+    if @item != @olditem || @back != @oldback
       @olditem = @item
+      @oldback = @back
       pbSEPlay("EBDX/SE_Select1")
       @sprites["sel"].target(@back ? @sprites["pocket5"] : @items["#{@item}"])
       @items["#{@item}"].src_rect.y -= 6 if !@back
@@ -463,15 +533,44 @@ class BagWindowEBDX
     # start the main input loop
     loop do
       @sprites["#{choice}"].src_rect.y += 1 if @sprites["#{choice}"].src_rect.y < 0
-      # process directional input
-      if Input.trigger?(Input::UP)
-        index -= 1
-        index = 1 if index < 0
-        choice = (index == 0) ? "confirm" : "cancel"
-      elsif Input.trigger?(Input::DOWN)
-        index += 1
-        index = 0 if index > 1
-        choice = (index == 0) ? "confirm" : "cancel"
+      # Mouse hover and click support
+      mouse_acted = false
+      if Mouse::UISelection.active?
+        buttons = {
+          0 => @sprites["confirm"],
+          1 => @sprites["cancel"]
+        }
+        mouse_action = Mouse::UISelection.update_menu(buttons, index)
+        if mouse_action
+          action, val = mouse_action
+          case action
+          when :highlight
+            index = val
+            choice = (index == 0) ? "confirm" : "cancel"
+          when :select
+            pbSEPlay("EBDX/SE_Select2")
+            mouse_acted = true
+            break
+          when :cancel
+            @scene.pbPlayCancelSE()
+            index = 1
+            mouse_acted = true
+            break
+          end
+        end
+      end
+
+      if !mouse_acted
+        # process directional input
+        if Input.trigger?(Input::UP)
+          index -= 1
+          index = 1 if index < 0
+          choice = (index == 0) ? "confirm" : "cancel"
+        elsif Input.trigger?(Input::DOWN)
+          index += 1
+          index = 0 if index > 1
+          choice = (index == 0) ? "confirm" : "cancel"
+        end
       end
       # process change in index
       if index != oldindex
@@ -481,13 +580,15 @@ class BagWindowEBDX
         @sprites["sel"].target(@sprites["#{choice}"])
       end
       # confirmation and cancellation input
-      if Input.trigger?(Input::C)
-        pbSEPlay("EBDX/SE_Select2")
-        break
-      elsif Input.trigger?(Input::B)
-        @scene.pbPlayCancelSE()
-        index = 1
-        break
+      if !mouse_acted
+        if Input.trigger?(Input::C)
+          pbSEPlay("EBDX/SE_Select2")
+          break
+        elsif Input.trigger?(Input::B)
+          @scene.pbPlayCancelSE()
+          index = 1
+          break
+        end
       end
       Input.update
       @sprites["sel"].update
@@ -577,23 +678,46 @@ class BagWindowEBDX
   #-----------------------------------------------------------------------------
   def updateMain
     last = @lastUsed != 0 ? EliteBattle.GetItemID(GameData::Item.get(@lastUsed).id) : 0
-    # move the index around
-    if Input.trigger?(Input::LEFT)
-      @index -= 1
-      @index += 2 if @index%2 == 1
-      @index = 3 if @index == 4 && !(last > 0)
-    elsif Input.trigger?(Input::RIGHT)
-      @index += 1
-      @index -= 2 if @index%2 == 0
-      @index = 2 if @index == 4 && !(last > 0)
-    elsif Input.trigger?(Input::UP)
-      @index -= 2
-      @index += 6 if @index < 0
-      @index = 5 if @index == 4 && !(last > 0)
-    elsif Input.trigger?(Input::DOWN)
-      @index += 2
-      @index -= 6 if @index > 5
-      @index = 5 if @index == 4 && !(last > 0)
+    # set variables
+    @doubleback = false
+    @finished = false
+    buttons = {}
+    for i in 0..5
+      next if i == 4 && !(last > 0)
+      buttons[i] = @sprites["pocket#{i}"]
+    end
+    action, val = Mouse::UISelection.input_action(buttons, @index)
+    case action
+    when :highlight
+      @index = val
+    when :select
+      if @index < 5
+        self.confirm
+      else
+        self.finish
+      end
+    when :cancel
+      self.finish
+    end
+    if action.nil?
+      # move the index around
+      if Input.trigger?(Input::LEFT)
+        @index -= 1
+        @index += 2 if @index%2 == 1
+        @index = 3 if @index == 4 && !(last > 0)
+      elsif Input.trigger?(Input::RIGHT)
+        @index += 1
+        @index -= 2 if @index%2 == 0
+        @index = 2 if @index == 4 && !(last > 0)
+      elsif Input.trigger?(Input::UP)
+        @index -= 2
+        @index += 6 if @index < 0
+        @index = 5 if @index == 4 && !(last > 0)
+      elsif Input.trigger?(Input::DOWN)
+        @index += 2
+        @index -= 6 if @index > 5
+        @index = 5 if @index == 4 && !(last > 0)
+      end
     end
     # play effects on index change
     if @oldindex != @index
@@ -605,15 +729,6 @@ class BagWindowEBDX
     # slide buttons into original position after selector shift
     for i in 0...6
       @sprites["pocket#{i}"].src_rect.y += 1 if @sprites["pocket#{i}"].src_rect.y < 0
-    end
-    # set variables
-    @doubleback = false
-    @finished = false
-    # check if confirm or cancel inputs are pressed
-    if Input.trigger?(Input::C) && !@doubleback && @index < 5
-      self.confirm
-    elsif (Input.trigger?(Input::B) || (Input.trigger?(Input::C) && @index==5)) && @selPocket == 0 && !@doubleback
-      self.finish
     end
   end
   #-----------------------------------------------------------------------------

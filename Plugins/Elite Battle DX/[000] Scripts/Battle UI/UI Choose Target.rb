@@ -3,6 +3,7 @@
 #===============================================================================
 class TargetWindowEBDX
   attr_reader :index
+  attr_reader :buttons
   #-----------------------------------------------------------------------------
   #  PBS metadata
   #-----------------------------------------------------------------------------
@@ -159,6 +160,10 @@ class Battle::Scene
   def pbChooseTarget(idxBattler, target_data, visibleSprites = nil)
     # hide fight menu
     @fightWindow.hidePlay
+    if (@battle.doublebattle? || @battle.triplebattle?) && idxBattler % 2 == 0
+      @vector.inc = 0.2
+      @vector.set(self.getRealVector(idxBattler, true))
+    end
     # Create an array of battler names (only valid targets are named)
     texts = pbCreateTargetTexts(idxBattler,target_data)
     # Determine mode based on targetType
@@ -178,6 +183,29 @@ class Battle::Scene
     loop do
       oldIndex = @targetWindow.index
       pbUpdate
+      # Mouse and keyboard input action support
+      buttons = {}
+      for i in 0...texts.length
+        next if texts[i].nil?
+        buttons[i] = @targetWindow.buttons["#{i}"]
+      end
+      action, val = Mouse::UISelection.input_action(buttons, @targetWindow.index)
+      case action
+      when :highlight
+        if mode == 0
+          @targetWindow.index = val
+          pbSEPlay("EBDX/SE_Select1")
+          pbSelectBattler(@targetWindow.index)
+        end
+      when :select
+        ret = @targetWindow.index
+        pbSEPlay("EBDX/SE_Select1")
+        break
+      when :cancel
+        ret = -1
+        pbPlayCancelSE
+        break
+      end
       # Update selected command
       if mode == 0   # Choosing just one target, can change index
         if Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT)
@@ -206,16 +234,6 @@ class Battle::Scene
       end
       # update window
       @targetWindow.update
-      # confirm input
-      if Input.trigger?(Input::C)
-        ret = @targetWindow.index; pbSEPlay("EBDX/SE_Select1")
-        break
-      end
-      # cancel input
-      if Input.trigger?(Input::B)
-        ret = -1; pbPlayCancelSE
-        break
-      end
     end
     # deselect all sprites and show fight UI if cancelled
     self.pbDeselectAll(ret < 0 ? idxBattler : nil)

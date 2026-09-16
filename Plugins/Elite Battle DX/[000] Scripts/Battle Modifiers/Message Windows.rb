@@ -191,19 +191,17 @@ class Battle::Scene
     loop do
       pbUpdate(cw)
       dw.update
-      if Input.trigger?(Input::B) && defaultValue >= 0
-        if dw.busy?
-          pbPlayDecisionSE() if dw.pausing?
-          dw.resume
-        else
-          pbSEPlay("EBDX/SE_Select2")
-          cw.dispose(self)
-          dw.text = ""
-          pbShowAllDataboxes
-          return defaultValue
-        end
+      # Mouse and keyboard input action support
+      buttons = {}
+      for i in 0...commands.length
+        buttons[i] = cw.sprites["choice#{i}"]
       end
-      if Input.trigger?(Input::C)
+      action, val = Mouse::UISelection.input_action(buttons, cw.index)
+      case action
+      when :highlight
+        cw.index = val
+        pbSEPlay("EBDX/SE_Select1")
+      when :select
         if dw.busy?
           pbPlayDecisionSE() if dw.pausing?
           dw.resume
@@ -213,6 +211,19 @@ class Battle::Scene
           dw.text = ""
           pbShowAllDataboxes
           return cw.index
+        end
+      when :cancel
+        if defaultValue >= 0
+          if dw.busy?
+            pbPlayDecisionSE() if dw.pausing?
+            dw.resume
+          else
+            pbSEPlay("EBDX/SE_Select2")
+            cw.dispose(self)
+            dw.text = ""
+            pbShowAllDataboxes
+            return defaultValue
+          end
         end
       end
     end

@@ -27,6 +27,34 @@ class Battle::Scene
       oldIndex = @fightWindow.index
       # General update
       self.updateWindow(@fightWindow)
+      # Mouse hover and click support
+      if Mouse::UISelection.active?
+        buttons = {}
+        for i in 0...@fightWindow.nummoves
+          buttons[i] = @fightWindow.button["#{i}"]
+        end
+        
+        # Check Mega Evolution button click first
+        if megaEvoPossible && @fightWindow.megaButton && @fightWindow.megaButton.y < Graphics.height
+          if Mouse.click?(@fightWindow.megaButton, :left)
+            @fightWindow.megaButtonTrigger
+            pbSEPlay("EBDX/SE_Select3")
+            break if yield -2
+          end
+        end
+
+        action, val = Mouse::UISelection.input_action(buttons, @fightWindow.index)
+        case action
+        when :highlight
+          @fightWindow.index = val
+        when :select
+          pbSEPlay("EBDX/SE_Select2")
+          break if yield @fightWindow.index
+        when :cancel
+          pbPlayCancelSE
+          break if yield -1
+        end
+      end
       # Update selected command
       if (Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT))
         @fightWindow.index = [0, 1, 2, 3][[1, 0, 3, 2].index(@fightWindow.index)]
@@ -53,13 +81,7 @@ class Battle::Scene
       # play SE
       pbSEPlay("EBDX/SE_Select1") if @fightWindow.index != oldIndex
       # Actions
-      if Input.trigger?(Input::C)                                               # Confirm choice
-        pbSEPlay("EBDX/SE_Select2")
-        break if yield @fightWindow.index
-      elsif Input.trigger?(Input::B)                                            # Cancel fight menu
-        pbPlayCancelSE
-        break if yield -1
-      elsif Input.trigger?(Input::A)                                            # Toggle Mega Evolution
+      if Input.trigger?(Input::A)                                            # Toggle Mega Evolution
         if megaEvoPossible
             @fightWindow.megaButtonTrigger
             pbSEPlay("EBDX/SE_Select3")
@@ -87,6 +109,7 @@ class FightWindowEBDX
   attr_accessor :battler
   attr_accessor :refreshpos
   attr_reader :nummoves
+  attr_reader :button, :megaButton
   #-----------------------------------------------------------------------------
   #  class inspector
   #-----------------------------------------------------------------------------

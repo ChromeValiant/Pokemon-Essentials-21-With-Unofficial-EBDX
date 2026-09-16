@@ -76,7 +76,7 @@ module CompilerEBDX
     return if cache.nil?
 
     for idx in 0..cache.length # for ch in cache
-      ch = cache[idx] 
+      ch = cache[idx]
       # run each from cache
       EliteBattle.add_data(*ch) if !ch.nil?
     end
@@ -98,11 +98,12 @@ module Compiler
     alias compile_all_ebdx compile_all
   end
   #-----------------------------------------------------------------------------
-  def self.compile_all(mustCompile)
+  def self.compile_all(*args)
+    must_compile = args[0]
     # run Essentials compiler
-    compile_all_ebdx(mustCompile) { |msg| pbSetWindowText(msg); echoln(msg) }
+    compile_all_ebdx(must_compile) { |msg| pbSetWindowText(msg); echoln(msg) }
     # compile EBDX
-    CompilerEBDX.compile(mustCompile)
+    CompilerEBDX.compile(must_compile)
   end
   #-----------------------------------------------------------------------------
 end

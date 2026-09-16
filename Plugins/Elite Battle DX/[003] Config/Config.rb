@@ -97,6 +97,9 @@ module EliteBattle
   
   # If true, battler names, gender, and level will use the font from the Gen 5 games (credit: bonzairob @ 3dPE)
   BW_DATABOX_FONT = true
+
+  # Enable right click to perform back action in menus
+  RIGHT_CLICK_BACK_ACTION = true
 end
 #-------------------------------------------------------------------------------
 # Adds additional "camera" vectors for when the camera is idling

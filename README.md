@@ -40,33 +40,33 @@ MKXP by Roza
 ## CREDITS: Elite Battle: DX
 - Original by Luka S.J., ported to v21.1 by Manurocker95
 
-Sprites:
-    GameFreak | Original sprites from B/W/2 games
-    Pokecheck.org | Ripping the sprites from B2/W2 roms
-    PinkCatDragon | GIF to PNG conversion
-    Tebited15, WolfPP, Issei Hyoudou, Nasasu, luckygirl88 | B/W styled trainer Red/Leaf sprites
-    WolfPP | B/W styled trainer Leaf sprite
-    Spriters-Resource (redblueyellow), Damien, WolfPP | Gen 5 ball sprites
+	Sprites:
+		GameFreak | Original sprites from B/W/2 games
+		Pokecheck.org | Ripping the sprites from B2/W2 roms
+		PinkCatDragon | GIF to PNG conversion
+		Tebited15, WolfPP, Issei Hyoudou, Nasasu, luckygirl88 | B/W styled trainer Red/Leaf sprites
+		WolfPP | B/W styled trainer Leaf sprite
+		Spriters-Resource (redblueyellow), Damien, WolfPP | Gen 5 ball sprites
 
-Sound Effects:
-    GameFreak | Original sound effects from B/W/2 games
-    BadSamaritan | Ripping the sound effects
+	Sound Effects:
+		GameFreak | Original sound effects from B/W/2 games
+		BadSamaritan | Ripping the sound effects
 
-Other:
-    Luka S.J. | Elite Battle: DX
-    Pokémon Essentials | Base system
-    Maruno, Marin, Golisopod User | General help, support, and bouncing off ideas
-    PinkCatDragon | GIF to PNG conversion
+	Other:
+		Luka S.J. | Elite Battle: DX
+		Pokémon Essentials | Base system
+		Maruno, Marin, Golisopod User | General help, support, and bouncing off ideas
+		PinkCatDragon | GIF to PNG conversion
 
-EBDX v21.1 port add-ons & fixes:
-	Aprogergely for the hatching scene fix
-	NikDie for the animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
-	SceoFlash13 for hotfixes while using frame-based animations.
-	Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
-	Ghasty_001 for Weather optimization
-	bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
-	EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti (GoggledPetilil)
-	Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)
+	EBDX v21.1 port add-ons & fixes:
+		Aprogergely for the hatching scene fix
+		NikDie for the animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
+		SceoFlash13 for hotfixes while using frame-based animations.
+		Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
+		Ghasty_001 for Weather optimization
+		bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
+		EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti (GoggledPetilil)
+		Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)
 
 ==============================================================
 ## CREDITS: Pokemon World Tournament

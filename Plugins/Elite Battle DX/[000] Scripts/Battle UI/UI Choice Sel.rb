@@ -5,6 +5,7 @@
 class ChoiceWindowEBDX
   attr_accessor :index
   attr_reader :over
+  attr_reader :sprites
   #-----------------------------------------------------------------------------
   #  initialize the choice boxes
   #-----------------------------------------------------------------------------

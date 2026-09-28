@@ -1,4 +1,5 @@
-Dar créditos si se usan a:
+La Base de Sky Animated Sprites as of 9/9/2026:
+Link: https://skyfangames.blogspot.com/2024/01/lista-de-recursos.html
 Luka S.J., Tenshi of War, DPertierra, Skyflyer, Hellfire_raptor, Adrix, Antiant, arinoelle, Aronousqui,
 AshnixsLaw, AyanoCloud, Azrita, Batin, BR0DE0, Caruban, Creobnil, DanEx, Diegotoon20, dimbly, EBaru, Ebaru,
 ekurepu, EricLostie, Esneider, Falcon7, Federico97_ez, Fleimer_, flea_alex, Franark122k, Hellfire0raptor,
@@ -8,3 +9,134 @@ mangalos810, Marty, MCBMechachu, MCH4R1Z4RD, Miguel, MizterBubu, N-Kin, NoelleMB
 OldSoulja, OmegalingYT, Pepsiman, PKMarioG, Pokepachito, Poki Papillon, PomPomKing, PumpkinPastel,
 RadicalCharizard, Regis, RetroNC, Robert, Rod, seleccion, SelenaArmorclaw, SkidMarc25, Snivy101, Sopita_Yorita,
 oulWardenInfinity, The King, TheAetherPlayer, TheCynicalPoet, Tinkatooni, Turi, Typhlito, uppababy.
+
+# Animated Sprites by Ghasty001
+Link: https://github.com/Ghasty001/Animated_sprites_by_Ghasty001
+A repository with all animated sprites I made on official pokemon, who usually currently miss on Smogon's sprite project when I needed them, or just made for fun.
+
+All these sprites are free to use, for other projects to use *with credit*. The credits also apply to all the artists who made the base sprite I used for the animation (also shared with free to use consent), and all of them will be listed below.
+
+This repository will be updated progressively when I make a new animation. The choice of the species itself is purely based on my personal will, and no requests are accepted.
+
+Lastly, if I don't make the front/back for a specific sprite, is because I either haven't done it yet, or found a perfectly fine animation made by a talented artist. In the latter case, I'll also include these in the credits.
+
+Enjoy.
+
+# Credit section:
+
+**Nacli - Naclstack - Garganacl**
+The front of Nacli has an animation currently Smogon's Sprite Project, made by *hexagonereal*, while the rest of the sprites used as a base the sprites made available by the talented *Kyledove*.
+
+**Smoliv - Dolliv - Arboliva**
+All original animations and sprites!
+
+**Fuecoco - Crocalor - Skeledirge**
+Fuecoco's front and back was edited from a sprite by *Bloxable*. Skeledirge front sprite was also made by *Bloxable*. both Skeli and Crocalor's back come from *KingOfThe*. Crocalor's front is original!
+
+**Hisuian Braviary**
+Base sprites from Smogon's Sprite Project by *G.E.Z and KingOfThe-X-Roads*.
+
+**Hisuian Qwilfish**
+Base sprites from Smogon's Sprite Project by *KingOfThe-X-Roads and Katten*. Overqwil animation is also on Smogon, by *hexagonereal*
+
+**Oricorio Baile (Fire type)**
+Base sprites from Smogon's Sprite Project by *aXl*. All the other 3 forms are made on Smogon by *Antiant*.
+
+**Clauncher - Clawitzer**
+All original animations and sprites!
+
+**Skrelp - Dragalgea**
+All original animations and sprites!
+
+**Golisopod**
+Base sprites from Smogon's Sprite Project by *leParagon*. Wimpod can be found always on Smogon by *Antiant*.
+
+**Gossifleur**
+All original animations and sprites! Eldegoss's animations can be found on Smogon's Sprite Project by  *PumpkinPastel and DanEx*.
+
+**Clodsire**
+Base sprites from Smogon's Sprite Project by *KingOfThe-X-Roads*. The Front can be found on Smogon made by *uppa*. A great Paldean Wooper animation was made by *AshnixsLaw* (you just need to adjust the color of the shiny ahah).
+
+**Gholdengo**
+Base sprites by *KingOfThe-X-Roads*. Fron on Smogon's Sprite project by *uppa*. Fun fact unrelated to credits, it's literally the same back for both normal and shiny variant. Screw this shiny.
+
+**Wyrdeer**
+Backsprite from Smogon's Sprite Project by *G.E.Z.*. Front animation always on Smogon by *hexagonereal*.
+
+**Hisuian Voltorb - Electrode**
+Base sprites from Smogon's Sprite Project by *Blaquaza and G.E.Z.*. The only one animated was Voltorb's Front by *Katten*.
+
+**Hisuian Sliggoo**
+Base sprites from Smogon's Sprite Project by *G.E.Z.*. In there there's also front, along with H.Goodra's assets.
+
+**Hisuian Avalugg**
+Base sprites from Smogon's Sprite Project by *Katten*. Front animations with decent quality where made by *hellfire0raptor*.
+
+**Hisuian Sneasel and Sneasler**
+Base sprites from Smogon's Sprite Project by *Blaquaza, G.E.Z. and KattenK*. Unrelated: these base sprites they made make Sneasler look good for me.
+
+**Dottler - Orbeetle**
+Base sprites from Smogon's Sprite Project by *KingOfThe-X-Roads and  leParagon*. Except Orbeetle's Front, that one I made myself. Blipbug can be found on Smogon as well by *arionelle*
+
+**Heliolisk**
+All original animations and sprites! Helioptyle's animations can be found on Smogon's Sprite Project by  *hexagonereal*.
+
+**Fidough - Dachsbun**
+Base front sprites by *KingOfThe-X-Roads*. Back sprites by *Kyledove*
+
+**Shroodle - Grafaiai**
+Base sprites by *KingOfThe-X-Roads*. Backs animations by *mangalos810*.
+
+**Flapple - Appletun**
+Base sprites for front and back by *Blaquaza and leParagon*.
+
+**Tarountula - Spidops**
+Base backsprites by *KingOfThe-X-Roads*. The front sprites I suggest are the ones from *hellfire0raptor*, HOWEVER I used their animated sprite as template for the shiny front, since they originally didn't made any.
+
+**Trevenant**
+All original animations and sprites! Phantump's animation can be found on Smogon's Sprite Project by  *arionelle*.
+
+**Armarouge and Ceruledge**
+Base Armarouge front sprites by *KingOfThe-X-Roads*. Credit to *lennybitao* for that second frame with the cannon arms, available also at the 2-frame project.I think the author of Base Ceruledge front either deleted its previous work or I simply couldn't find him. If you happen to know, feel free to share. If you want a good base Ceruledge sprite, look for the ones also by *lennybitao*. Good Charcadet sprite animations can be found in the Deluxe Battle Kit, but I can't link you the name of the creator directly.... yeah this section is quite a mess.
+
+**Mega Altaria**
+Base sprites by *Falgaia*.
+
+**Mega Ampharos**
+Base sprites was made by *Branflakes325, Layell, Wyverii* on Smogon's Sprite Project.
+
+**Mega Beedrill**
+Basecksprite by *Sleet* on Smogon's Sprite Project. The base front animation on Smogon's Sprite Project by *arionelle*.
+
+**Mega Malamar**
+All original animations and sprites!
+
+**Mega Victreebel**
+All original animations and sprites!
+
+**Mega Chandelure**
+All original animations and sprites! Also best Pokèmon.
+
+**Mega Eelektross**
+Base sprite by *kiriaura* over on its Deviant-Art.
+
+**Mega Absol Z**
+All original animations and sprites! Back might need touchups.
+
+**Mega Meganium**
+The base front was made by *kiriaura* over on its Deviant-Art, while the back is original.
+
+**Dreepy - Drakloak - Dragapult**
+Base sprite by *KingOfThe-X-Roads*. Slightly modified the drakloak and dragapult front sprites, while the backs are mine.
+
+**Kingambit**
+Base sprites by *Anarlaurendil* over on Deviantart.
+
+**Bramblin and Brambleghast**
+Base sprites by *KingOfThe-X-Roads* on Smogon's Sprite Project.
+
+**Rotom dj**
+Base sprites by *KingOfThe-X-Roads*. It's a bonus addition because some people asked me to.
+
+**Annihilape**
+All original animations and sprites!

@@ -10,19 +10,28 @@ OldSoulja, OmegalingYT, Pepsiman, PKMarioG, Pokepachito, Poki Papillon, PomPomKi
 RadicalCharizard, Regis, RetroNC, Robert, Rod, seleccion, SelenaArmorclaw, SkidMarc25, Snivy101, Sopita_Yorita,
 oulWardenInfinity, The King, TheAetherPlayer, TheCynicalPoet, Tinkatooni, Turi, Typhlito, uppababy.
 
+# GIF to PNG Sprite Sheet converter tool by @dragonnite (Lucy)
+
+# All Mega Evolution sprites except Manectric are by Aronousqui:
+# Link to Aronousqui DeviantArt: https://www.deviantart.com/aronousqui20/gallery
+
+# Link to mangalos810 sprites: https://www.deviantart.com/mangalos810/gallery/103628774/new-work
+- Charizard G-Max
+- Delphox
+- Lapras G-Max
+- Manectric Mega
+- Moltres-Galar
+- Mr.Mime-Galar
+- Palkia-Origin
+- Slowking-Galar
+- Slowpoke-Galar
+- Snorlax G-Max
+- Tauros-Paldea-Combat
+- Tauros-Paldea-Aqua
+- Weezing-Galar
+
 # Animated Sprites by Ghasty001
 Link: https://github.com/Ghasty001/Animated_sprites_by_Ghasty001
-A repository with all animated sprites I made on official pokemon, who usually currently miss on Smogon's sprite project when I needed them, or just made for fun.
-
-All these sprites are free to use, for other projects to use *with credit*. The credits also apply to all the artists who made the base sprite I used for the animation (also shared with free to use consent), and all of them will be listed below.
-
-This repository will be updated progressively when I make a new animation. The choice of the species itself is purely based on my personal will, and no requests are accepted.
-
-Lastly, if I don't make the front/back for a specific sprite, is because I either haven't done it yet, or found a perfectly fine animation made by a talented artist. In the latter case, I'll also include these in the credits.
-
-Enjoy.
-
-# Credit section:
 
 **Nacli - Naclstack - Garganacl**
 The front of Nacli has an animation currently Smogon's Sprite Project, made by *hexagonereal*, while the rest of the sprites used as a base the sprites made available by the talented *Kyledove*.
@@ -98,33 +107,6 @@ All original animations and sprites! Phantump's animation can be found on Smogon
 
 **Armarouge and Ceruledge**
 Base Armarouge front sprites by *KingOfThe-X-Roads*. Credit to *lennybitao* for that second frame with the cannon arms, available also at the 2-frame project.I think the author of Base Ceruledge front either deleted its previous work or I simply couldn't find him. If you happen to know, feel free to share. If you want a good base Ceruledge sprite, look for the ones also by *lennybitao*. Good Charcadet sprite animations can be found in the Deluxe Battle Kit, but I can't link you the name of the creator directly.... yeah this section is quite a mess.
-
-**Mega Altaria**
-Base sprites by *Falgaia*.
-
-**Mega Ampharos**
-Base sprites was made by *Branflakes325, Layell, Wyverii* on Smogon's Sprite Project.
-
-**Mega Beedrill**
-Basecksprite by *Sleet* on Smogon's Sprite Project. The base front animation on Smogon's Sprite Project by *arionelle*.
-
-**Mega Malamar**
-All original animations and sprites!
-
-**Mega Victreebel**
-All original animations and sprites!
-
-**Mega Chandelure**
-All original animations and sprites! Also best Pokèmon.
-
-**Mega Eelektross**
-Base sprite by *kiriaura* over on its Deviant-Art.
-
-**Mega Absol Z**
-All original animations and sprites! Back might need touchups.
-
-**Mega Meganium**
-The base front was made by *kiriaura* over on its Deviant-Art, while the back is original.
 
 **Dreepy - Drakloak - Dragapult**
 Base sprite by *KingOfThe-X-Roads*. Slightly modified the drakloak and dragapult front sprites, while the backs are mine.

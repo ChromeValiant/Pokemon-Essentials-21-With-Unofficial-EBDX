@@ -257,7 +257,7 @@ class Battle::Scene
   #  Function called when capture is successful
   #-----------------------------------------------------------------------------
   def pbThrowSuccess
-    return if @battle.opponent
+    # return if @battle.opponent # commented out for shadow pokemon capture
     @briefmessage = true
     # try to resolve the ME jingle
     me = "EBDX/Capture Success"
@@ -266,7 +266,7 @@ class Battle::Scene
     # play ME
     pbMEPlay(me)
     # wait for audio frames to complete
-    frames = (getPlayTime("Audio/ME/#{me}") * Graphics.ebdx_frame_rate).ceil + 4
+    frames = (getPlayTime("Audio/ME/#{me}") * Graphics.frame_rate).ceil + 4 + 20 #debug
     self.wait(frames)
     pbMEStop
     # return scene to normal

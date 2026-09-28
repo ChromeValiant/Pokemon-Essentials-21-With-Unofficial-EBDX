@@ -16,9 +16,13 @@ class Battle::Scene
     @sprites["abilityMessage"].bitmap.clear
     @sprites["abilityMessage"].bitmap.blt(0, bitmap.height/2, bitmap, rect)
     bitmap = @sprites["abilityMessage"].bitmap
+	if EliteBattle::BW_DATABOX_FONT
+		@sprites["abilityMessage"].bitmap.font.name = "Truth And Ideals - Fighting Ideals" # H3 edit
+		@sprites["abilityMessage"].bitmap.font.size = 23 # H3 edit
+	end
     # draws text with outline
-    pbDrawOutlineText(bitmap, 28, 4, bitmap.width - 38, bitmap.font.size, _INTL("{1}'s", battler.name), baseColor, Color.new(0, 0, 0, 125), 0)
-    pbDrawOutlineText(bitmap, 0, bitmap.height/2 + 4, bitmap.width - 28, bitmap.font.size, "#{effect}", baseColor, Color.new(0, 0, 0, 125), 2)
+    pbDrawOutlineText(bitmap, 28, 4, bitmap.width - 38, bitmap.font.size, _INTL("{1}'s", battler.name), baseColor, Color.new(0, 0, 0), 0)
+    pbDrawOutlineText(bitmap, 0, bitmap.height/2 + 4, bitmap.width - 28, bitmap.font.size, "#{effect}", baseColor, Color.new(0, 0, 0), 2)
     # positions message box
     width = bitmap.width
     @sprites["abilityMessage"].x = playerBattler?(battler) ? (-width - width%10) : (Graphics.width + width%10)

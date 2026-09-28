@@ -72,6 +72,8 @@ class Battle::Battler
     ret = pbFaint_ebdx(*args)
     # displays trainer dialogue if applicable
     @battle.scene.pbTrainerBattleSpeech(playerBattler?(self) ? "fainted" : "faintedOpp") if show
+	partyLength = playerBattler?(self) ? @battle.pbAbleCount(0) : @battle.pbAbleCount(1)
+	@battle.scene.pbTrainerBattleSpeech(playerBattler?(self) ? "faintedBeforeLast" : "faintedOppBeforeLast") if show && partyLength == 1
     return ret
   end
   #-----------------------------------------------------------------------------
@@ -131,8 +133,7 @@ class Battle::Scene
         # last Pokemon is sent out
         elsif key.include?("last") || key.include?("afterLast") || key.include?("beforeLast")
           lin = key.include?("Opp") ? 1 : 0
-          format = @battle.doublebattle? ? 2 : 1 # H3 edit: Fix to apply for doubles :)
-          if @battle.pbParty(lin).length > format && @battle.pbAbleCount(lin) <= format
+          if @battle.pbParty(lin).length > 1 && @battle.pbAbleCount(lin) == 1
             pbTrainerSpeak(@battle.midspeech[index][key], nil, index)
             @battle.midspeech[index][key] = nil
             @battle.midspeech[index].delete(key)
@@ -233,39 +234,20 @@ class Battle::Scene
     @sprites["box2"].x = @viewport.width + 2
     @sprites["box2"].y = @viewport.height - 32
     x = v > 0 ? -8 : -6
-    if EliteBattle::USE_TRAINER_OUT_OF_PLACE_HOTFIX
-      for i in 0...20.delta_add
-        k = 20.delta_add/20.0
-        #moveEntireScene(x, (speech ? +2 : -1), true, true) if i%k > 0 || k == 1
-        @sprites["opponent"].opacity += 12.8.delta_sub(false)
-        @sprites["opponent"].x += x/20 if i%k > 0 || k == 1
-        endx = @sprites["opponent"].x
-        @sprites["opponent"].y +=0 if i%k > 0 || k == 1
-        endy = @sprites["opponent"].y
-        @sprites["box1"].zoom_x += (@viewport.width/16).delta_sub(false) if speech
-        @sprites["box2"].zoom_x += (@viewport.width/16).delta_sub(false) if speech
-        self.wait(1, true)
-      end
-        @sprites["opponent"].x = endx
-        @sprites["opponent"].y = endy # + (speech ? 2 : -1)
-        @sprites["box1"].zoom_x = @viewport.width if speech
-        @sprites["box2"].zoom_x = @viewport.width if speech
-    else  
-      for i in 0...20.delta_add
-        k = 20.delta_add/20.0
-        moveEntireScene(x, (speech ? +2 : -1), true, true) if i%k > 0 || k == 1
-        @sprites["opponent"].opacity += 12.8.delta_sub(false)
-        @sprites["opponent"].x += x if i%k > 0 || k == 1
-        @sprites["opponent"].y += (speech ? 2 : -1) if i%k > 0 || k == 1
-        @sprites["box1"].zoom_x += (@viewport.width/16).delta_sub(false) if speech
-        @sprites["box2"].zoom_x += (@viewport.width/16).delta_sub(false) if speech
-        self.wait(1, true)
-      end
-      @sprites["opponent"].x = ox + x*20
-      @sprites["opponent"].y = oy + (speech ? 2 : -1)*20
-      @sprites["box1"].zoom_x = @viewport.width if speech
-      @sprites["box2"].zoom_x = @viewport.width if speech
+    for i in 0...20.delta_add
+      k = 20.delta_add/20.0
+      moveEntireScene(x, (speech ? +2 : -1), true, true) if i%k > 0 || k == 1
+      @sprites["opponent"].opacity += 12.8.delta_sub(false)
+      @sprites["opponent"].x += x if i%k > 0 || k == 1
+      @sprites["opponent"].y += (speech ? 2 : -1) if i%k > 0 || k == 1
+      @sprites["box1"].zoom_x += (@viewport.width/16).delta_sub(false) if speech
+      @sprites["box2"].zoom_x += (@viewport.width/16).delta_sub(false) if speech
+      self.wait(1, true)
     end
+    @sprites["opponent"].x = ox + x*20
+    @sprites["opponent"].y = oy + (speech ? 2 : -1)*20
+    @sprites["box1"].zoom_x = @viewport.width if speech
+    @sprites["box2"].zoom_x = @viewport.width if speech
   end
   #-----------------------------------------------------------------------------
   #  visuals to hide opponent in scene
@@ -275,33 +257,19 @@ class Battle::Scene
     pbSetMessageMode(false)
     v = (@battle.doublebattle? && speech) ? 3 : -1
     x = v > 0 ? 8 : 6
-    if EliteBattle::USE_TRAINER_OUT_OF_PLACE_HOTFIX
-      for i in 0...20.delta_add
-        k = 20.delta_add/20.0
-        @sprites["opponent"].opacity -= 12.8.delta_sub(false)
-        @sprites["opponent"].x += x/20 if i%k > 0 || k == 1
-        @sprites["box1"].zoom_x -= (@viewport.width/16).delta_sub(false) if speech
-        @sprites["box2"].zoom_x -= (@viewport.width/16).delta_sub(false) if speech
-        self.wait(1, true)
-      end
-      @sprites["opponent"].opacity = 0
-      @sprites["box1"].zoom_x = 0 if speech
-      @sprites["box2"].zoom_x = 0 if speech
-    else  
-      for i in 0...20.delta_add
-        k = 20.delta_add/20.0
-        moveEntireScene(x, (speech ? -2 : +1), true, true) if i%k > 0 || k == 1
-        @sprites["opponent"].opacity -= 12.8.delta_sub(false)
-        @sprites["opponent"].x += x if i%k > 0 || k == 1
-        @sprites["opponent"].y -= (speech ? 2 : -1) if i%k > 0 || k == 1
-        @sprites["box1"].zoom_x -= (@viewport.width/16).delta_sub(false) if speech
-        @sprites["box2"].zoom_x -= (@viewport.width/16).delta_sub(false) if speech
-        self.wait(1, true)
-      end
-      @sprites["opponent"].opacity = 0
-      @sprites["box1"].zoom_x = 0 if speech
-      @sprites["box2"].zoom_x = 0 if speech
+    for i in 0...20.delta_add
+      k = 20.delta_add/20.0
+      moveEntireScene(x, (speech ? -2 : +1), true, true) if i%k > 0 || k == 1
+      @sprites["opponent"].opacity -= 12.8.delta_sub(false)
+      @sprites["opponent"].x += x if i%k > 0 || k == 1
+      @sprites["opponent"].y -= (speech ? 2 : -1) if i%k > 0 || k == 1
+      @sprites["box1"].zoom_x -= (@viewport.width/16).delta_sub(false) if speech
+      @sprites["box2"].zoom_x -= (@viewport.width/16).delta_sub(false) if speech
+      self.wait(1, true)
     end
+    @sprites["opponent"].opacity = 0
+    @sprites["box1"].zoom_x = 0 if speech
+    @sprites["box2"].zoom_x = 0 if speech
     # show databoxes
     pbShowAllDataboxes
     # dispose sprites
@@ -368,7 +336,45 @@ class Trainer
   end
   #-----------------------------------------------------------------------------
 end
-
+#===============================================================================
+#  AI override to send out ace last
+#===============================================================================
+class Battle::AI
+  #-----------------------------------------------------------------------------
+  def pbChooseBestNewEnemy(idxBattler, party, enemies)
+    return -1 if !enemies || enemies.length == 0
+    best    = -1
+    bestSum = 0
+    # get opponent info
+    opponent = @battle.pbGetOwnerFromBattlerIndex(idxBattler)
+    selAce = EliteBattle.get_trainer_data(opponent.trainer_type, :ACE, opponent) if !opponent.nil?
+    selAce = nil if !selAce.is_a?(Numeric) || selAce < 1 || selAce > 6
+    # loop through possible selections
+    enemies.each do |i|
+      pkmn = party[i]
+      # skip ace if not last sendout
+      if !selAce.nil?
+        cnt = 0
+        party.each { |pl| cnt += 1 if pl.able? }
+        next if i == selAce - 1 && cnt > 2
+      end
+      sum  = 0
+      pkmn.moves.each do |m|
+        next if m.base_damage == 0
+        @battle.battlers[idxBattler].eachOpposing do |b|
+          bTypes = b.pbTypes(true)
+          sum += Effectiveness.calculate(m.type, bTypes[0], bTypes[1], bTypes[2])
+        end
+      end
+      if best == -1 || sum > bestSum
+        best = i
+        bestSum = sum
+      end
+    end
+    return best
+  end
+  #-----------------------------------------------------------------------------
+end
 #===============================================================================
 class FancyMessage
   #-----------------------------------------------------------------------------

@@ -83,19 +83,12 @@ module EliteBattle
     end
   end
   def self.GetSpeciesIndex(species)
-    
-    if EliteBattle::TRY_TO_ALWAYS_INITIALIZE && @full_species.length <= GameData::Species.species_count
-      EliteBattle.InitializeSpecies()
-    end
-
     number = @full_species.index(species) || 0
     return number
   end
-  
   def self.GetSpeciesID(species)
     return GameData::Species.try_get(species)&.species
   end
-
   def self.GetItemID(item)
     return @full_items.index(item) || 0
   end
@@ -134,6 +127,7 @@ module EliteBattle
     return if var.nil?
     # concats battle speech parameter into an array if necessary
     if var == :nextBattleScript # potential compatibility for double battles
+	@nextBattleScript = nil
       if val.nil?
         @nextBattleScript = nil
       elsif !@nextBattleScript.nil?
@@ -318,7 +312,6 @@ module EliteBattle
       end
       str = poke ? "species" : "trainer"
       id = id[0] if id.is_a?(Array)
-      id = id.species if poke && id.is_a?(Pokemon)
       custom_id = poke ? GetSpeciesIndex(GameData::Species.get(id).id) : GetTrainerID(GameData::TrainerType.get(id).id)
       sym = poke ? GameData::Species.get(id).id : GameData::TrainerType.get(id).id
       if !pbResolveBitmap(sprintf("Graphics/EBDX/Transitions/%s", sym)) && !pbResolveBitmap(sprintf("Graphics/EBDX/Transitions/%s_%d", sym, (poke && variant) ? variant : 0))
@@ -635,7 +628,8 @@ module EliteBattle
     return nil if !EliteBattle::USE_FOLLOWER_EXCEPTION
     return nil if !$PokemonGlobal || !$PokemonGlobal.dependentEvents
     return nil if !$PokemonGlobal.respond_to?(:follower_toggled)
-    return ($PokemonGlobal.follower_toggled && $PokemonGlobal.dependentEvents.can_refresh? && battle.scene.firstsendout) ? 0 : nil
+    #return ($PokemonGlobal.follower_toggled && $PokemonGlobal.dependentEvents.can_refresh? && battle.scene.firstsendout) ? 0 : nil
+    return ($PokemonGlobal.follower_toggled && FollowingPkmn.active? && battle.scene.firstsendout) ? 0 : nil
   end
   #-----------------------------------------------------------------------------
   # check if current map is an outdoor map

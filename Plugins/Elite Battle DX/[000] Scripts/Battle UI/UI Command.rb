@@ -32,6 +32,15 @@ class Battle::Scene
     pbSEPlay("EBDX/SE_Zoom4", 50)
     @commandWindow.showPlay
     @sprites["dataBox_#{idxBattler}"].selected = true
+	# debug switch to Fight when last command was CALL
+	if @commandWindow.index == 3
+		@commandWindow.index = 0
+	end
+	# debug switch to moves when choosen items before
+	if (@commandWindow.index == 1 || @commandWindow.index == 2)
+		@commandWindow.index = 0
+	end
+	#	
     loop do
       oldIndex = @commandWindow.index
       # main update

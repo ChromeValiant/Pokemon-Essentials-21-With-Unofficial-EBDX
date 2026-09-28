@@ -34,7 +34,8 @@ class EliteBattle_BasicWildAnimations
   
   def pbExtraChecks
     # animation selection processing for regular battles
-    if (!@level.nil? && $player && !($player.party[0].is_a?(Pokemon)) && @level > $player.party[0].level)
+	@level = @level[1] if @level.kind_of?(Array) #fix for wild battle crashes
+    if (!@level.nil? && @level > $player.party[0].level)
       return self.overlevel
     elsif ($PokemonGlobal && ($PokemonGlobal.surfing || $PokemonGlobal.diving || $PokemonGlobal.fishing))
       return self.water
@@ -69,7 +70,6 @@ class EliteBattle_BasicWildAnimations
   #  special animation for Regis
   #-----------------------------------------------------------------------------
   def animRegi
-    waiter = EbdxWaiter.new
     fp = {}
     # gets main index
     index = self.regiIndex?
@@ -114,7 +114,7 @@ class EliteBattle_BasicWildAnimations
     # fades to black
     8.delta_add.times do
       fp["back"].opacity += 32/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     fp["back"].opacity = 255
     k = -2
@@ -132,12 +132,12 @@ class EliteBattle_BasicWildAnimations
         fp[j].visible = fp[j+7].opacity < 255
       end
       fp["back"].color.alpha += [1, 2/self.delta].max if fp["back"].color.alpha < 255
-      waiter.wait
+      pbWait(0.01)
     end
     # fades viewport to black
     8.delta_add.times do
       @viewport.color.alpha += 32/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     @viewport.color.alpha = 255
     # disposes unused sprites
@@ -148,7 +148,6 @@ class EliteBattle_BasicWildAnimations
   #  wild animation for outdoor battles
   #-----------------------------------------------------------------------------
   def outdoor(variant = false)
-    waiter = EbdxWaiter.new
     # gets screen size
     hz = 8
     vz = 6
@@ -191,7 +190,7 @@ class EliteBattle_BasicWildAnimations
           sps[j].zoom_x += 0.15/self.delta if sps[j].zoom_x < 1
         end
       end
-      waiter.wait
+      pbWait(0.01)
     end
     # ensures viewport is set to black
     @viewport.color = Color.new(0, 0, 0, 255)
@@ -203,7 +202,6 @@ class EliteBattle_BasicWildAnimations
   #  wild animation for indoor battles
   #-----------------------------------------------------------------------------
   def indoor
-    waiter = EbdxWaiter.new
     # draws blank bitmap upon which to draw snaking pattern
     screen = Sprite.new(@viewport)
     screen.bitmap = Bitmap.new(@viewport.width,@viewport.height)
@@ -217,11 +215,11 @@ class EliteBattle_BasicWildAnimations
         x = (j%2 == 0) ? 0 : @viewport.width - i*(width/16).delta_sub
         screen.bitmap.fill_rect(x,j*height,i*(width/16),height,black)
       end
-      waiter.wait
+      pbWait(0.01)
     end
     # ensures viewport is black
     @viewport.color = Color.new(0, 0, 0, 255)
-    waiter.wait(10)
+    pbWait(0.010)
     # disposes unused sprite
     screen.dispose
     return true
@@ -230,7 +228,6 @@ class EliteBattle_BasicWildAnimations
   #  wild animation for cave battles
   #-----------------------------------------------------------------------------
   def cave
-    waiter = EbdxWaiter.new
     # draws blank bitmap upon which to draw snaking pattern
     screen = Sprite.new(@viewport)
     screen.bitmap = Bitmap.new(@viewport.width,@viewport.height)
@@ -261,7 +258,7 @@ class EliteBattle_BasicWildAnimations
           sprites[n].zoom_x += 0.2/self.delta
           sprites[n].zoom_y += 0.2/self.delta
         end
-        waiter.wait
+        pbWait(0.01)
       end
       for j in 0...seq[i].length
         n = seq[i][j]
@@ -270,7 +267,7 @@ class EliteBattle_BasicWildAnimations
     end
     # ensures viewport is black
     @viewport.color = Color.new(0, 0, 0, 255)
-    waiter.wait
+    pbWait(0.01)
     # disposes unused sprites
     pbDisposeSpriteHash(sprites)
     screen.dispose
@@ -280,7 +277,6 @@ class EliteBattle_BasicWildAnimations
   #  wild animation for water encounters
   #-----------------------------------------------------------------------------
   def water
-    waiter = EbdxWaiter.new
     # gets snapshot of screen
     bmp = Graphics.snap_to_bitmap
     split = 12
@@ -308,7 +304,7 @@ class EliteBattle_BasicWildAnimations
         sprites[i].x = @viewport.width/2 + 16*o if f >= i*self.delta
         sprites[i].color.alpha += 25.5/self.delta if sprites[i].color.alpha < 255 && f >= (64 - (48-i))
       end
-      waiter.wait
+      pbWait(0.01)
     end
     # ensures viewport is black
     @viewport.color = Color.new(0, 0, 0, 255)
@@ -320,7 +316,6 @@ class EliteBattle_BasicWildAnimations
   #  wild animation for minor legendaries
   #-----------------------------------------------------------------------------
   def minorLegendary(special = false)
-    waiter = EbdxWaiter.new
     # initial metrics
     bmp = Graphics.snap_to_bitmap
     max = 50
@@ -332,7 +327,7 @@ class EliteBattle_BasicWildAnimations
     # animates initial viewport color
     20.delta_add.times do
       @viewport.color.alpha += [1, 2/self.delta].max
-      waiter.wait
+      pbWait(0.01)
     end
     @viewport.color.alpha = 40
     # animates screen blur pattern
@@ -362,17 +357,18 @@ class EliteBattle_BasicWildAnimations
           @viewport.color.blue += 5/self.delta if @viewport.color.blue < 255
         end
       end
-      waiter.wait
+      pbWait(0.01)
     end
     # ensures viewport goes to black
-    frames[(max+19).delta_add].tone = Tone.new(255, 255, 255)
-    waiter.wait(10)
+    frames[(max+19).delta_add].tone = Tone.new(255, 255, 255) if !frames[(max+19).delta_add].nil?
+    #frames[(max+19).delta_add].tone = Tone.new(255, 255, 255) #crashed on some pcs, so the upper part is saver
+    pbWait(0.010.delta_add)
     10.delta_add.times do
       next if special
       @viewport.color.red -= 25.5/self.delta
       @viewport.color.green -= 25.5/self.delta
       @viewport.color.blue -= 25.5/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     @viewport.color = Color.new(0, 0, 0)
     # disposes unused sprites
@@ -383,7 +379,6 @@ class EliteBattle_BasicWildAnimations
   #  animation for B/W legendaries
   #-----------------------------------------------------------------------------
   def bwLegendary(special = false)
-    waiter = EbdxWaiter.new
     bmp = pbBitmap("Graphics/EBDX/Transitions/Common/zoomStreak")
     n = 10
     sprites = {}
@@ -433,7 +428,7 @@ class EliteBattle_BasicWildAnimations
         sprites["sp"].opacity += 32/self.delta
       end
       sprites["bg"].opacity += 16/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     # dispose
     pbDisposeSpriteHash(sprites)
@@ -443,7 +438,6 @@ class EliteBattle_BasicWildAnimations
   #  animation for B/W legendaries
   #-----------------------------------------------------------------------------
   def bwLegendary2
-    waiter = EbdxWaiter.new
     sprites = {}
     # generate black backdrop
     sprites["bg"] = Sprite.new(@viewport)
@@ -470,36 +464,33 @@ class EliteBattle_BasicWildAnimations
     4.delta_add.times do
       sprites["bg"].opacity += 64/self.delta
       sprites["bar"].x += (@viewport.width/4)/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     sprites["bar"].x = 0
     # animate bar out
     8.delta_add.times do
       sprites["bar"].zoom_y -= 0.125/self.delta
       sprites["bar"].opacity -= 8/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     sprites["bar"].zoom_y = 0
     # animate spark
     for i in 0...8.delta_add
       sprites["s1"].zoom += (i < 4.delta_add ? 0.25 : -0.25)/self.delta
       sprites["s1"].angle += 8/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     sprites["s1"].zoom = 0
-
-    waiter = EbdxWaiter.new
-
     # animate full shine
     @viewport.color = Color.new(255, 255, 255, 0)
     for i in 0...16.delta_add
       sprites["s2"].zoom += 0.25/self.delta
       sprites["s2"].opacity += 32/self.delta
       @viewport.color.alpha += 32/self.delta if i >= 8.delta_add
-      waiter.graphics_update
+      Graphics.update
     end
     @viewport.color = Color.white
-    16.delta_add.times { waiter.graphics_update }
+    16.delta_add.times { Graphics.update }
     # dispose
     pbDisposeSpriteHash(sprites)
     # fade to black
@@ -507,17 +498,16 @@ class EliteBattle_BasicWildAnimations
       @viewport.color.red -= 8/self.delta
       @viewport.color.green -= 8/self.delta
       @viewport.color.blue -= 8/self.delta
-      waiter.graphics_update
+      Graphics.update
     end
     @viewport.color = Color.black
-    2.delta_add.times { waiter.graphics_update }
+    2.delta_add.times { Graphics.update }
     return true
   end
   #-----------------------------------------------------------------------------
   #  wild animation for Pokemon that are higher level than your party leader
   #-----------------------------------------------------------------------------
   def overlevel
-    waiter = EbdxWaiter.new
     # gets screen size
     height = @viewport.height/4
     width = @viewport.width/10
@@ -533,14 +523,14 @@ class EliteBattle_BasicWildAnimations
       for i in 1..10.delta_add
         sprite.bitmap.fill_rect(0, height*y[j], width*i/self.delta, height, Color.white)
         backdrop.tone.all += 3/self.delta
-        waiter.wait
+        pbWait(0.01)
       end
     end
     # ensures viewport is black
     @viewport.color = Color.new(0, 0, 0, 0)
     10.delta_add.times do
       @viewport.color.alpha += 25.5/self.delta
-      waiter.wait
+      pbWait(0.01)
     end
     @viewport.color.alpha = 255
     # disposes unused sprites
@@ -549,7 +539,7 @@ class EliteBattle_BasicWildAnimations
     return true
   end
   #-----------------------------------------------------------------------------
-  def delta; return Graphics.ebdx_frame_rate/40.0; end
+  def delta; return Graphics.frame_rate/40.0; end
   #-----------------------------------------------------------------------------
 end
 #===============================================================================
@@ -669,7 +659,6 @@ class SunMoonSpeciesTransitions
   def start
     @started = true
     return if self.disposed?
-    waiter = EbdxWaiter.new
     for i in 0...64
       @sprites["background"].reduceAlpha(16) if i < 16
       @sprites["streak"].x -= 64 if @sprites["streak"].x > 0
@@ -684,7 +673,7 @@ class SunMoonSpeciesTransitions
         @sprites["p#{j}"].x -= 32*@sprites["p#{j}"].speed
       end
       @sprites["background"].update
-      waiter.graphics_update
+      Graphics.update
     end
     @sprites["background"].speed = 4
     # changes focus to Pokemon graphic
@@ -697,7 +686,7 @@ class SunMoonSpeciesTransitions
         @viewport.color.alpha += 64
       end
       self.update
-      waiter.graphics_update
+      Graphics.update
     end
     # flash and impact of screen
     @sprites["poke1"].oy = @sprites["poke1"].bitmap.height/2
@@ -726,7 +715,7 @@ class SunMoonSpeciesTransitions
       @sprites["impact"].angle += 180 if i%4 == 0
       @sprites["impact"].mirror = !@sprites["impact"].mirror if i%4 == 2
       self.update
-      waiter.graphics_update
+      Graphics.update
     end
   end
   #-----------------------------------------------------------------------------
@@ -744,7 +733,6 @@ class SunMoonSpeciesTransitions
   #-----------------------------------------------------------------------------
   def finish
     return if self.disposed?
-    waiter = EbdxWaiter.new
     @scene.clearMessageWindow(true)
     @sprites["ov1"] = Sprite.new(@viewport)
     @sprites["ov1"].snap_screen
@@ -766,11 +754,11 @@ class SunMoonSpeciesTransitions
       if i >= 16
         @sprites["ov2"].tone.all += 16
       end
-      #Everyone say "alt"
+      Graphics.update
     end
     @viewport.color = Color.white
     self.dispose
-    8.times { waiter.graphics_update }
+    8.times { Graphics.update }
     EliteBattle.set(:smAnim, false)
     # fades out viewport and shows battlebox
     @scene.sprites["dataBox_1"].appear
@@ -801,7 +789,7 @@ class SunMoonSpeciesTransitions
   #-----------------------------------------------------------------------------
   def color; end
   def color=(val); end
-  def delta; return Graphics.ebdx_frame_rate/40.0; end
+  def delta; return Graphics.frame_rate/40.0; end
   #-----------------------------------------------------------------------------
   #  fetches secondary parameters for the animations
   #-----------------------------------------------------------------------------

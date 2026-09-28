@@ -113,6 +113,7 @@ class Battle::Scene
   def initializeSprites
     # initializes player sprite
     @battle.player.each_with_index do |pl, i|
+	  # default player back sprite
       plfile = GameData::TrainerType.player_back_sprite_filename(pl.trainer_type)
       pbAddSprite("player_#{i}", 0, 0, plfile, @viewport)
       if @sprites["player_#{i}"].bitmap.nil?
@@ -193,8 +194,7 @@ class Battle::Scene
     vector = EliteBattle.get_vector(:MAIN, @battle)
     @vector.force
     @vector.set(vector)
-    mult = Graphics.ebdx_frame_rate/EliteBattle::DEFAULT_FRAMERATE 
-    @vector.inc = 0.1 * mult
+    @vector.inc = 0.1
     # fade necessary sprites into scene
     for i in 0...22.delta_add
       # player sprite for Safari Zone
@@ -340,9 +340,7 @@ class Battle::Scene
   #  updates scene graphics
   #-----------------------------------------------------------------------------
   def pbGraphicsUpdate
-    #Graphics.update
-    @waiter = EbdxWaiter.new if !@waiter || @waiter.is_too_stale?
-    @waiter.graphics_update
+    Graphics.update
   end
   def pbUpdate(cw = nil)
     pbGraphicsUpdate

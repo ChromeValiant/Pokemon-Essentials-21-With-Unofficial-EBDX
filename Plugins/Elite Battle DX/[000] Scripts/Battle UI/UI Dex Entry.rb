@@ -8,10 +8,9 @@ class EliteBattle_Pokedex
   def initialize(viewport, battler)
     @viewport = viewport
     @viewport.color = Color.new(0, 0, 0, 0)
-    waiter = EbdxWaiter.new
     16.times do
       @viewport.color.alpha += 16
-      waiter.wait
+      Graphics.update
     end
     @path = "Graphics/EBDX/Pictures/Pokedex/"
     @pokemon = battler
@@ -184,25 +183,24 @@ class EliteBattle_Pokedex
   #  main loop of scene
   #-----------------------------------------------------------------------------
   def main
-    waiter = EbdxWaiter.new
     # fade in scene
     16.times do
       self.update
       @viewport.color.alpha -= 16
-      waiter.graphics_update
+      Graphics.update
     end
     # hide silhouette
     h = (@sprites["sil"].bitmap.height/32.0).ceil
     32.times do
       self.update
       @sprites["sil"].src_rect.height -= h
-      waiter.graphics_update
+      Graphics.update
     end
     # play cry
     GameData::Species.cry_filename_from_pokemon(@pokemon)
     # begin loop
     loop do
-      waiter.graphics_update
+      Graphics.update
       Input.update
       self.update
       break if Input.trigger?(Input::C)
@@ -219,10 +217,10 @@ class EliteBattle_Pokedex
         @sprites["c#{i}"].opacity += 8
       end
       self.update
-      waiter.graphics_update
+      Graphics.update
     end
     @sprites["poke"].x = @viewport.width/2
-    waiter.graphics_update
+    Graphics.update
   end
   #-----------------------------------------------------------------------------
   #  updates scene
@@ -263,3 +261,4 @@ class EliteBattle_Pokedex
   end
   #-----------------------------------------------------------------------------
 end
+

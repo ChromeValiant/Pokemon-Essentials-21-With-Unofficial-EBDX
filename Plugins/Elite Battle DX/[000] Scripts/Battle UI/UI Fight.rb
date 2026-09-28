@@ -35,7 +35,7 @@ class Battle::Scene
         end
         
         # Check Mega Evolution button click first
-        if megaEvoPossible && @fightWindow.megaButton && @fightWindow.megaButton.y < Graphics.height
+        if megaEvoPossible && @fightWindow.megaButton #&& @fightWindow.megaButton.y < Graphics.height
           if Mouse.click?(@fightWindow.megaButton, :left)
             @fightWindow.megaButtonTrigger
             pbSEPlay("EBDX/SE_Select3")

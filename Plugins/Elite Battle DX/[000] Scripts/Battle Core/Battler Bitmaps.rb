@@ -24,7 +24,6 @@ def pbLoadPokemonBitmapSpecies(pokemon, species, back = false, scale = EliteBatt
   s = EliteBattle.get_data(species, :Species, :SPRITESPEED, (pokemon.form rescue 0))
   speed = s if !s.nil? && s.is_a?(Numeric)
   species_id = EliteBattle.GetSpeciesIndex(species)
-  #echoln _INTL("Species ID: {1}",species_id)
   if pokemon.egg?
     eggPath = "Graphics/EBDX/Battlers/Eggs/"
     bitmapFileName = sprintf("#{eggPath}%s", species) rescue nil

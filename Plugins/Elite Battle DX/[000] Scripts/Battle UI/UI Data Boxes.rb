@@ -256,15 +256,13 @@ class DataBoxEBDX  <  SpriteWrapper
     @colors = pbBitmap(@path + @colors)
     # initializes all the necessary components
     @sprites["base"] = Sprite.new(@viewport)
+	@baseBitmap = "dataBox"
+	@baseBitmap = "dataBoxShadow" if @pokemon.shadowPokemon?
+	@baseBitmap = "dataBoxBoss" if EliteBattle.get(:setBoss) && !@playerpoke
     @sprites["base"].bitmap = pbBitmap(@path+@baseBitmap)
     @sprites["base"].mirror = @playerpoke
-
     @sprites["status"] = Sprite.new(@viewport)
-
-    lang = pbGetSelectedLanguage
-    statusBitmapPath = pbResolveBitmap(@path + "status_"+lang)
-    @sprites["status"].bitmap = statusBitmapPath ? pbBitmap(statusBitmapPath) : pbBitmap(@path + "status")
-
+    @sprites["status"].bitmap = pbBitmap(@path + "status")
     @sprites["status"].z = self.getMetric("status", :z)
     @sprites["status"].src_rect.height /= 5
     @sprites["status"].src_rect.width = 0
@@ -394,7 +392,6 @@ class DataBoxEBDX  <  SpriteWrapper
     # updates the HP text
     str = "#{self.hp}/#{@battler.totalhp}"
     @sprites["textHP"].bitmap.clear
-
     textpos = [[str, @sprites["textHP"].bitmap.width + @hpTextX, @hpTextY,1,Color.white,Color.new(0,0,0)]]
     pbDrawTextPositions(@sprites["textHP"].bitmap,textpos) if @showhp
   end
@@ -416,6 +413,14 @@ class DataBoxEBDX  <  SpriteWrapper
     return if @pokemon.nil?
     @hidden = EliteBattle.get_data(@pokemon.species, :Species, :HIDENAME, (@pokemon.form rescue 0)) && !$player.owned?(@pokemon.species)
     # exits the refresh if the databox isn't fully set up yet
+	#debug shadow pokemon bar
+	#@sprites["base"].bitmap.clear
+	@baseBitmap = "dataBox"
+	@baseBitmap = "dataBoxShadow" if @pokemon.shadowPokemon?
+	@baseBitmap = "dataBoxBoss" if EliteBattle.get(:setBoss) && !@playerpoke
+    @sprites["base"].bitmap = pbBitmap(@path+@baseBitmap)
+    @sprites["base"].mirror = @playerpoke
+	#debug shadow pokemon bar
     return if !@loaded
     # update for HP/EXP bars
     self.updateHpBar
@@ -431,25 +436,25 @@ class DataBoxEBDX  <  SpriteWrapper
     # writes the Pokemon's name
     str = @battler.name.nil? ? "" : @battler.name
     str += " "
-    color = @pokemon.shiny? ? Color.new(222,197,95) : Color.white
-	if @pokemon.shadowPokemon?
-		color = Color.new(105,73,136)
-	end
+    color = (@pokemon.shiny?) ? Color.new(222,197,95) : Color.white
+	outline = (@pokemon.shadowPokemon?) ? Color.new(96, 50, 135) : Color.new(0,0,0) # Changes outline text to purple if Shadow Pokemon
+	outline = Color.new(162,26,36) if EliteBattle.get(:setBoss) && !@playerpoke # Changes outline text to purple if Boss Pokemon
 	if EliteBattle::BW_DATABOX_FONT
 		@sprites["textName"].bitmap.font.name = "Truth And Ideals - Fighting Ideals" # H3 edit
-		@sprites["textName"].bitmap.font.size = 24 # H3 edit
+		@sprites["textName"].bitmap.font.size = 23 # H3 edit
 	end
-    pbDrawOutlineText(@sprites["textName"].bitmap,18-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,Color.new(0,0,0),0)
+    pbDrawOutlineText(@sprites["textName"].bitmap,18-o,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,outline,0)
     # writes the Pokemon's gender
     x = @sprites["textName"].bitmap.text_size(str).width + 18
     str = ""
     str = _INTL("♂") if @pokemon.gender == 0 && !@hidden
     str = _INTL("♀") if @pokemon.gender == 1 && !@hidden
-    color = (@pokemon.gender == 0) ? Color.new(53,107,208) : Color.new(180,37,77)
-    pbDrawOutlineText(@sprites["textName"].bitmap,x-o-2,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,Color.new(0,0,0),0)
+    color = (@pokemon.gender == 0) ? Color.new(0,186,243) : Color.new(251,48,65)
+    pbDrawOutlineText(@sprites["textName"].bitmap,x-o-2,7,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,outline,0)
     # writes the Pokemon's level
     str = "Lv.#{@battler.level}"
-    pbDrawOutlineText(@sprites["textName"].bitmap,18+o+20,7,@sprites["textName"].bitmap.width-40-2,@sprites["textName"].bitmap.height,str,Color.white,Color.new(0,0,0),2)
+	color = Color.new(243,178,0)
+    pbDrawOutlineText(@sprites["textName"].bitmap,18+o+20,7,@sprites["textName"].bitmap.width-40-2,@sprites["textName"].bitmap.height,str,color,outline,2)
     # changes the Mega symbol graphics (depending on Mega or Primal)
     if @battler.mega?
       @sprites["mega"].bitmap = @megaBmp.clone
@@ -597,7 +602,7 @@ class SafariDataBoxEBDX < SpriteWrapper
     bmp = pbBitmap("Graphics/EBDX/Pictures/UI/safariBar")
     self.bitmap.blt((self.bitmap.width-bmp.width)/2,self.bitmap.height-bmp.height,bmp,Rect.new(0,0,bmp.width,bmp.height))
     str = _INTL("Safari Balls: {1}", @battle.ballCount)
-    pbDrawOutlineText(self.bitmap,0,38,self.bitmap.width,self.bitmap.height,str,Color.white,Color.new(0,0,0,125),1)
+    pbDrawOutlineText(self.bitmap,0,38,self.bitmap.width,self.bitmap.height,str,Color.white,Color.new(0,0,0),1)
   end
   #-----------------------------------------------------------------------------
   #  update (temp)

@@ -129,71 +129,100 @@ class Battle::Scene
     return if !moveid
     # move information
     species = @battle.battlers[user.index].species
-    movedata = GameData::Move.get(moveid)
-    move = Battle::Move.from_pokemon_move(@battle, Pokemon::Move.new(moveid))
-    numhits = user.thisMoveHits
-    multihit = !numhits.nil? ? (numhits > @animationCount) : false
-    @animationCount += 1
-    if numhits.nil?
-      @animationCount = 1
-    elsif @animationCount > numhits
-      @animationCount = 1
-    end
-    multitarget = false
-    multitarget = move.target if [:AllFoes, :AllNearFoes].include?(move.target)
-    target = (targets && targets.is_a?(Array)) ? targets[0] : targets
-    target = user if !target
-    # clears the current UI
-    pbHideAllDataboxes
-    # Substitute animation
-    if @sprites["pokemon_#{user.index}"] && @battle.battlescene
-      subbed = @sprites["pokemon_#{user.index}"].isSub
-      self.setSubstitute(user.index, false) if subbed
-    end
-    # gets move animation def name
-    handled = false
-    if @battle.battlescene
-      @sprites["battlebg"].defocus
-      # checks if def for specific move exists, and then plays it
-      handled = EliteBattle.playMoveAnimation(moveid, self, user.index, target.index, hitnum, multihit, species) if !handled
-      # in case people want to use the old animation player
-      if EliteBattle::CUSTOM_MOVE_ANIM && !handled
-        animid = pbFindMoveAnimation(moveid, user.index, hitnum)
-        if !animid
-          pbShowAllDataboxes
-          clearMessageWindow
-          return
-        end
-        anim = animid[0]
-        animations = EliteBattle.get(:moveAnimations)
-        name = GameData::Move.get(moveid).name
-        pbSaveShadows {
-           if animid[1] # On opposing side and using OppMove animation
-             pbAnimationCore(animations[anim], target, user, true)
-           else         # On player's side, and/or using Move animation
-             pbAnimationCore(animations[anim], user, target, false)
-           end
-        }
-        handled = true
-      end
-      # decides which global move animation to play, if any
-      if !handled
-        handled = EliteBattle.mapMoveGlobal(self, move.type, user.index, target.index, hitnum, multihit, multitarget, movedata.category)
-      end
-      # if all above failed, plays the move animation for Tackle
-      if !handled
-        EliteBattle.playMoveAnimation(:TACKLE, self, user.index, target.index, 0, multihit)
-      end
-      @sprites["battlebg"].focus
-    end
-    # Change form to transformed version
-    if move.function_code == "TransformUserIntoTarget" && user && target # Transform
-      pbChangePokemon(user, target.pokemon)
-    end
-    # restores cleared UI
-    pbShowAllDataboxes
-    clearMessageWindow
-    self.afterAnim = true
+	#Move::Struggle.new(self, nil)
+	#-----------------------------------------------------------------------------
+	if moveid != :STRUGGLE
+		movedata = GameData::Move.get(moveid)
+		move = Battle::Move.from_pokemon_move(@battle, Pokemon::Move.new(moveid))
+		numhits = user.thisMoveHits
+		multihit = !numhits.nil? ? (numhits > @animationCount) : false
+		@animationCount += 1
+		if numhits.nil?
+		  @animationCount = 1
+		elsif @animationCount > numhits
+		  @animationCount = 1
+		end
+		multitarget = false
+		#multitarget = move.target if [:AllFoes, :AllNearFoes].include?(move.target)
+		multitarget = move.target if [:AllFoes, :AllNearFoes, :FoeSide].include?(move.target)
+		target = (targets && targets.is_a?(Array)) ? targets[0] : targets
+		target = user if !target
+		# clears the current UI
+		pbHideAllDataboxes
+		# Substitute animation
+		if @sprites["pokemon_#{user.index}"] && @battle.battlescene
+		  subbed = @sprites["pokemon_#{user.index}"].isSub
+		  self.setSubstitute(user.index, false) if subbed
+		end
+		# gets move animation def name
+		handled = false
+		if @battle.battlescene
+		  @sprites["battlebg"].defocus
+		  # checks if def for specific move exists, and then plays it
+		  handled = EliteBattle.playMoveAnimation(moveid, self, user.index, target.index, hitnum, multihit, species) if !handled
+		  # in case people want to use the old animation player
+		  if EliteBattle::CUSTOM_MOVE_ANIM && !handled
+			animid = pbFindMoveAnimation(moveid, user.index, hitnum)
+			if !animid
+			  pbShowAllDataboxes
+			  clearMessageWindow
+			  return
+			end
+			anim = animid[0]
+			animations = EliteBattle.get(:moveAnimations)
+			name = GameData::Move.get(moveid).name
+			pbSaveShadows {
+			   if animid[1] # On opposing side and using OppMove animation
+				 pbAnimationCore(animations[anim], target, user, true)
+			   else         # On player's side, and/or using Move animation
+				 pbAnimationCore(animations[anim], user, target, false)
+			   end
+			}
+			handled = true
+		  end
+		  # decides which global move animation to play, if any
+		  if !handled
+			handled = EliteBattle.mapMoveGlobal(self, move.type, user.index, target.index, hitnum, multihit, multitarget, movedata.category)
+		  end
+		  # if all above failed, plays the move animation for Tackle
+		  if !handled
+			EliteBattle.playMoveAnimation(:TACKLE, self, user.index, target.index, 0, multihit)
+		  end
+		  @sprites["battlebg"].focus
+		end
+		# Change form to transformed version
+		if move.function_code == "TransformUserIntoTarget" && user && target # Transform
+		  pbChangePokemon(user, target.pokemon)
+		end
+		# restores cleared UI
+		pbShowAllDataboxes
+		clearMessageWindow
+		self.afterAnim = true
+	#-----------------------------------------------------------------------------
+	else #fix for struggle animation
+		# clears the current UI
+		pbHideAllDataboxes
+		# Substitute animation
+		if @sprites["pokemon_#{user.index}"] && @battle.battlescene
+		  subbed = @sprites["pokemon_#{user.index}"].isSub
+		  self.setSubstitute(user.index, false) if subbed
+		end
+		# gets move animation def name
+		handled = false
+		if @battle.battlescene
+		  @sprites["battlebg"].defocus
+		  # checks if def for specific move exists, and then plays it
+		  target = (targets && targets.is_a?(Array)) ? targets[0] : targets
+		  target = user if !target
+		  handled = EliteBattle.playMoveAnimation(:STRUGGLE, self, user.index, target.index, hitnum, multihit, species) if !handled
+		  handled = true
+		  @sprites["battlebg"].focus
+		end
+		# restores cleared UI
+		pbShowAllDataboxes
+		clearMessageWindow
+		self.afterAnim = true
+	end
   end
   #-----------------------------------------------------------------------------
 end

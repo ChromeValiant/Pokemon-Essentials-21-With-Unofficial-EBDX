@@ -58,9 +58,8 @@ class PokemonEggHatch_Scene
     @viewport.color = Color.new(0,0,0,0)
     # initial fading transition
     16.times do
-      pbWait(0.01) do |delta_t|
-        @viewport.color.alpha += 16
-      end 
+      @viewport.color.alpha += 16
+      pbWait(0.01)
     end
     # initializes bars for cutting the screen off
     @sprites["bar1"] = Sprite.new(@viewport)
@@ -106,7 +105,7 @@ class PokemonEggHatch_Scene
         crackfilename = sprintf("Graphics/EBDX/Battlers/Eggs/000cracks")
       end
     end
-    if !pbResolveBitmap(crackfilename)
+	if !pbResolveBitmap(crackfilename)
       # get graphics for the egg crack
       crackfilename = sprintf("Graphics/Pokemon/Eggs/%s_cracks", @pokemon.species) rescue nil
       if !pbResolveBitmap(crackfilename)
@@ -136,9 +135,8 @@ class PokemonEggHatch_Scene
     # stops BGM and displays message
     pbBGMStop()
     pbMEPlay("EBDX/Evolution Start")
-    waiter = EbdxWaiter.new
     16.times do
-      waiter.graphics_update
+      Graphics.update
       self.update
       @sprites["bar1"].y -= @sprites["bar1"].bitmap.height/16
       @sprites["bar2"].y += @sprites["bar2"].bitmap.height/16
@@ -256,7 +254,7 @@ class PokemonEggHatch_Scene
     pbBGMStop()
     GameData::Species.play_cry(@pokemon)
     frames.times do
-      waiter.graphics_update
+      Graphics.update
       self.update
     end
     pbMEPlay("EBDX/Capture Success")
@@ -264,7 +262,25 @@ class PokemonEggHatch_Scene
     @sprites["msgwindow"].visible = true
     cmd = [_INTL("Yes"),_INTL("No")]
     pbMessageDisplay(@sprites["msgwindow"],_INTL("\\se[]{1} hatched from the Egg!\\wt[80]",@pokemon.name)) { self.update }
-    pbMessageDisplay(@sprites["msgwindow"],_INTL("Would you like to nickname the newly hatched {1}?",@pokemon.name)) { self.update }
+    #addition
+	# Record the Pokémon's species as owned in the Pokédex
+    was_owned = $player.owned?(@pokemon.species)
+    #$player.pokedex.register(@pokemon) #debug deactivated entry for hatching
+    #$player.pokedex.set_owned(@pokemon.species) #debug deactivated entry for hatching
+    $player.pokedex.set_seen_egg(@pokemon.species)
+    # Show Pokédex entry for new species if it hasn't been owned before
+    if Settings::SHOW_NEW_SPECIES_POKEDEX_ENTRY_MORE_OFTEN && !was_owned &&
+       $player.has_pokedex && $player.pokedex.species_in_unlocked_dex?(@pokemon.species)
+      pbMessage(_INTL("{1}'s data was added to the Pokédex.", @pokemon.name)) { update }
+      $player.pokedex.register_last_seen(@pokemon)
+      pbFadeOutIn do
+        scene = PokemonPokedexInfo_Scene.new
+        screen = PokemonPokedexInfoScreen.new(scene)
+        screen.pbDexEntry(@pokemon.species)
+      end
+    end	
+    #addition
+	pbMessageDisplay(@sprites["msgwindow"],_INTL("Would you like to nickname the newly hatched {1}?",@pokemon.name)) { self.update }
     if pbShowCommands(@sprites["msgwindow"],cmd,1,0) { self.update } == 0
       nickname = pbEnterPokemonName(_INTL("{1}'s nickname?",@pokemon.name),0,10,"",@pokemon,true)
       @pokemon.name = nickname if nickname != ""
@@ -276,40 +292,11 @@ class PokemonEggHatch_Scene
   #-----------------------------------------------------------------------------
   # frame wait function
   #-----------------------------------------------------------------------------
-  def wait_old(frames = 1)
-    waiter = EbdxWaiter.new
+  def wait(frames = 1)
     frames.times do
-      waiter.graphics_update
+      Graphics.update
       self.update
     end
-  end
-
-  # duration is in seconds
-  # def pbWaitFix(duration)
-  #   timer_start = System.uptime
-  #   until System.uptime - timer_start >= duration
-  #     # do sth
-  #     self.update
-  #     Graphics.update
-  #   end
-  # end
-
-  def wait(frames = 1)
-    # mult = Graphics.ebdx_frame_rate/EliteBattle::DEFAULT_FRAMERATE 
-    # frames = frames * mult
-    
-    # if EliteBattle::USE_DELTA_TIME_HOTFIX
-    #   if frames <= 0
-    #     self.update
-    #     Graphics.update
-    #   else  
-    #     duration = frames.to_f / Graphics.ebdx_frame_rate
-    #     duration = 0.01 if duration <= 0
-    #     pbWaitFix(duration)
-    #   end 
-    # else
-      wait_old(frames)
-    # end
   end
   #-----------------------------------------------------------------------------
   # close animation sequence
@@ -322,9 +309,8 @@ class PokemonEggHatch_Scene
     end
     pbDisposeSpriteHash(@sprites)
     16.times do
-      pbWait(0.01) do |delta_t|
-        @viewport.color.alpha -= 16
-      end 
+      @viewport.color.alpha -= 16
+      pbWait(0.01)
     end
     @viewport.dispose
   end

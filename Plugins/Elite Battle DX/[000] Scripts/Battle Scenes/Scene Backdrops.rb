@@ -292,11 +292,11 @@ class BattleSceneRoom
       @toggle *= -1 if @wind < 65 || (@wind >= 70 && @toggle < 0)
     else
       @wWait += 1
-      if @wWait > Graphics.ebdx_frame_rate*5
+      if @wWait > Graphics.frame_rate*5
         mod = @toggle*(2 + (@wind >= 88 && @wind <= 92 ? 2 : 0))
         @wind -= mod
         @toggle *= -1 if @wind <= 80 || @wind >= 100
-        @wWait = 0 if @wWait > Graphics.ebdx_frame_rate*5 + 33
+        @wWait = 0 if @wWait > Graphics.frame_rate*5 + 33
       end
     end
     # additional metrics
@@ -464,7 +464,8 @@ class BattleSceneRoom
   #-----------------------------------------------------------------------------
   def setWeather
     # loop once
-    for wth in [["Rain", [:Rain, :HeavyRain]], ["Snow", :Hail], ["StrongWind", :StrongWinds], ["Sunny", [:Sun, :HarshSun]], ["Sandstorm", :Sandstorm], ["Fog", :Fog]]
+    #for wth in [["Rain", [:Rain, :HeavyRain]], ["Snow", :Hail], ["StrongWind", :StrongWinds], ["Sunny", [:Sun, :HarshSun]], ["Sandstorm", :Sandstorm], ["Fog", :Fog]]
+    for wth in [["Rain", [:Rain, :HeavyRain]], ["Snow", :Hail], ["StrongWind", :StrongWinds], ["Sunny", [:Sun, :HarshSun]], ["Sandstorm", :Sandstorm], ["Fog", :Fog], ["ShadowSky", :ShadowSky]]
       proceed = false
       for cond in (wth[1].is_a?(Array) ? wth[1] : [wth[1]])
         proceed = true if @battle.pbWeather == cond
@@ -515,6 +516,23 @@ class BattleSceneRoom
       end
       @sprites["w_rain#{j}"].opacity -= @sprites["w_rain#{j}"].speed*(harsh ? 3 : 2)/self.delta
       @sprites["w_rain#{j}"].ox += [1, @sprites["w_rain#{j}"].speed*(harsh ? 8 : 6)/self.delta].max
+    end
+	# shadowsky particles
+    for j in 0...72
+      next if !@sprites["w_shadowsky#{j}"]
+      if @sprites["w_shadowsky#{j}"].opacity <= 0
+        z = rand(32)
+        @sprites["w_shadowsky#{j}"].param = 0.24 + 0.01*rand(z/2)
+        @sprites["w_shadowsky#{j}"].ox = 0
+        @sprites["w_shadowsky#{j}"].ey = -rand(64)
+        @sprites["w_shadowsky#{j}"].ex = 32 + rand(@sprites["bg"].bitmap.width - 64)
+        @sprites["w_shadowsky#{j}"].speed = 3 + 2/((rand(5) + 1)*0.4)
+        @sprites["w_shadowsky#{j}"].z = z - (@focused ? 0 : 100)
+        @sprites["w_shadowsky#{j}"].opacity = 255
+        @sprites["w_shadowsky#{j}"].color = Settings::SHADOW_MOVES_COLOR
+      end
+      @sprites["w_shadowsky#{j}"].opacity -= @sprites["w_shadowsky#{j}"].speed*(harsh ? 3 : 2)/self.delta
+      @sprites["w_shadowsky#{j}"].ox += [1, @sprites["w_shadowsky#{j}"].speed*(harsh ? 8 : 6)/self.delta].max
     end
     # sun particles
     for j in 0...3
@@ -884,7 +902,7 @@ class BattleSceneRoom
     for j in 0...72
       next if @sprites["w_rain#{j}"]
       @sprites["w_rain#{j}"] = Sprite.new(@viewport)
-      @sprites["w_rain#{j}"].create_rect(harsh ? 28 : 24, 3, Color.white)
+      @sprites["w_rain#{j}"].create_rect(harsh ? 28 : 24, 2, Color.white)
       @sprites["w_rain#{j}"].default!
       @sprites["w_rain#{j}"].angle = 80
       @sprites["w_rain#{j}"].oy = 2
@@ -905,6 +923,45 @@ class BattleSceneRoom
       next if !@sprites["w_rain#{j}"]
       @sprites["w_rain#{j}"].dispose
       @sprites.delete("w_rain#{j}")
+    end
+  end
+  #-----------------------------------------------------------------------------
+  # shadow sky weather handlers
+  #-----------------------------------------------------------------------------
+  def drawShadowSky
+    # apply sky tone
+    if @sprites["sky"]
+      @sprites["sky"].tone.all -= 2 if @sprites["sky"].tone.all > -16
+      @sprites["sky"].tone.gray += 16 if @sprites["sky"].tone.gray < 128
+      for i in 0..1
+        @sprites["cloud#{i}"].tone.all -= 2 if @sprites["cloud#{i}"].tone.all > -16
+        @sprites["cloud#{i}"].tone.gray += 16 if @sprites["cloud#{i}"].tone.gray < 128
+      end
+    end
+    for j in 0...72
+      next if @sprites["w_shadowsky#{j}"]
+      @sprites["w_shadowsky#{j}"] = Sprite.new(@viewport)
+      @sprites["w_shadowsky#{j}"].create_rect(24, 1, Color.white)
+      @sprites["w_shadowsky#{j}"].default!
+      @sprites["w_shadowsky#{j}"].angle = 80
+      @sprites["w_shadowsky#{j}"].oy = 2
+      @sprites["w_shadowsky#{j}"].opacity = 0
+    end
+  end
+  def deleteShadowSky
+    # apply sky tone
+    if @sprites["sky"]
+      @sprites["sky"].tone.all += 2 if @sprites["sky"].tone.all < 0
+      @sprites["sky"].tone.gray -= 16 if @sprites["sky"].tone.gray > 0
+      for i in 0..1
+        @sprites["cloud#{i}"].tone.all += 2 if @sprites["cloud#{i}"].tone.all < 0
+        @sprites["cloud#{i}"].tone.gray -= 16 if @sprites["cloud#{i}"].tone.gray > 0
+      end
+    end
+    for j in 0...72
+      next if !@sprites["w_shadowsky#{j}"]
+      @sprites["w_shadowsky#{j}"].dispose
+      @sprites.delete("w_shadowsky#{j}")
     end
   end
   #-----------------------------------------------------------------------------
@@ -980,7 +1037,7 @@ class BattleSceneRoom
   #-----------------------------------------------------------------------------
   # battler sprite positioning
   #-----------------------------------------------------------------------------
-  def delta; return Graphics.ebdx_frame_rate/40.0; end
+  def delta; return Graphics.frame_rate/40.0; end
   def scale_y; return @sprites["bg"].zoom_y; end
   def battler(i); return @sprites["battler#{i}"]; end
   def trainer(i); return @sprites["trainer_#{i}"]; end

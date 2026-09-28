@@ -69,7 +69,7 @@ class Pokemon
       end
     end
     # adjust IVs if applicable
-    self.adjust_shiny_iv
+    # self.adjust_shiny_iv
   end
   #-----------------------------------------------------------------------------
   #  adjust IV values for shiny Pokemon
@@ -104,7 +104,11 @@ class Pokemon
     # Format stat multipliers due to nature
     nature_mod = {}
     GameData::Stat.each_main { |s| nature_mod[s.id] = 100 }
-    this_nature = self.nature_for_stats
+    #this_nature = self.nature_for_stats
+	if self.nature_for_stats.nil?
+		self.nature_for_stats = -1
+	end
+	this_nature=(self.nature_for_stats!=-1) ? GameData::Nature.get(nature_for_stats) : self.nature_for_stats
     if this_nature
       this_nature.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
     end

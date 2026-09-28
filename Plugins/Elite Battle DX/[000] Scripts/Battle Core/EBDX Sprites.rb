@@ -114,12 +114,18 @@ class DynamicPokemonSprite
     @fp = {}
     # loads shadow particles for battler animation
     for i in 0...16
-      @fp[i] = Sprite.new(@viewport)
-      @fp[i].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/ebShadow")
-      @fp[i].ox = @fp[i].bitmap.width/4
-      @fp[i].oy = @fp[i].bitmap.height/2
-      @fp[i].src_rect.set(0,0,@fp[i].bitmap.width/2,@fp[i].bitmap.height)
-      @fp[i].opacity = 0
+      # @fp[i] = Sprite.new(@viewport)
+      # @fp[i].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/ebShadow")
+      # @fp[i].ox = @fp[i].bitmap.width/4
+      # @fp[i].oy = @fp[i].bitmap.height/2
+      # @fp[i].src_rect.set(0,0,@fp[i].bitmap.width/2,@fp[i].bitmap.height)
+      # @fp[i].opacity = 0
+	  @fp["shadowaura#{i}"] = Sprite.new(@viewport)
+      @fp["shadowaura#{i}"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/ebShadowAura")
+      @fp["shadowaura#{i}"].ox = @fp["shadowaura#{i}"].bitmap.width/8
+      @fp["shadowaura#{i}"].oy = @fp["shadowaura#{i}"].bitmap.height
+      @fp["shadowaura#{i}"].src_rect.set(0,0,@fp["shadowaura#{i}"].bitmap.width/4,@fp["shadowaura#{i}"].bitmap.height)
+      @fp["shadowaura#{i}"].opacity = 0
     end
     # loads aura charge particles
     for i in 0...12
@@ -147,7 +153,7 @@ class DynamicPokemonSprite
   def sideSize; return @battle.pbSideSize(@index); end
   def battleIndex; return @index; end
   def pbSetPosition(*args); end
-  def delta; return Graphics.ebdx_frame_rate/40.0; end
+  def delta; return Graphics.frame_rate/40.0; end
   def x; return @sprite.x; end
   def y; return @sprite.y; end
   def z; return @sprite.z; end
@@ -375,6 +381,7 @@ class DynamicPokemonSprite
     @species = species.nil? ? pokemon.species : species
     @form = (@pokemon.form rescue 0)
     @isShadow = true if @pokemon.shadowPokemon?
+    #@isHyperMode = true if @pokemon.hyper_mode
     # loads Pokemon bitmap
     if !species.nil?
       @bitmap = pbLoadPokemonBitmapSpecies(pokemon, species, back)
@@ -569,8 +576,12 @@ class DynamicPokemonSprite
       when 4 #BRN
         @sprite.color = Color.new(206, 73, 43, @pulse)
       end
+	  #@isHyperMode = @pokemon.hyper_mode
       @sprite.color = Color.new(204, 38, 92, @pulse*0.5) if @status < 1 && @dynamax
       @sprite.color = Color.new(221, 68, 92, @pulse) if @status < 1 && @charged
+      @sprite.color = Color.new(221, 68, 92, @pulse) if @status < 1 && @charged
+      @sprite.color = Color.new(80, 0, 160, [@pulse,100].max) if @isShadow
+      #@sprite.color = Color.new(160, 0, 30, [@pulse,100].max) if @isHyperMode
     end
     @anim = false
     # Pokemon sprite blinking when targeted or damaged
@@ -582,37 +593,66 @@ class DynamicPokemonSprite
     self.formatShadow
   end
   #-----------------------------------------------------------------------------
-  # adds smokey shadow effects to battlers
+  # adds smokey shadow effects to battlers #change to shadow aura
   #-----------------------------------------------------------------------------
   def shadowUpdate
     # decides whether or not to run the animation
     return if !@loaded
     return if self.disposed? || @bitmap.disposed?
-    # animates shadow particles
-    for i in 0...16
-      next if i > @frame2*self.delta/4
-      @fp[i].visible = @showshadow
-      @fp[i].visible = false if @hidden
-      @fp[i].visible = false if !@isShadow
+    for i in 0...12
+      next if i > @frame3*self.delta/16
+      @fp["shadowaura#{i}"].visible = @showshadow
+      @fp["shadowaura#{i}"].visible = false if @hidden
+      @fp["shadowaura#{i}"].visible = false if !@isShadow
       next if !@isShadow
-      if @fp[i].opacity <= 0
-        @fp[i].toggle = 2
-        z = [0.5,0.6,0.7,0.8,0.9,1.0][rand(6)]
-        @fp[i].param = z
-        @fp[i].x = self.x - self.bitmap.width*self.zoom_x/2 + rand(self.bitmap.width)*self.zoom_x
-        @fp[i].y = self.y - 64*self.zoom_y + rand(64)*self.zoom_y
-        @fp[i].z = (rand(2)==0) ? self.z - 1 : self.z + 1
-        @fp[i].speed = (rand(2)==0) ? +1 : -1
-        @fp[i].src_rect.x = rand(2)*@fp[i].bitmap.width/2
+      if @fp["shadowaura#{i}"].opacity <= 0
+        x = @sprite.x - @sprite.ox*@sprite.zoom_x + rand(@sprite.bitmap.width*@sprite.zoom_x)
+        y = @sprite.y - @sprite.oy*0.7*@sprite.zoom_y + rand(@sprite.bitmap.height*0.8*@sprite.zoom_y)
+        @fp["shadowaura#{i}"].x = x
+        @fp["shadowaura#{i}"].y = y
+        @fp["shadowaura#{i}"].z = (rand(2)==0) ? self.z - 1 : self.z + 1
+        @fp["shadowaura#{i}"].src_rect.x = rand(4)*@fp["shadowaura#{i}"].bitmap.width/4
+        @fp["shadowaura#{i}"].zoom_y = 0.6*@sprite.zoom_y
+        @fp["shadowaura#{i}"].zoom_x = @sprite.zoom_x
+        @fp["shadowaura#{i}"].opacity = 166 + rand(90)
+        @fp["shadowaura#{i}"].mirror = (x < @sprite.x) ? false : true
+		if $game_switches[350]
+			@fp["shadowaura#{i}"].tone = Tone.new(100,0,-100)
+		else
+			@fp["shadowaura#{i}"].tone = Tone.new(0,0,0)
+		end
       end
-      @fp[i].zoom_x = @fp[i].param*self.zoom_x
-      @fp[i].zoom_y = @fp[i].param*self.zoom_y
-      @fp[i].param -= 0.01/self.delta
-      @fp[i].y -= 1
-      @fp[i].opacity += 8*@fp[i].toggle/self.delta
-      @fp[i].toggle = -1 if @fp[i].opacity >= 255
+	  #aura behaviour [velocity, size]
+      @fp["shadowaura#{i}"].zoom_y += 0.1/5*@sprite.zoom_y/self.delta
+      @fp["shadowaura#{i}"].opacity -= 16/2/self.delta
     end
-    @frame2 += 1 if @frame2 < 128
+    @frame3 += 1 if @frame3 < 256
+    # # animates shadow particles
+    # for i in 0...16
+      # next if i > @frame2*self.delta/4
+      # @fp[i].visible = @showshadow
+      # @fp[i].visible = false if @hidden
+      # @fp[i].visible = false if !@isShadow
+      # next if !@isShadow
+      # if @fp[i].opacity <= 0
+        # @fp[i].toggle = 2
+        # z = [0.5,0.6,0.7,0.8,0.9,1.0][rand(6)]
+        # @fp[i].param = z
+        # @fp[i].x = self.x - self.bitmap.width*self.zoom_x/2 + rand(self.bitmap.width)*self.zoom_x
+        # @fp[i].y = self.y - 64*self.zoom_y + rand(64)*self.zoom_y
+        # @fp[i].z = (rand(2)==0) ? self.z - 1 : self.z + 1
+        # @fp[i].speed = (rand(2)==0) ? +1 : -1
+        # @fp[i].src_rect.x = rand(2)*@fp[i].bitmap.width/2
+      # end
+      # @fp[i].zoom_x = @fp[i].param*self.zoom_x
+      # @fp[i].zoom_y = @fp[i].param*self.zoom_y
+      # @fp[i].param -= 0.01/self.delta
+      # @fp[i].y -= 1
+      # @fp[i].opacity += 8*@fp[i].toggle/self.delta
+      # @fp[i].toggle = -1 if @fp[i].opacity >= 255
+    # end
+    # @frame2 += 1 if @frame2 < 128
+	#EliteBattle.playCommonAnimation(:SHADOWAURA, self, battlerIndex, battlerIndex, 0)
   end
   #-----------------------------------------------------------------------------
   # adds charged particle animation (for Aura)

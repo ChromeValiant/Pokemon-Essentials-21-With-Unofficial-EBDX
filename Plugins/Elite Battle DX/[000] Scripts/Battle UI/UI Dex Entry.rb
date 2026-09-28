@@ -122,7 +122,7 @@ class EliteBattle_Pokedex
     # Draw the type icon(s)
     type1 = GameData::Type.get(species_data.types[0]).icon_position
     type2 = species_data.types[1] ? GameData::Type.get(species_data.types[1]).icon_position : type1
-    height = 26 #@typebitmap.height/GameData::Type.values.length
+    height = @typebitmap.height/GameData::Type.values.length
     type1rect = Rect.new(0, type1*height, @typebitmap.width, height)
     type2rect = Rect.new(0, type2*height, @typebitmap.width, height)
     overlay.blt(292, 122, @typebitmap, type1rect)

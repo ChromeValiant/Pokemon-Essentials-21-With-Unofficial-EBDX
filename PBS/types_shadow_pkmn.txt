@@ -2,6 +2,6 @@
 #-------------------------------
 [SHADOW]
 Name = Shadow
-IconPosition = 9
+IconPosition = 19
 IsSpecialType = true
 Resistances = SHADOW

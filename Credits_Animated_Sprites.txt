@@ -10,6 +10,9 @@ OldSoulja, OmegalingYT, Pepsiman, PKMarioG, Pokepachito, Poki Papillon, PomPomKi
 RadicalCharizard, Regis, RetroNC, Robert, Rod, seleccion, SelenaArmorclaw, SkidMarc25, Snivy101, Sopita_Yorita,
 oulWardenInfinity, The King, TheAetherPlayer, TheCynicalPoet, Tinkatooni, Turi, Typhlito, uppababy.
 
+# Shadow Lugia Colors, Overworld sprite, & Icons from Pokemon Bushido Dev Team
+- Link to Pokemon Bushido: https://eeveeexpo.com/bushido/
+
 # GIF to PNG Sprite Sheet converter tool by @dragonnite (Lucy)
 
 # All Mega Evolution sprites except Manectric are by Aronousqui:

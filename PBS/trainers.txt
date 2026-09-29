@@ -33,7 +33,7 @@ Pokemon = ONIX,14
 #-------------------------------
 [TEAMROCKET_M,Grunt,1]
 LoseText = You're too good for me!
-Pokemon = WEEPINBELL,21
+Pokemon = LUGIA,21
     Shadow = true
 #-------------------------------
 [TEAMROCKET_F,Grunt,1]

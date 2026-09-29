@@ -739,7 +739,7 @@ Generation = 1
 WildItemUncommon = GRIPCLAW
 #-------------------------------
 [NIDORANfE]
-Name = Nidoran♀
+Name = Nidoran
 Types = POISON
 BaseStats = 55,47,52,41,40,40
 GenderRatio = AlwaysFemale
@@ -818,7 +818,7 @@ Pokedex = It is adept at sending foes flying with harsh tackles using its tough,
 Generation = 1
 #-------------------------------
 [NIDORANmA]
-Name = Nidoran♂
+Name = Nidoran
 Types = POISON
 BaseStats = 46,57,40,50,40,40
 GenderRatio = AlwaysMale

@@ -63,6 +63,9 @@ EBDX v21.1 port add-ons & fixes:
 	NikDie for the animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
 	SceoFlash13 for hotfixes while using frame-based animations.
 	Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
+	Golisopod-User for Mouse Support
+	PetiGoggles (Peti) for update to EBDX Stat Boost Overlay (originally by PhantomBass)
+	KleinStudio for BW Party Ball Lineup graphics
 
 ==============================================================
 CREDITS: Pokemon World Tournament

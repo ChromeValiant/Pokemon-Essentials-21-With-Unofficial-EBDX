@@ -612,7 +612,7 @@ TotalPP = 5
 Target = AllNearFoes
 FunctionCode = AddMoneyGainedFromBattleLowerUserSpAtk1
 Flags = CanProtect,CanMirrorMove,CannotMetronome
-Description = The user throws out a huge mass of coins, lowering its Sp. Atk stat. Money is earned after the battle.
+Description = Throws out a huge mass of coins that lowers its Sp. Atk stat. Money is earned after the battle.
 #-------------------------------
 [MORTALSPIN]
 Name = Mortal Spin

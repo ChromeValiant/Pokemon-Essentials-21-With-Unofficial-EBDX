@@ -5,19 +5,21 @@
 ################################################################################
 class Battle::AI
   GEN_9_BASE_ABILITY_RATINGS = {
-    9  => [:ORICHALCUMPULSE, :HADRONENGINE],
-    8  => [:THERMALEXCHANGE],
-    7  => [:EARTHEATER, :TOXICDEBRIS, :PROTOSYNTHESIS, :QUARKDRIVE, :SUPERSWEETSYRUP, :MINDSEYE],
-    6  => [:SUPREMEOVERLORD, :SEEDSOWER, :OPPORTUNIST],
+    9  => [:ORICHALCUMPULSE, :HADRONENGINE, :MEGASOL],
+    8  => [:THERMALEXCHANGE,:DRAGONIZE, :EELEVATE],
+    7  => [:EARTHEATER, :TOXICDEBRIS, :PROTOSYNTHESIS, :QUARKDRIVE, :SUPERSWEETSYRUP,
+           :MINDSEYE],
+    6  => [:SUPREMEOVERLORD, :SEEDSOWER, :OPPORTUNIST, :SPICYSPRAY],
     5  => [:ARMORTAIL, :ROCKYPAYLOAD, :SHARPNESS, :LINGERINGAROMA, :CUDCHEW, 
-           :TOXICCHAIN, :POISONPUPPETEER],
+           :TOXICCHAIN, :POISONPUPPETEER, :FIREMANE],
     4  => [:PURIFYINGSALT, :WELLBAKEDBODY, :ANGERSHELL, :ELECTROMORPHOSIS, :WINDPOWER],
     3  => [:WINDRIDER, :HOSPITALITY,
            :TABLETSOFRUIN, :SWORDOFRUIN, :VESSELOFRUIN, :BEADSOFRUIN
           ],
     1  => [:EMBODYASPECT, :EMBODYASPECT_1, :EMBODYASPECT_2, :EMBODYASPECT_3,
            :TERASHIFT, :TERASHELL, :TERAFORMZERO
-          ]
+          ],
+    0  => [:PIERCINGDRILL]
 
   }
 
@@ -355,7 +357,7 @@ class Battle::AI::AIMove
     # Ability effects that alter damage
     if user.ability_active?
       case user.ability_id
-      when :AERILATE, :GALVANIZE, :PIXILATE, :REFRIGERATE
+      when :AERILATE, :GALVANIZE, :PIXILATE, :REFRIGERATE, :DRAGONIZE
         multipliers[:power_multiplier] *= 1.2 if type == :NORMAL   # NOTE: Not calc_type.
       when :ANALYTIC
         if rough_priority(user) <= 0

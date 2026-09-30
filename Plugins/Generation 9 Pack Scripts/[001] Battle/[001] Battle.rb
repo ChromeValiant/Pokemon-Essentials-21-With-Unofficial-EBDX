@@ -42,6 +42,10 @@ class Battle
     return @rage_hit_count[battler.index & 1][battler.pokemonIndex]
   end
   
+  def pbRageHitReset(battler)
+    return @rage_hit_count[battler.index & 1][battler.pokemonIndex] = 0
+  end
+  
   def pbAddFaintedAlly(idxBattler)
     idxBattler = idxBattler.index if idxBattler.respond_to?("index")
     @fainted_count[idxBattler & 1] += 1 if @fainted_count[idxBattler & 1] < 100
@@ -95,6 +99,37 @@ class Battle
   end
 
   #-----------------------------------------------------------------------------
+  # Aliased to ensure encored Pokemon cannot use first impression and fake out.
+  #-----------------------------------------------------------------------------
+  alias champions_pbAutoChooseMove pbAutoChooseMove
+  def pbAutoChooseMove(idxBattler, showMessages = true)
+    battler = @battlers[idxBattler]
+    if battler.fainted?
+      pbClearChoice(idxBattler)
+      return true
+    end
+    # Encore
+    idxEncoredMove = battler.pbEncoredMoveIndex
+    encoreMove = battler.moves[idxEncoredMove]
+    if idxEncoredMove >= 0 &&
+      ["FlinchTargetFailsIfNotUserFirstTurn", "FailsIfNotUserFirstTurn"].include?(encoreMove.function_code)
+      @choices[idxBattler][0] = :UseMove         # "Use move"
+      @choices[idxBattler][1] = -1               # Index of move to be used
+      @choices[idxBattler][2] = @struggle        # Battle::Move object
+      @choices[idxBattler][3] = -1               # No target chosen yet
+      return true if singleBattle?
+      if pbOwnedByPlayer?(idxBattler)
+        if showMessages
+          pbDisplayPaused(_INTL("{1} has to use Struggle!", battler.name))
+        end
+        return pbChooseTarget(battler, encoreMove)
+      end
+      return true
+    end
+    return champions_pbAutoChooseMove(idxBattler, showMessages)
+  end
+
+  #-----------------------------------------------------------------------------
   # Counts down the remaining turns of the Splinter effect until its reset.
   #-----------------------------------------------------------------------------
   alias paldea_pbEOREndBattlerEffects pbEOREndBattlerEffects
@@ -142,7 +177,11 @@ class Battle
     priority.each do |battler|
       next if !battler.effects[PBEffects::SaltCure] || !battler.takesIndirectDamage?
       pbCommonAnimation("SaltCure", battler)
-      fraction = (battler.pbHasType?(:STEEL) || battler.pbHasType?(:WATER)) ? 4 : 8
+      if Settings::CHAMPIONS_MECHANICS
+        fraction = (battler.pbHasType?(:STEEL) || battler.pbHasType?(:WATER)) ? 8 : 16
+      else
+        fraction = (battler.pbHasType?(:STEEL) || battler.pbHasType?(:WATER)) ? 4 : 8
+      end
       battler.pbTakeEffectDamage(battler.totalhp / fraction) { |hp_lost|
         pbDisplay(_INTL("{1} is hurt by Salt Cure!", battler.pbThis))
       }
@@ -200,6 +239,16 @@ class Battle
     displayname = (pbOwnedByPlayer?(idxBattler)) ? pkmn.name : _INTL("The opposing {1}", pkmn.name)
     pbDisplay(_INTL("{1} was revived and is ready to fight again!", displayname))
   end
+
+  #-----------------------------------------------------------------------------
+  # Resets rage hit counter on switch out.
+  #-----------------------------------------------------------------------------
+  alias champions_pbRecallAndReplace pbRecallAndReplace
+  def pbRecallAndReplace(*args)
+    idxBattler = args[0]
+    pbRageHitReset(@battlers[idxBattler]) if Settings::CHAMPIONS_MECHANICS
+    champions_pbRecallAndReplace(*args)
+  end
 end
 
 
@@ -254,12 +303,22 @@ class Battle::Move
   def display_type(battler)
     case @function_code
     when "TypeDependsOnUserPlate",            # Judgement
+         "TypeAndPowerDependOnWeather",       # Weather Ball
+         "TypeDependsOnUserIVs",              # Hidden Power
+         "TypeAndPowerDependOnUserBerry",     # Natural Gift
+         "TypeDependsOnUserMemory",           # Multi-Attack
+         "TypeDependsOnUserDrive",            # Techno Blast
+         "TypeIsUserFirstType",               # Revelation Dance
+         "TypeAndPowerDependOnTerrain",       # Terrain Pulse
          "TypeIsUserSecondType",              # Ivy Cudgel
          "TypeIsUserSecondTypeRemoveScreens"  # Raging Bull
       return pbBaseType(battler)
-    else
-      return paldea_display_type(battler)
     end
+    # Ability
+    return pbBaseType(battler) if battler&.hasActiveAbility?([:AERILATE, :GALVANIZE, :PIXILATE,
+                                                              :REFRIGERATE, :LIQUIDVOICE, :NORMALIZE,
+                                                              :DRAGONIZE])
+    return paldea_display_type(battler)
   end
   
   #-----------------------------------------------------------------------------
@@ -353,8 +412,14 @@ class Battle::Move
       end
     when :Hail
       if Settings::HAIL_WEATHER_TYPE > 0 && target.pbHasType?(:ICE) && 
-         (physicalMove? || @function_code == "UseTargetDefenseInsteadOfTargetSpDef")
+         (physicalMove? || @function_code == "UseTargetDefenseInsteadOfTargetSpDef") && !user.hasActiveAbility?(:MEGASOL)
         multipliers[:defense_multiplier] *= 1.5
+      end
+    when :Sandstorm
+      # Mega Sol ability negate sp. def boost to Rock-type during Sandstorm
+      if target.pbHasType?(:ROCK) && specialMove? && @function_code != "UseTargetDefenseInsteadOfTargetSpDef" &&
+         user.hasActiveAbility?(:MEGASOL)
+        multipliers[:defense_multiplier] /= 1.5
       end
     end
     # Frostbite
@@ -367,7 +432,49 @@ class Battle::Move
     end
     # Glaive Rush
     multipliers[:final_damage_multiplier] *= 2 if target.effects[PBEffects::GlaiveRush] > 0
+    # Mega Sol (skip if its sunny)
+    if user.hasActiveAbility?(:MEGASOL) && ![:Sun, :HarshSun].include?(user.effectiveWeather)
+      # Negate boosted/lowered damage during rain
+      case type
+      when :FIRE
+        multipliers[:final_damage_multiplier] *= [:Rain, :HeavyRain].include?(user.effectiveWeather) ? 3 : 1.5
+      when :WATER
+        multipliers[:final_damage_multiplier] /= [:Rain, :HeavyRain].include?(user.effectiveWeather) ? 3 : 2
+      end
+      if @function_code == "IncreasePowerInSunWeather"
+        multipliers[:final_damage_multiplier] *= (type == :FIRE) ? 1 : (type == :WATER) ? 3 : 1.5
+      end
+    end
     paldea_pbCalcDamageMultipliers(user, target, numTargets, type, baseDmg, multipliers)
+  end
+
+  #=============================================================================
+  # Messages upon being hit
+  #=============================================================================
+  # Added extremely effective and mostly effective message
+  #-----------------------------------------------------------------------------
+  alias champions_pbEffectivenessMessage pbEffectivenessMessage
+  def pbEffectivenessMessage(user, target, numTargets = 1)
+    return if self.is_a?(Battle::Move::FixedDamageMove)
+    return if target.damageState.disguise || target.damageState.iceFace
+    # Extremely Effective
+    if target.damageState.typeMod > 2.0
+      if numTargets > 1
+        @battle.pbDisplay(_INTL("It's extremely effective on {1}!", target.pbThis(true)))
+      else
+        @battle.pbDisplay(_INTL("It's extremely effective!"))
+      end
+      return
+    # Mostly Ineffective
+    elsif target.damageState.typeMod < 0.5
+      if numTargets > 1
+        @battle.pbDisplay(_INTL("It's mostly ineffective on {1}...", target.pbThis(true)))
+      else
+        @battle.pbDisplay(_INTL("It's mostly ineffective..."))
+      end
+      return
+    end
+    champions_pbEffectivenessMessage(user, target, numTargets)
   end
 end
 

@@ -607,6 +607,41 @@ class Battle::Move::TypeDependsOnUserPlate < Battle::Move
 end
 
 #===============================================================================
+# Hidden Power
+#===============================================================================
+# Added Tooglable PLA Hidden Power.
+#-------------------------------------------------------------------------------
+class Battle::Move::TypeDependsOnUserIVs < Battle::Move
+  def pbOnStartUse(user, targets)
+    if Settings::HIDDEN_POWER_USE_PLA_MECHANICS && user.hasHiddenPowerUnown? && !targets.empty?
+      target = nil
+      targets.each do |b|
+        next if !b || b.fainted? || b.isCommander?
+        target = b
+      end
+      newType   = @battle.pbGetBestTypeJudgment(user, target, self, user.legendPlateType)
+      @calcType = newType
+    end
+  end
+
+  def pbBaseType(user)
+    if Settings::HIDDEN_POWER_USE_PLA_MECHANICS
+      return user.legendPlateType
+    else
+      hp = pbHiddenPower(user.pokemon)
+      return hp[0]
+    end
+  end
+
+  def pbBaseDamage(baseDmg, user, target)
+    return 50 if Settings::HIDDEN_POWER_USE_PLA_MECHANICS
+    return super if Settings::MECHANICS_GENERATION >= 6
+    hp = pbHiddenPower(user.pokemon)
+    return hp[1]
+  end
+end
+
+#===============================================================================
 # Feint
 #===============================================================================
 # Also negates the effects of Burning Bulwark.

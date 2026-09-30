@@ -541,14 +541,26 @@ MultipleForms.register(:HOOPA, {
 })
 
 #-------------------------------------------------------------------------------
+# Basculin
+#-------------------------------------------------------------------------------
+MultipleForms.register(:BASCULIN, {
+  "getForm" => proc { |pkmn|
+    if pkmn.form_simple >= 2
+      next (pkmn.female?) ? 3 : 2
+    end
+    next pkmn.form_simple
+  }
+})
+
+#-------------------------------------------------------------------------------
 # Basculegion - Gender forms.
 #-------------------------------------------------------------------------------
 MultipleForms.register(:BASCULEGION, {
   "getForm" => proc { |pkmn|
-    next pkmn.gender
+    next (pkmn.female?) ? 3 : 2
   },
   "getFormOnCreation" => proc { |pkmn|
-    next pkmn.gender
+    next (pkmn.female?) ? 3 : 2
   }
 })
 
@@ -666,6 +678,7 @@ MultipleForms.register(:TERAPAGOS, {
   }
 })
 
+#-------------------------------------------------------------------------------
 # Zygarde - Mega Zygarde form.
 #-------------------------------------------------------------------------------
 MultipleForms.register(:ZYGARDE, {
@@ -697,5 +710,9 @@ MultipleForms.register(:ZYGARDE, {
     if GameData::Move.exists?(:COREENFORCER) && endBattle
       pkmn.moves.each { |move| move.id = :COREENFORCER if move.id == :NIHILLIGHT }
     end
+  },
+  "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    pkmn.makeUnmega if pkmn.mega? && endBattle
+    next pkmn.form - 2 if [2, 3].include?(pkmn.form) && (pkmn.fainted? || endBattle)
   }
 })

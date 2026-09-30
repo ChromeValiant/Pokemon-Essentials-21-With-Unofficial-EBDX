@@ -66,3 +66,19 @@ Battle::AI::Handlers::AbilityRanking.add(:POISONPUPPETEER,
     next 0
   }
 )
+
+#================================================================================================
+# Champions
+#================================================================================================
+Battle::AI::Handlers::AbilityRanking.add(:MEGASOL,
+  proc { |ability, score, battler, ai|
+    next score if battler.check_for_move do |m|
+      m.is_a?(Battle::Move::RaiseUserAtkSpAtk1Or2InSun) ||                   # Growth
+      m.is_a?(Battle::Move::TypeAndPowerDependOnWeather) ||                  # Weather Ball
+      m.is_a?(Battle::Move::TwoTurnAttackOneTurnInSun) ||                    # Solar Beam, Solar Blade
+      m.is_a?(Battle::Move::HealUserDependingOnWeather) ||                   # Moonlight, Morning Sun, Synthesis
+      m.is_a?(Battle::Move::IncreasePowerInSunWeather)                       # Hydro Stream
+    end
+    next 0
+  }
+)

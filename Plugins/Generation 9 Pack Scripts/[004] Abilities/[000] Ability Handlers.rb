@@ -692,7 +692,7 @@ Battle::AbilityEffects::EndOfRoundGainItem.add(:BALLFETCH,
     next if battler.item
     next if battle.first_poke_ball.nil?
     battle.pbShowAbilitySplash(battler)
-    user.setStolenItem(battle.first_poke_ball)
+    battler.setStolenItem(battle.first_poke_ball)
     battler.item = battle.first_poke_ball
     battler.setInitialItem(battler.item) if !battler.initialItem
     battle.first_poke_ball = nil

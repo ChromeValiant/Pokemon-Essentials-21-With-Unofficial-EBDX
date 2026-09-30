@@ -352,6 +352,7 @@ Battle::AbilityEffects::OnSwitchOut.add(:ZEROTOHERO,
 Battle::AbilityEffects::OnSwitchIn.add(:COMMANDER,
   proc { |ability, battler, battle, switch_in|
     next if battler.effects[PBEffects::Commander]
+    next if battler.mega?
     next if defined?(battler.dynamax?) && battler.dynamax?
     showAnim = true
     battler.allAllies.each{|b|
@@ -359,6 +360,7 @@ Battle::AbilityEffects::OnSwitchIn.add(:COMMANDER,
       next if battle.choices[b.index][0] == :SwitchOut
       next if !b.isSpecies?(:DONDOZO)
       next if b.effects[PBEffects::Commander]
+      next if b.mega?
       next if defined?(b.dynamax?) && b.dynamax?
       battle.pbShowAbilitySplash(battler)
       battle.pbClearChoice(battler.index)

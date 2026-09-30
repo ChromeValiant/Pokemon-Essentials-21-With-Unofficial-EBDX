@@ -1,11 +1,71 @@
 Name = Generation 9 Pack
-Version = 3.3.3
+Version = 3.3.7
 Essentials = 21.1
 Requires = v21.1 Hotfixes,1.0.9
 Website = https://www.eeveeexpo.com/threads/5817/
 Credits = Caruban
 
 # Change logs
+#############################################
+# 3.3.7
+#############################################
+# - Added Fire Mane and Eelevate abilities.
+# - Added OPTIONAL Pokemon PBS files, which have been updated with several moves from the Pokémon Champions movepool.
+# - Fixed a typo in the Ball Fetch function.
+# - Fixed the status update order in pbTryUseMove.
+# - Updated the mega abilities for Barbaracle, Dragalge, Eelectross, Malamar, Pyroar, Raichu X, Raichu Y, Scolipede, Scrafty, and Staraptor.
+# - While using Champions Mechanics:
+#   - Burn Up: Becomes unselectable if the user is not a Fire type.
+#   - Double Shock: Becomes unselectable if the user is not an Electric type.
+#   - Last Resort: Becomes unselectable if the user hasn't used all of its other moves.
+#   - Make It Rain: Lowers the user's Sp. Atk by 2 stages.
+#   - Rage Fist: Resets upon switching out.
+#   - Spit Up: Becomes unselectable if the user has no Stockpile counters.
+#############################################
+# 3.3.6
+#############################################
+# - Added the remaining mega form icon sprites.
+# - Added Mega Sol’s damage modifier to bypass weather-based defensive buffs (Rock-type Sp. Def in Sandstorm and Ice-type Defense in Snow/Hail).
+# - Fixed a missing comma within the GEN_9_BASE_ABILITY_RATINGS data.
+# - Updated Champions Piercing Drill and Unseen Fist to ensure they trigger the secondary effects of a target's protection.
+#############################################
+# 3.3.5
+#############################################
+# - Added 4 new abilities: Mega Sol, Dragonize, Piercing Drill, and Spicy Spray.
+# - Added optional PBS files for Champions-related changes.
+# - Added optional PBS data and move function for PLZA Dark Void.
+# - Added a new toggleable setting, CHAMPIONS_MECHANICS, which implements the following changes:
+#   - Freeze: Lasts a maximum of 3 turns with a 25% chance to thaw each turn.
+#   - Paralysis: Reduced "fully paralyzed" chance to 12.5%.
+#   - Sleep: Lasts a maximum of 3 turns with a 33% chance to wake up on the second turn.
+#   - Healer Ability: 50% chance to cure an ally's status condition.
+#   - Unseen Fist & Piercing Drill Abilities: Contact moves now deal only 25% damage against protections.
+#   - Fake Out & First Impression: Become unselectable after the Pokémon's first turn on the field.
+#   - Rapid Spin & Knock Off: Secondary effects now trigger even if the user faints during the attack.
+#   - Freeze-Dry: Removed the chance to freeze the target (0% chance).
+#   - Toxic Thread: Lowers the target's Speed stat by two stages.
+#   - Salt Cure: Reduced damage to 1/16 max HP (or 1/8 for Water and Steel types) at the end of each turn.
+# - Added a new toggleable setting, HIDDEN_POWER_USE_PLA_MECHANICS, allowing Hidden Power to function similarly to Judgment when used with the Legend Plate.
+# - Added the last missing battle sprites from Pokémon Legends: Z-A.
+#############################################
+# 3.3.4
+#############################################
+# - Added a Mega Form check for the Commander Ability
+# - Added generation metadata for Palkia and Dialga (Origin Formes)
+# - Added new battle sprites for 23 mega forms: Mega Absol Z, Mega Barbaracle, Mega Chandelure, Mega Crabominable, 
+#   Mega Dragalge, Mega Drampa, Mega Floette, Mega Glimmora, Mega Golisopod, Mega Golurk, Mega Heatran, 
+#   Mega Magearna (default and original color), Mega Meowstic, Mega Pyroar, Mega Raichu (X and Y), Mega Scolipede,
+#   Mega Scovillain, Mega Staraptor, and Mega Tatsugiri (Curly, Droopy, and Stretchy).
+# - Added new cries for Mega Form Pokémon
+# - Corrected the base stats for Mega Metagross and Mega Scizor within the species updater
+# - Corrected the front sprite filenames for shiny Archaludon and Gouging Fire
+# - Fixed PLZA mega form Pokémon base stats
+# - Fixed an error where Mega Zygarde reverted to the incorrect form
+# - Fixed the float value calculation of money received via the Gold Canari doll effect
+# - Fixed the MoveFailureCheck handler logic for Gigaton Hammer
+# - Removed the multiHitMove? from the Water Shuriken move handler
+# - Updated Basculegion form numbers from 0 and 1 to 2 and 3
+# - Updated tutor and egg moves in the species updater with Maruno’s v22 dev branch PBS data to restore transfer-only moves
 #############################################
 # 3.3.3
 #############################################

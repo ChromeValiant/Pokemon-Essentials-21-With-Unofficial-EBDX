@@ -19,7 +19,7 @@ GameData::Status.register({
   :id            => :DROWSY,
   :name          => _INTL("Drowsy"),
   :animation     => "Drowsy",
-  :icon_position => 0
+  :icon_position => 5
 })
 
 #-------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ GameData::Status.register({
   :id            => :FROSTBITE,
   :name          => _INTL("Frostbite"),
   :animation     => "Frostbite",
-  :icon_position => 4
+  :icon_position => 6
 })
 
 
@@ -197,6 +197,24 @@ end
 
 
 class Battle::Battler
+  #-----------------------------------------------------------------------------
+  # Sleep
+  #-----------------------------------------------------------------------------
+  def pbSleepDuration(duration = -1)
+    duration = 2 + @battle.pbRandom(3) if duration <= 0
+    duration = 3 if Settings::CHAMPIONS_MECHANICS
+    duration = (duration / 2).floor if hasActiveAbility?(:EARLYBIRD)
+    return duration
+  end
+
+  #-----------------------------------------------------------------------------
+  # Freeze
+  #-----------------------------------------------------------------------------
+  def pbFreeze(msg = nil)
+    duration = Settings::CHAMPIONS_MECHANICS ? 3 : 0
+    pbInflictStatus(:FROZEN, duration, msg)
+  end
+
   #-----------------------------------------------------------------------------
   # Drowsy utilities. 
   #-----------------------------------------------------------------------------
@@ -483,12 +501,70 @@ class Battle::Battler
   end
   
   #-----------------------------------------------------------------------------
-  # Aliased to prevent the use of moves due to being Drowsy.
+  # Aliased to prevent the use of moves due to being Drowsy and champions statuses update.
   #-----------------------------------------------------------------------------
   alias paldea_pbTryUseMove pbTryUseMove
   def pbTryUseMove(*args)
-    ret = paldea_pbTryUseMove(*args)
-    return false if !ret
+    choice, move, specialUsage, skipAccuracyCheck = args[0], args[1], args[2], args[3]
+    if !pbCanChooseMove?(move, false, true, specialUsage)
+      @lastMoveFailed = true
+      return false
+    end
+    # Check whether it's possible for self to do anything at all
+    if @effects[PBEffects::SkyDrop] >= 0   # Intentionally no message here
+      PBDebug.log("[Move failed] #{pbThis} can't use #{move.name} because of being Sky Dropped")
+      return false
+    end
+    if @effects[PBEffects::HyperBeam] > 0   # Intentionally before Truant
+      PBDebug.log("[Move failed] #{pbThis} is recharging after using #{move.name}")
+      @battle.pbDisplay(_INTL("{1} must recharge!", pbThis))
+      @effects[PBEffects::Truant] = !@effects[PBEffects::Truant] if hasActiveAbility?(:TRUANT)
+      return false
+    end
+    if choice[1] == -2   # Battle Palace
+      PBDebug.log("[Move failed] #{pbThis} can't act in the Battle Palace somehow")
+      @battle.pbDisplay(_INTL("{1} appears incapable of using its power!", pbThis))
+      return false
+    end
+    # Skip checking all applied effects that could make self fail doing something
+    return true if skipAccuracyCheck
+    
+    # Update Champions
+    # Check Sleep and Frozen before the alias
+    if Settings::CHAMPIONS_MECHANICS
+      # Check status problems and continue their effects/cure them
+      case @status
+      when :SLEEP
+        self.statusCount -= 1
+        if @statusCount <= 0
+          pbCureStatus
+        elsif @statusCount == 1 && @battle.pbRandom(100) < (100/3.0)
+          pbCureStatus
+        else
+          pbContinueStatus
+          if !move.usableWhenAsleep?   # Snore/Sleep Talk
+            PBDebug.log("[Move failed] #{pbThis} is asleep")
+            @lastMoveFailed = true
+            return false
+          end
+        end
+      when :FROZEN
+        self.statusCount -= 1
+        if @statusCount <= 0
+          pbCureStatus
+        elsif !move.thawsUser?
+          if @battle.pbRandom(100) < 25
+            pbCureStatus
+          else
+            pbContinueStatus
+            PBDebug.log("[Move failed] #{pbThis} is frozen")
+            @lastMoveFailed = true
+            return false
+          end
+        end
+      end
+    end
+    # Check for Drowsy
     if @status == :DROWSY
       self.statusCount -= 1
       if @statusCount <= 0
@@ -502,6 +578,40 @@ class Battle::Battler
             return false
           end
         end
+      end
+    end
+    # Set the status to nil to skip the sleep and frozen check
+    # Set infatuation to 0 to skip the process
+    oldStatus = @status
+    oldAttract = @effects[PBEffects::Attract]
+    @status = nil if Settings::CHAMPIONS_MECHANICS && [:SLEEP, :FROZEN, :PARALYSIS].include?(@status)
+    @effects[PBEffects::Attract] = -1 if oldAttract >= 0
+    ret = paldea_pbTryUseMove(*args)
+    return false if !ret
+    # Update Champions
+    # Paralysis check
+    if Settings::CHAMPIONS_MECHANICS
+      # Restore the old status
+      @status = oldStatus
+      if @status == :PARALYSIS && @battle.pbRandom(100) < 12.5
+        pbContinueStatus
+        PBDebug.log("[Move failed] #{pbThis} is paralyzed")
+        @lastMoveFailed = true
+        return false
+      end
+    end
+    # Infatuation check
+    if oldAttract >= 0
+      # Restore the old infatuate counter
+      @effects[PBEffects::Attract] = oldAttract
+      @battle.pbCommonAnimation("Attract", self)
+      @battle.pbDisplay(_INTL("{1} is in love with {2}!", pbThis,
+                              @battle.battlers[@effects[PBEffects::Attract]].pbThis(true)))
+      if @battle.pbRandom(100) < 50
+        @battle.pbDisplay(_INTL("{1} is immobilized by love!", pbThis))
+        PBDebug.log("[Move failed] #{pbThis} is immobilized by love")
+        @lastMoveFailed = true
+        return false
       end
     end
     return true

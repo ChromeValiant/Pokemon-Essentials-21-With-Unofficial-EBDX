@@ -173,7 +173,7 @@ class Battle::Battler
   # don't need this, so it'll only return :NORMAL until actually using the move.
   #-----------------------------------------------------------------------------
   def pbGetJudgmentType(check_type = nil)
-    if pbOwnedByPlayer? && hasLegendPlateJudgment? 
+    if pbOwnedByPlayer? && (hasLegendPlateJudgment? || hasHiddenPowerUnown?)
       target = nil
       @battle.pbGetOpposingIndicesInOrder(@index).each do |i|
         battler = @battle.battlers[i]
@@ -194,6 +194,11 @@ class Battle::Battler
            hasActiveAbility?(:MULTITYPE) && 
            hasActiveItem?(:LEGENDPLATE) &&
            pbHasMove?(:JUDGMENT)
+  end
+
+  def hasHiddenPowerUnown?
+    return isSpecies?(:UNOWN) && 
+           pbHasMove?(:HIDDENPOWER)
   end
 end
 

@@ -27,7 +27,7 @@ MenuHandlers.add(:pokemon_debug_menu, :set_status, {
       end
       loop do
         msg = _INTL("Current status: {1}", GameData::Status.get(pkmn.status).name)
-        if pkmn.status == :SLEEP
+        if pkmn.status == :SLEEP || (pkmn.status == :FROZEN && Settings::CHAMPIONS_MECHANICS)
           msg = _INTL("Current status: {1} (turns: {2})",
                       GameData::Status.get(pkmn.status).name, pkmn.statusCount)
         end
@@ -40,11 +40,12 @@ MenuHandlers.add(:pokemon_debug_menu, :set_status, {
         else
           count = 0
           cancel = false
-          if [:SLEEP, :DROWSY].include?(ids[cmd]) 
+          if [:SLEEP, :DROWSY].include?(ids[cmd]) || (ids[cmd] == :FROZEN && Settings::CHAMPIONS_MECHANICS)
             params = ChooseNumberParams.new
             params.setRange(0, 9)
             params.setDefaultValue(3)
-			status = (ids[cmd] == :SLEEP) ? "sleep" : "drowsy"
+			      status = (ids[cmd] == :SLEEP) ? "sleep" : "drowsy"
+			      status = "frozen" if ids[cmd] == :FROZEN
             count = pbMessageChooseNumber(
               _INTL("Set the Pokémon's #{status} count."), params
             ) { screen.pbUpdate }
@@ -113,10 +114,20 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :set_status, {
           params.setRange(0, 99)
           params.setDefaultValue((pkmn.status == :SLEEP) ? pkmn.statusCount : 3)
           params.setCancelValue(-1)
-		  status = (ids[cmd] == :SLEEP) ? "sleep" : "drowsy"
+		      status = (ids[cmd] == :SLEEP) ? "sleep" : "drowsy"
           count = pbMessageChooseNumber("\\ts[]" + _INTL("Set {1}'s #{status} count (0-99).", pkmn_name), params)
           next if count < 0
           (battler || pkmn).statusCount = count
+        when :FROZEN
+          if Settings::CHAMPIONS_MECHANICS
+            params = ChooseNumberParams.new
+            params.setRange(0, 99)
+            params.setDefaultValue((pkmn.status == :FROZEN) ? pkmn.statusCount : 3)
+            params.setCancelValue(-1)
+            count = pbMessageChooseNumber("\\ts[]" + _INTL("Set {1}'s frozen count (0-99).", pkmn_name), params)
+            next if count < 0
+            (battler || pkmn).statusCount = count
+          end
         when :POISON
           if pbConfirmMessage("\\ts[]" + _INTL("Make {1} badly poisoned (toxic)?", pkmn_name))
             if battler

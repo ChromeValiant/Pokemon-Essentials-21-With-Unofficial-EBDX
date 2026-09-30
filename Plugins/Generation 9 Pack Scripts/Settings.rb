@@ -34,8 +34,16 @@ module Settings
   # (Spark, Volt Tackle, and Wild Charge)
   #-----------------------------------------------------------------------------
   ELECTROCUTE_MOVES_CURE_SLEEP = false
-
   
+
+  #=============================================================================
+  # Hidden Power Move Settings
+  #=============================================================================
+  # When true, hidden move type determined similar to Judgement with Legend Plate.
+  #-----------------------------------------------------------------------------
+  HIDDEN_POWER_USE_PLA_MECHANICS = false
+  
+
   #=============================================================================
   # Held Item Settings
   #=============================================================================
@@ -63,4 +71,21 @@ module Settings
   # -Incense is no longer required to hatch baby species of certain Pokemon.
   #-----------------------------------------------------------------------------
   MECHANICS_GENERATION = 9
+  #-----------------------------------------------------------------------------
+  # When true, makes status, abilities, and moves function like in Pokemon Champions.
+  #-----------------------------------------------------------------------------
+  # Updated Effects:
+  # -Freeze last up to 3 turns and 25% chance getting thaws.
+  # -12.5% Fully Paralysis chances.
+  # -Sleep last up to 2 turn, 1/3 chance to wake up at the 2nd turn.
+  # -Healer ability 50% chance cures allies status condition
+  # -Unseen Fist and Piercing Drill makes a quarter of damage from contact moves againts protections
+  # -Unselectable Fake Out and First Impression after the first turn of the pokemon on the field
+  # -additional effect of Rapid Spin and Knock Off will be triggered even if the caster faint
+  # -0% chances of frozen by Freeze-Dry
+  # -Toxic Thread lowers speed stat by 2 stages
+  # -Salt Cure inflicted 1/16 or 1/8 (water and/or steel-type) of its maximum HP at the end of each turn
+  # -Change the total PP of each moves to 8, 12, 16, or 20
+  #-----------------------------------------------------------------------------
+  CHAMPIONS_MECHANICS = true
 end

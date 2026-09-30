@@ -21,11 +21,6 @@ end
 # Water Shuriken
 #===============================================================================
 class Battle::Move::HitTwoToFiveTimesOrThreeForAshGreninja < Battle::Move::HitTwoToFiveTimes
-  def multiHitMove?
-    return false if user.isSpecies?(:GRENINJA) && user.form == 3 # Mega Greninja
-    return super
-  end
-
   def pbNumHits(user, targets)
     return 1 if user.isSpecies?(:GRENINJA) && user.form == 3 # Mega Greninja
     return 3 if user.isSpecies?(:GRENINJA) && user.form == 2
@@ -36,5 +31,29 @@ class Battle::Move::HitTwoToFiveTimesOrThreeForAshGreninja < Battle::Move::HitTw
     return 75 if user.isSpecies?(:GRENINJA) && user.form == 3 # Mega Greninja
     return 20 if user.isSpecies?(:GRENINJA) && user.form == 2
     return super
+  end
+end
+
+#===============================================================================
+# Dark Void
+#===============================================================================
+class Battle::Move::SleepTargetIfUserDarkrai < Battle::Move::SleepTarget
+  def canMagicCoat?; return !damagingMove?; end
+
+  def healingMove?; return damagingMove?; end
+
+  def pbBaseDamage(baseDmg, user, target)
+    if target.asleep? &&
+       (target.effects[PBEffects::Substitute] == 0 || ignoresSubstitute?(user))
+      baseDmg *= 2
+    end
+    return baseDmg
+  end
+
+  def pbEffectAgainstTarget(user, target)
+    return super if !damagingMove?
+    return if target.damageState.hpLost <= 0
+    hpGain = (target.damageState.hpLost / 2.0).round
+    user.pbRecoverHPFromDrain(hpGain, target)
   end
 end

@@ -427,7 +427,8 @@ class Battle::Move::AddMoneyGainedFromBattleLowerUserSpAtk1 < Battle::Move
   attr_reader :statDown
   def initialize(battle, move)
     super
-    @statDown = [:SPECIAL_ATTACK, 1]
+    qty = Settings::CHAMPIONS_MECHANICS ? 2 : 1
+    @statDown = [:SPECIAL_ATTACK, qty]
   end
   
   def pbEndOfMoveUsageEffect(user, targets, numHits, switchedBattlers)
@@ -708,7 +709,7 @@ end
 #-------------------------------------------------------------------------------
 class Battle::Move::RemoveUserBindingAndEntryHazardsPoisonTarget < Battle::Move::PoisonTarget
   def pbEffectAfterAllHits(user, target)
-    return if user.fainted? || target.damageState.unaffected
+    return if (user.fainted? && Settings::CHAMPIONS_MECHANICS) || target.damageState.unaffected
     if user.effects[PBEffects::Trapping] > 0
       trapMove = GameData::Move.get(user.effects[PBEffects::TrappingMove]).name
       trapUser = @battle.battlers[user.effects[PBEffects::TrappingUser]]

@@ -351,9 +351,7 @@ class Battle::Scene
   #  reset scene parameters
   #-----------------------------------------------------------------------------
   def pbResetParams
-    if !(@battle.doublebattle? || @battle.triplebattle?) || !@battle.command_phase
-      @vector.reset
-    end
+    @vector.reset
     @orgPos = nil
     @vector.inc = 0.2
     @vector.lock

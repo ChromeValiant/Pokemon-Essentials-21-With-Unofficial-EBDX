@@ -160,10 +160,6 @@ class Battle::Scene
   def pbChooseTarget(idxBattler, target_data, visibleSprites = nil)
     # hide fight menu
     @fightWindow.hidePlay
-    if (@battle.doublebattle? || @battle.triplebattle?) && idxBattler % 2 == 0
-      @vector.inc = 0.2
-      @vector.set(self.getRealVector(idxBattler, true))
-    end
     # Create an array of battler names (only valid targets are named)
     texts = pbCreateTargetTexts(idxBattler,target_data)
     # Determine mode based on targetType

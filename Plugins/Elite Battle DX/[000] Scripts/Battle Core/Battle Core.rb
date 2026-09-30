@@ -157,7 +157,6 @@ class Battle
 	@scene.pbTrainerBattleSpeech("everyTurnStart") # http404error addition :)
     pbCommandPhase_ebdx
     @scene.idleTimer = -1
-    @scene.pbResetParams
   end
   #-----------------------------------------------------------------------------
   #  enters last phase of the round

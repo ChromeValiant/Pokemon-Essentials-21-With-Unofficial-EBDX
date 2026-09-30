@@ -18,14 +18,7 @@ class Battle::Scene
   def pbCommandMenuEx(idxBattler, texts, mode = 0)
     self.clearMessageWindow
     # set starting variables
-    @ret = 0
-    if (@battle.doublebattle? || @battle.triplebattle?) && idxBattler % 2 == 0
-      @vector.inc = 0.2
-      @vector.set(self.getRealVector(idxBattler, true))
-    else
-      @vector.reset
-    end
-    @inCMx = true
+    @ret = 0; @vector.reset; @inCMx = true
     @commandWindow.refreshCommands(idxBattler)
     # show command window
     #name = (@safaribattle) ? $player.name : @battle.battlers[idxBattler].name
@@ -233,7 +226,7 @@ class CommandWindowEBDX
     default = [_INTL("FIGHT"), _INTL("BAG"), _INTL("PARTY"), _INTL("RUN")]
     default.push(_INTL("DEBUG")) if $DEBUG && default.length == 4 && EliteBattle::SHOW_DEBUG_FEATURES
     for i in 0...default.length
-      val = default[i]; val = _INTL("CALL") if default[i] == _INTL("RUN") && (poke.shadowPokemon? && poke.inHyperMode?)
+      val = default[i]; val = _INTL("CALL") if default[i] == _INTL("RUN") && (poke.shadowPokemon?) && @battle.trainerBattle? # || poke.inHyperMode? 
       if !d1.nil?
         if d1.include?(default[i])
           @indexes.push(i); cmd.push(val)

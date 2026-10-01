@@ -182,6 +182,7 @@ class FightWindowEBDX
     @button = {}
     @moved = false
     @showMega = false
+	@sprites ||= {}
 
     eff = [_INTL("Normal damage"),_INTL("Not very effective"),_INTL("Super effective"),_INTL("No effect")]
     @typeInd = Sprite.new(@viewport)
@@ -258,8 +259,8 @@ class FightWindowEBDX
       # get numeric values of required variables
       movedata = GameData::Move.get(@moves[i].id)
       category = movedata.physical? ? 0 : (movedata.special? ? 1 : 2)
-      type = GameData::Type.get(movedata.type).icon_position
-
+      # Display correct type
+      type = GetProperType(@battler, movedata).icon_position
       # create sprite
       @button["#{i}"] = Sprite.new(@viewport)
       @button["#{i}"].param = category
@@ -271,10 +272,24 @@ class FightWindowEBDX
       @button["#{i}"].bitmap.blt(3, 46, @typebitmap, Rect.new(0, type*22, 72, 22))
       baseColor = @buttonBitmap.get_pixel(5, 32 + (type*74)).darken(0.4)
       pbSetSmallFont(@button["#{i}"].bitmap)
-
-      pbDrawOutlineText(@button["#{i}"].bitmap, 198, 10, 196, 42,"#{movedata.name}", Color.white, baseColor, 1)
+      pbDrawOutlineText(@button["#{i}"].bitmap, 198, 10, 196, 42,"#{movedata.real_name}", Color.white, baseColor, 1)
+	  # Display PP (with correct colouring)
       pp = "#{@moves[i].pp}/#{@moves[i].total_pp}"
-      pbDrawOutlineText(@button["#{i}"].bitmap, 0, 48, 191, 26, pp, Color.white, baseColor, 2)
+      ppBase   = [Color.white,                # More than 1/2 of total PP
+            Color.new(248,192,0),    # 1/2 of total PP or less
+            Color.new(248,136,32),   # 1/4 of total PP or less
+            Color.new(248,72,72)]    # Zero PP
+      ppShadow = [baseColor,             # More than 1/2 of total PP
+            Color.new(144,104,0),   # 1/2 of total PP or less
+            Color.new(144,72,24),   # 1/4 of total PP or less
+            Color.new(136,48,48)]   # Zero PP
+      ppfraction = 0
+      if @moves[i].pp==0;                  ppfraction = 3
+      elsif @moves[i].pp*4<=@moves[i].total_pp; ppfraction = 2
+      elsif @moves[i].pp*2<=@moves[i].total_pp; ppfraction = 1
+      end
+	  ppfraction = 0 if @moves[i].pp==0 && @moves[i].total_pp==0 # Shadow moves
+      pbDrawOutlineText(@button["#{i}"].bitmap, 0, 48, 191, 26, pp, ppBase[ppfraction], ppShadow[ppfraction], 2)
       pbSetSystemFont(@button["#{i}"].bitmap)
       selectedMoveNameYPos = 18
       text = [[movedata.name, 99, selectedMoveNameYPos, 2, baseColor, Color.new(0, 0, 0, 24)]]
@@ -284,6 +299,9 @@ class FightWindowEBDX
       @button["#{i}"].x = @x[i]
       @button["#{i}"].y = @y[i]
     end
+	@sprites["moveInfo"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport) # Solar Eclipse
+    @sprites["moveInfo"].z = 103
+    pbSetSmallFont(@sprites["moveInfo"].bitmap)
   end
   #-----------------------------------------------------------------------------
   #  unused
@@ -296,6 +314,7 @@ class FightWindowEBDX
   def show
     @sel.visible = false
     @typeInd.visible = false
+	@sprites["moveInfo"].visible = true if @sprites && @sprites["moveInfo"] # Solar Eclipse
     @background.y -= (@background.bitmap.height/8)
     for i in 0...@nummoves
       @button["#{i}"].x += ((i%2 == 0 ? 1 : -1)*@viewport.width/16)
@@ -314,6 +333,7 @@ class FightWindowEBDX
   def hide
     @sel.visible = false
     @typeInd.visible = false
+	@sprites["moveInfo"].visible = false if @sprites && @sprites["moveInfo"] # Solar Eclipse
     @background.y += (@background.bitmap.height/8)
     @megaButton.y += 12
     for i in 0...@nummoves
@@ -353,6 +373,33 @@ class FightWindowEBDX
     end
     if @oldindex != @index
       @button["#{@index}"].src_rect.y = -4
+	  # Solar Eclipse
+	  move = @battler.moves[@index]
+      # Show move stats
+      bitmap = @sprites["moveInfo"].bitmap
+      bitmap.clear
+      # Get move stats
+      power = GetProperPower(@battler, GameData::Move.get(move.id)).to_s
+      power = "-" if power == "0"
+      acc = (move.accuracy == 0) ? "-" : GetProperAccuracy(@player, GameData::Move.get(move.id)).to_s + "%"
+      pri = GetProperPriority(@player, move).to_s
+      lines = [
+        "#{power}",
+        "#{acc}",
+        "#{pri}",
+      ]
+      baseX = Graphics.width - 45
+      baseY = Graphics.height - 60
+      lineHeight = 18
+
+      lines.each_with_index do |line, i|
+        pbDrawOutlineText(
+          bitmap,
+          baseX, baseY + i * lineHeight, Graphics.width, lineHeight,
+          line, Color.white, Color.black, 0
+        )
+      end
+	  # END Solar Eclipse
       if @showTypeAdvantage && !(@battle.doublebattle? || @battle.triplebattle?)
         move = @battler.moves[@index]
         @modifier = move.pbCalcTypeMod(move.type, @player, @opponent)
@@ -402,6 +449,363 @@ class FightWindowEBDX
     @megaButton.dispose
     @typeInd.dispose
     pbDisposeSpriteHash(@button)
+	pbDisposeSpriteHash(@sprites)
+  end
+  #-----------------------------------------------------------------------------
+#  custom functions
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
+  #  Get Proper Move Type
+  #-----------------------------------------------------------------------------
+  def GetProperType(battler, movedata)
+    return GameData::Type.get(:NORMAL) if movedata == nil
+    moveType = movedata.type
+
+    # if movedata.function_code=="TypeDependsOnUserIVs"
+      # #Hidden Power
+      # return GameData::Type.get(pbHiddenPower(battler)[0])
+    # end
+    if movedata.id == :JUDGMENT && battler.itemActive?
+      return GameData::Type.get(:NORMAL) if battler.item == nil
+      case battler.item.id
+      when :FISTPLATE
+        return GameData::Type.get(:FIGHTING)
+      when :SKYPLATE
+        return GameData::Type.get(:FLYING)
+      when :TOXICPLATE
+        return GameData::Type.get(:POISON)
+      when :EARTHPLATE
+        return GameData::Type.get(:GROUND)
+      when :STONEPLATE
+        return GameData::Type.get(:ROCK)
+      when :INSECTPLATE
+        return GameData::Type.get(:BUG)
+      when :SPOOKYPLATE
+        return GameData::Type.get(:GHOST)
+      when :IRONPLATE
+        return GameData::Type.get(:STEEL)
+      when :FLAMEPLATE
+        return GameData::Type.get(:FIRE)
+      when :SPLASHPLATE
+        return GameData::Type.get(:WATER)
+      when :MEADOWPLATE
+        return GameData::Type.get(:GRASS)
+      when :ZAPPLATE
+        return GameData::Type.get(:ELECTRIC)
+      when :MINDPLATE
+        return GameData::Type.get(:PSYCHIC)
+      when :ICICLEPLATE
+        return GameData::Type.get(:ICE)
+      when :DRACOPLATE
+        return GameData::Type.get(:DRAGON)
+      when :DREADPLATE
+        return GameData::Type.get(:DARK)
+      when :PIXIEPLATE
+        return GameData::Type.get(:FAIRY)
+      end
+    end
+    if movedata.id == :MULTIATTACK && battler.itemActive?
+      return GameData::Type.get(:NORMAL) if battler.item == nil
+      case battler.item.id
+      when :FIGHTINGMEMORY
+        return GameData::Type.get(:FIGHTING)
+      when :FLYINGMEMORY
+        return GameData::Type.get(:FLYING)
+      when :POISONMEMORY
+        return GameData::Type.get(:POISON)
+      when :GROUNDMEMORY
+        return GameData::Type.get(:GROUND)
+      when :ROCKMEMORY
+        return GameData::Type.get(:ROCK)
+      when :BUGMEMORY
+        return GameData::Type.get(:BUG)
+      when :GHOSTMEMORY
+        return GameData::Type.get(:GHOST)
+      when :STEELMEMORY
+        return GameData::Type.get(:STEEL)
+      when :FIREMEMORY
+        return GameData::Type.get(:FIRE)
+      when :WATERMEMORY
+        return GameData::Type.get(:WATER)
+      when :GRASSMEMORY
+        return GameData::Type.get(:GRASS)
+      when :ELECTRICMEMORY
+        return GameData::Type.get(:ELECTRIC)
+      when :PSYCHICMEMORY
+        return GameData::Type.get(:PSYCHIC)
+      when :ICIMEMORY
+        return GameData::Type.get(:ICE)
+      when :DRAGONMEMORY
+        return GameData::Type.get(:DRAGON)
+      when :DARKMEMORY
+        return GameData::Type.get(:DARK)
+      when :FAIRYMEMORY
+        return GameData::Type.get(:FAIRY)
+      end
+    end
+    if movedata.id == :TECHNOBLAST && battler.itemActive?
+      return GameData::Type.get(:NORMAL) if battler.item == nil
+      case battler.item.id
+      when :SHOCKDRIVE
+        return GameData::Type.get(:ELECRIC)
+      when :BURNDRIVE
+        return GameData::Type.get(:FIRE)
+      when :CHILLDRIVE
+        return GameData::Type.get(:ICE)
+      when :DOUSEDRIVE
+        return GameData::Type.get(:WATER)
+      end
+    end
+    if movedata.function_code=="TypeAndPowerDependOnWeather"
+      # Weather Ball
+	  return GameData::Type.get(:FIRE) if battler.hasActiveAbility?(:MEGASOL)
+	  case battler.effectiveWeather
+	  when :Sun, :HarshSun
+	    return GameData::Type.get(:FIRE)
+	  when :Rain, :HeavyRain
+        return GameData::Type.get(:WATER)
+      when :Sandstorm
+        return GameData::Type.get(:ROCK)
+      when :Hail
+        return GameData::Type.get(:ICE)
+      when :ShadowSky
+        return GameData::Type.get(:SHADOW)
+      end
+    end
+    if movedata.function_code=="TypeDependsOnUserMorpekoFormRaiseUserSpeed1"
+      # Aura Wheel
+      return GameData::Type.get(:DARK) if battler.isSpecies?(:MORPEKO) && battler.form == 1
+    end
+    if movedata.function_code=="TypeIsUserSecondType" && battler.isSpecies?(:OGERPON)
+      # Ivy Cudgel
+      case battler.form
+      when 1, 5
+        return GameData::Type.get(:WATER)
+      when 2, 6
+        return GameData::Type.get(:FIRE)
+      when 3, 7
+        return GameData::Type.get(:ROCK)
+      end
+    end
+    if movedata.function_code=="TypeIsUserSecondTypeRemoveScreens" && battler.isSpecies?(:TAUROS)
+      # Raging Bull
+      return GameData::Type.get(battler.type1) || GameData::Type.get(battler.type2)
+    end
+    if movedata.function_code=="TypeIsUserFirstType"
+      # Revelation Dance
+      return GameData::Type.get(battler.type1)
+    end
+    if movedata.function_code=="TypeAndPowerDependOnUserBerry"
+      # Natural Gift
+      return GameData::Type.get(:NORMAL) if battler.item == nil
+      case battler.item.id
+      when :CHILANBERRY
+        return GameData::Type.get(:NORMAL)
+      when :CHERIBERRY,  :BLUKBERRY,   :WATMELBERRY, :OCCABERRY
+        return GameData::Type.get(:FIRE)
+      when :CHESTOBERRY, :NANABBERRY,  :DURINBERRY,  :PASSHOBERRY
+        return GameData::Type.get(:WATER)
+      when :PECHABERRY,  :WEPEARBERRY, :BELUEBERRY,  :WACANBERRY
+        return GameData::Type.get(:ELECTRIC)
+      when :RAWSTBERRY,  :PINAPBERRY,  :RINDOBERRY,  :LIECHIBERRY
+        return GameData::Type.get(:GRASS)
+      when :ASPEARBERRY, :POMEGBERRY,  :YACHEBERRY,  :GANLONBERRY
+        return GameData::Type.get(:ICE)
+      when :LEPPABERRY,  :KELPSYBERRY, :CHOPLEBERRY, :SALACBERRY
+        return GameData::Type.get(:FIGHTING)
+      when :ORANBERRY,   :QUALOTBERRY, :KEBIABERRY,  :PETAYABERRY
+        return GameData::Type.get(:POISON)
+      when :PERSIMBERRY, :HONDEWBERRY, :SHUCABERRY,  :APICOTBERRY
+        return GameData::Type.get(:GROUND)
+      when :LUMBERRY,    :GREPABERRY,  :COBABERRY,   :LANSATBERRY
+        return GameData::Type.get(:FLYING)
+      when :SITRUSBERRY, :TAMATOBERRY, :PAYAPABERRY, :STARFBERRY
+        return GameData::Type.get(:PSYCHIC)
+      when :FIGYBERRY,   :CORNNBERRY,  :TANGABERRY,  :ENIGMABERRY
+        return GameData::Type.get(:BUG)
+      when :WIKIBERRY,   :MAGOSTBERRY, :CHARTIBERRY, :MICLEBERRY
+        return GameData::Type.get(:ROCK)
+      when :MAGOBERRY,   :RABUTABERRY, :KASIBBERRY,  :CUSTAPBERRY
+        return GameData::Type.get(:GHOST)
+      when :AGUAVBERRY,  :NOMELBERRY,  :HABANBERRY,  :JABOCABERRY
+        return GameData::Type.get(:DRAGON)
+      when :IAPAPABERRY, :SPELONBERRY, :COLBURBERRY, :ROWAPBERRY, :MARANGABERRY
+        return GameData::Type.get(:DARK)
+      when :RAZZBERRY,   :PAMTREBERRY, :BABIRIBERRY
+        return GameData::Type.get(:STEEL)
+      when :ROSELIBERRY, :KEEBERRY
+        return GameData::Type.get(:FAIRY)
+      end
+    end
+
+    if battler.hasActiveAbility?(:AERILATE) && moveType == :NORMAL
+      return GameData::Type.get(:FLYING)
+    end
+    if battler.hasActiveAbility?(:GALVANIZE) && moveType == :NORMAL
+      return GameData::Type.get(:ELECTRIC)
+    end
+    if battler.hasActiveAbility?(:LIQUIDVOICE) && movedata.flags[/k/]
+      return GameData::Type.get(:WATER)
+    end
+    if battler.hasActiveAbility?(:NORMALIZE)
+      return GameData::Type.get(:NORMAL)
+    end
+    if battler.hasActiveAbility?(:PIXILATE) && moveType == :NORMAL
+      return GameData::Type.get(:FAIRY)
+    end
+    if battler.hasActiveAbility?(:REFRIGERATE) && moveType == :NORMAL
+      return GameData::Type.get(:ICE)
+    end
+	if battler.hasActiveAbility?(:DRAGONIZE) && moveType == :NORMAL
+      return GameData::Type.get(:DRAGON)
+    end
+
+    return GameData::Type.get(moveType)
+  end
+  #-----------------------------------------------------------------------------
+  #  Get Proper Move Power
+  #-----------------------------------------------------------------------------
+  def GetProperPower(battler, movedata)
+    return "-" if movedata == nil
+    movePower = movedata.power
+
+    if movedata.function_code=="PowerHigherWithUserHappiness"
+      # Return
+      return [(battler.happiness*2/5).floor,1].max
+    end
+
+    if movedata.function_code=="PowerLowerWithUserHappiness"
+      # Frustration
+      return [((255-battler.happiness)*2/5).floor,1].max
+    end
+
+    if movedata.function_code=="PowerHigherWithUserHP"
+      # Eruption, Water Spout
+      return [150*battler.hp/battler.totalhp,1].max
+    end
+
+    if movedata.function_code=="ThrowUserItemAtTarget"
+      # Fling
+      return 0 if battler.item == nil
+      case battler.item.id
+      when :IRONBALL
+        return 130
+      when :HARDSTONE,:RAREBONE,:ARMORFOSSIL,:CLAWFOSSIL,:COVERFOSSIL,:DOMEFOSSIL,:HELIXFOSSIL,:JAWFOSSIL,:OLDAMBER,:PLUMEFOSSIL,:ROOTFOSSIL,:SAILFOSSIL,:SKULLFOSSIL
+        return 100
+      when :DEEPSEATOOTH,:GRIPCLAW,:THICKCLUB,:DRACOPLATE,:DREADPLATE,:EARTHPLATE,:FISTPLATE,:FLAMEPLATE,:ICICLEPLATE,:INSECTPLATE,:IRONPLATE,:MEADOWPLATE,:MINDPLATE,:PIXIEPLATE,:SKYPLATE,:SPLASHPLATE,:SPOOKYPLATE,:STONEPLATE,:TOXICPLATE,:ZAPPLATE
+        return 90
+      when :ASSAULTVEST,:CHIPPEDPOT,:CRACKEDPOT,:DAWNSTONE,:DUSKSTONE,:ELECTIRIZER,:HEAVYDUTYBOOTS,:MAGMARIZER,:ODDKEYSTONE,:OVALSTONE,:PROTECTOR,:QUICKCLAW,:RAZORCLAW,:SACHET,:SAFETYGOGGLES,:SHINYSTONE,:STICKYBARB,:WEAKNESSPOLICY,:WHIPPEDDREAM
+        return 80
+      when :DRAGONFANG,:POISONBARB,:POWERANKLET,:POWERBAND,:POWERBELT,:POWERBRACER,:POWERLENS,:POWERWEIGHT,:BURNDRIVE,:CHILLDRIVE,:DOUSEDRIVE,:SHOCKDRIVE
+        return 70
+      when :ADAMANTORB,:DAMPROCK,:GRISEOUSORB,:HEATROCK,:LEEK,:LUSTROUSORB,:MACHOBRACE,:ROCKYHELMET,:STICK,:TERRAINEXTENDER
+        return 60
+      when :DUBIOUSDISC,:SHARPBEAK,:BUGMEMORY,:DARKMEMORY,:DRAGONMEMORY,:ELECTRICMEMORY,:FAIRYMEMORY,:FIGHTINGMEMORY,:FIREMEMORY,:FLYINGMEMORY,:GHOSTMEMORY,:GRASSMEMORY,:GROUNDMEMORY,:ICEMEMORY,:POISONMEMORY,:PSYCHICMEMORY,:ROCKMEMORY,:STEELMEMORY,:WATERMEMORY
+        return 50
+      when :EVIOLITE,:ICYROCK,:LUCKYPUNCH
+        return 40
+      when :ABSORBBULB,:ADRENALINEORB,:AMULETCOIN,:BINDINGBAND,:BLACKBELT,:BLACKGLASSES,:BLACKSLUDGE,:BOTTLECAP,:CELLBATTERY,:CHARCOAL,:CLEANSETAG,:DEEPSEASCALE,:DRAGONSCALE,:EJECTBUTTON,:ESCAPEROPE,:EXPSHARE,:FLAMEORB,:FLOATSTONE,:FLUFFYTAIL,:GOLDBOTTLECAP,:HEARTSCALE,:HONEY,:KINGSROCK,:LIFEORB,:LIGHTBALL,:LIGHTCLAY,:LUCKYEGG,:LUMINOUSMOSS,:MAGNET,:METALCOAT,:METRONOME,:MIRACLESEED,:MYSTICWATER,:NEVERMELTICE,:PASSORB,:POKEDOLL,:POKETOY,:PRISMSCALE,:PROTECTIVEPADS,:RAZORFANG,:SACREDASH,:SCOPELENS,:SHELLBELL,:SHOALSALT,:SHOALSHELL,:SMOKEBALL,:SNOWBALL,:SOULDEW,:SPELLTAG,:TOXICORB,:TWISTEDSPOON,:UPGRADE,:ANTIDOTE,:AWAKENING,:BERRYJUICE,:BIGMALASADA,:BLUEFLUTE,:BURNHEAL,:CASTELIACONE,:ELIXIR,:ENERGYPOWDER,:ENERGYROOT,:ETHER,:FRESHWATER,:FULLHEAL,:FULLRESTORE,:HEALPOWDER,:HYPERPOTION,:ICEHEAL,:LAVACOOKIE,:LEMONADE,:LUMIOSEGALETTE,:MAXELIXIR,:MAXETHER,:MAXHONEY,:MAXPOTION,:MAXREVIVE,:MOOMOOMILK,:OLDGATEAU,:PARALYZEHEAL,:PARLYZHEAL,:PEWTERCRUNCHIES,:POTION,:RAGECANDYBAR,:REDFLUTE,:REVIVALHERB,:REVIVE,:SHALOURSABLE,:SODAPOP,:SUPERPOTION,:SWEETHEART,:YELLOWFLUTE,:XACCURACY,:XACCURACY2,:XACCURACY3,:XACCURACY6,:XATTACK,:XATTACK2,:XATTACK3,:XATTACK6,:XDEFEND,:XDEFEND2,:XDEFEND3,:XDEFEND6,:XDEFENSE,:XDEFENSE2,:XDEFENSE3,:XDEFENSE6,:XSPATK,:XSPATK2,:XSPATK3,:XSPATK6,:XSPECIAL,:XSPECIAL2,:XSPECIAL3,:XSPECIAL6,:XSPDEF,:XSPDEF2,:XSPDEF3,:XSPDEF6,:XSPEED,:XSPEED2,:XSPEED3,:XSPEED6,:DIREHIT,:DIREHIT2,:DIREHIT3,:ABILITYURGE,:GUARDSPEC,:ITEMDROP,:ITEMURGE,:RESETURGE,:MAXMUSHROOMS,:CALCIUM,:CARBOS,:HPUP,:IRON,:PPUP,:PPMAX,:PROTEIN,:ZINC,:RARECANDY,:EVERSTONE,:FIRESTONE,:ICESTONE,:LEAFSTONE,:MOONSTONE,:SUNSTONE,:THUNDERSTONE,:WATERSTONE,:SWEETAPPLE,:TARTAPPLE, :GALARICACUFF,:GALARICAWREATH,:MAXREPEL,:REPEL,:SUPERREPEL,:AMAZEMULCH,:BOOSTMULCH,:DAMPMULCH,:GOOEYMULCH,:GROWTHMULCH,:RICHMULCH,:STABLEMULCH,:SURPRISEMULCH,:BLUESHARD,:GREENSHARD,:REDSHARD,:YELLOWSHARD,:BALMMUSHROOM,:BIGMUSHROOM,:BIGNUGGET,:BIGPEARL,:COMETSHARD,:NUGGET,:PEARL,:PEARLSTRING,:RELICBAND,:RELICCOPPER,:RELICCROWN,:RELICGOLD,:RELICSILVER,:RELICSTATUE,:RELICVASE,:STARDUST,:STARPIECE,:STRANGESOUVENIR,:TINYMUSHROOM,:EXPCANDYXS, :EXPCANDYS, :EXPCANDYM, :EXPCANDYL, :EXPCANDYXL
+        return 30
+      when :CLEVERFEATHER,:GENIUSFEATHER,:HEALTHFEATHER,:MUSCLEFEATHER,:PRETTYFEATHER,:RESISTFEATHER,:SWIFTFEATHER,:CLEVERWING,:GENIUSWING,:HEALTHWING,:MUSCLEWING,:PRETTYWING,:RESISTWING,:SWIFTWING,:FAIRYFEATHER
+        return 20
+      when nil
+        return 0
+      else
+        return 10
+      end
+    end
+
+    if movedata.function_code=="TypeAndPowerDependOnUserBerry"
+      # Natural Gift
+      return 0 if battler.item == nil
+      case battler.item.id
+      when :WATMELBERRY,:DURINBERRY,:BELUEBERRY,:LIECHIBERRY,:GANLONBERRY,:SALACBERRY,:PETAYABERRY,:APICOTBERRY,:LANSATBERRY,:STARFBERRY,:ENIGMABERRY,:MICLEBERRY,:CUSTAPBERRY,:JABOCABERRY,:ROWAPBERRY,:KEEBERRY,:MARANGABERRY
+        return 100
+      when :BLUKBERRY,:NANABBERRY,:WEPEARBERRY,:PINAPBERRY,:POMEGBERRY,:KELPSYBERRY,:QUALOTBERRY,:HONDEWBERRY,:GREPABERRY,:TAMATOBERRY,:CORNNBERRY,:MAGOSTBERRY,:RABUTABERRY,:NOMELBERRY,:SPELONBERRY,:PAMTREBERRY
+        return 90
+      when :CHERIBERRY,:CHESTOBERRY,:PECHABERRY,:RAWSTBERRY,:ASPEARBERRY,:LEPPABERRY,:ORANBERRY,:PERSIMBERRY,:LUMBERRY,:SITRUSBERRY,:FIGYBERRY,:WIKIBERRY,:MAGOBERRY,:AGUAVBERRY,:IAPAPABERRY,:RAZZBERRY,:OCCABERRY,:PASSHOBERRY,:WACANBERRY,:RINDOBERRY,:YACHEBERRY,:CHOPLEBERRY,:KEBIABERRY,:SHUCABERRY,:COBABERRY,:PAYAPABERRY,:TANGABERRY,:CHARTIBERRY,:KASIBBERRY,:HABANBERRY,:COLBURBERRY,:BABIRIBERRY,:CHILANBERRY,:ROSELIBERRY
+        return 80
+      else
+        return 0
+      end
+    end
+
+    if movedata.function_code=="PowerHigherWithUserPositiveStatStages"
+      # Power Trip, Stored Power
+      mult = 1
+      GameData::Stat.each_battle { |s| mult += battler.stages[s.id] if battler.stages[s.id] > 0 }
+      return 20 * mult
+    end
+
+    if movedata.function_code=="PowerLowerWithUserHP"
+      # Flail, Reversal
+      ret = 20
+      n = 48*battler.hp/battler.totalhp
+      if n<2;     ret = 200
+      elsif n<5;  ret = 150
+      elsif n<10; ret = 100
+      elsif n<17; ret = 80
+      elsif n<33; ret = 40
+      end
+    return ret
+    end
+	
+	if movedata.function_code=="OHKO" || movedata.function_code=="OHKOIce" || movedata.function_code=="OHKOHitsUndergroundTarget"
+      # OHKO
+      return "KO!"
+    end
+
+    return "???" if movePower == 1
+
+    return movePower
+  end
+  #-----------------------------------------------------------------------------
+  #  Get Proper Move Accuracy
+  #-----------------------------------------------------------------------------
+  def GetProperAccuracy(battler, movedata)
+    return "-" if movedata == nil
+    moveAcc = movedata.accuracy
+
+    if battler.hasActiveItem?(:WIDELENS)
+      # No Zoom Lens because it activates afterwards
+      moveAcc *= 1.1
+    end
+
+    if battler.hasActiveAbility?(:HUSTLE) && movedata.category==0
+      moveAcc *= 0.8
+    elsif battler.hasActiveAbility?(:COMPOUNDEYES)
+      moveAcc *= 1.3
+    elsif battler.hasActiveAbility?(:ILLUMINATE)
+      moveAcc *= 1.2
+    elsif battler.hasActiveAbility?(:NOGUARD)
+      return "-"
+    end
+    
+    return moveAcc.round
+  end
+  #-----------------------------------------------------------------------------
+  #  Get Proper Move Priority
+  #-----------------------------------------------------------------------------
+  def GetProperPriority(battler, movedata)
+    return "-" if movedata == nil
+    movePriority = movedata.priority
+
+    if battler != nil
+      if battler.hasActiveAbility?(:PRANKSTER) && movedata.category==2
+        movePriority += 1
+      end
+      if battler.hasActiveAbility?(:GALEWINGS) && movedata.type == :FLYING && battler.hp == battler.totalhp
+        movePriority += 1
+      end
+      if battler.hasActiveAbility?(:TRIAGE) && movedata.healingMove?
+        movePriority += 3
+      end
+    end
+
+    priorityStr = "-" if movePriority == 0
+    priorityStr = "+#{movePriority}" if movePriority > 0
+    priorityStr = "#{movePriority}" if movePriority < 0
+    return priorityStr
   end
   #-----------------------------------------------------------------------------
 end

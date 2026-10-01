@@ -1,7 +1,7 @@
 #===============================================================================
-#  Common Animation: SHINY
+#  Common Animation: LEVELUP
 #===============================================================================
-EliteBattle.defineCommonAnimation(:SHINY) do
+EliteBattle.defineCommonAnimation(:LEVELUP) do
   #-----------------------------------------------------------------------------
   #  configure variables
   @scene.wait(16, true) if @scene.afterAnim
@@ -15,7 +15,6 @@ EliteBattle.defineCommonAnimation(:SHINY) do
     str = "Graphics/EBDX/Animations/Moves/ebShiny1"
     str = "Graphics/EBDX/Animations/Moves/ebShiny2" if i >= 8
     fp["#{i}"].bitmap = pbBitmap(str).clone
-    fp["#{i}"].bitmap.hue_change(180) if i < 8 && @battlers[@targetIndex].pokemon.superShiny?
     fp["#{i}"].center!
     fp["#{i}"].x = cx
     fp["#{i}"].y = cy
@@ -27,7 +26,6 @@ EliteBattle.defineCommonAnimation(:SHINY) do
   for j in 0...8
     fp["s#{j}"] = Sprite.new(@viewport)
     fp["s#{j}"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/ebShiny3").clone
-    fp["s#{j}"].bitmap.hue_change(180) if @battlers[@targetIndex].pokemon.superShiny?
     fp["s#{j}"].center!
     fp["s#{j}"].opacity = 0
     z = [1,0.75,1.25,0.5][rand(4)]*factor
@@ -41,7 +39,7 @@ EliteBattle.defineCommonAnimation(:SHINY) do
   end
   #-----------------------------------------------------------------------------
   #  play animation part 1
-  pbSEPlay("EBDX/Shiny")
+  pbSEPlay("EBDX/LevelUp")
   for i in 0...48
     k *= -1 if i%24 == 0
     cx, cy = @targetSprite.getCenter(true)
@@ -72,19 +70,7 @@ EliteBattle.defineCommonAnimation(:SHINY) do
         end
       end
     end
-    @targetSprite.tone.all += 3.2*k/2
-    @scene.wait(1,true)
-  end
-  #-----------------------------------------------------------------------------
-  #  play animation part 2
-  pbSEPlay("EBDX/Shiny2")
-  for i in 0...16
-    for j in 0...8
-      next if j>i
-      fp["s#{j}"].opacity += 51
-      fp["s#{j}"].zoom_x -= fp["s#{j}"].zoom_x*0.25 if fp["s#{j}"].opacity >= 255
-      fp["s#{j}"].zoom_y -= fp["s#{j}"].zoom_y*0.25 if fp["s#{j}"].opacity >= 255
-    end
+    @targetSprite.tone.all += 6.4*k/2
     @scene.wait(1,true)
   end
   #-----------------------------------------------------------------------------

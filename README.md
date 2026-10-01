@@ -68,51 +68,11 @@ MKXP by Roza
 		EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti (GoggledPetilil)
 		Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)
 		Golisopod-User for Mouse Support
+		PetiGogggles (Dev of Pokemon Solar Eclipse) for better UI Fight info, Common Animations, Party Ball Lineup graphics
 
 ==============================================================
 ## CREDITS: Pokemon World Tournament
 	Luka S.J., DerxwnaKapsyla, Vendily, Manurocker95
-
-==============================================================
-## CREDITS: Animated Pokemon System by Lucidious89
-https://eeveeexpo.com/resources/1544/
-
-    Plugin Credits:
-
-    Creator: Lucidious89
-    Based on the Generation 8 Pack by Golisopod User and EBDX by Luka S.J.
-
-
-    Sprite Credits:
-    Battler Sprites
-
-        Gen 1-5: Luka S.J.
-        Gen 6: All Contributors To Smogon X/Y Sprite Project
-        Gen 7: All Contributors To Smogon Sun/Moon Sprite Project
-        Gen 8: All Contributors To Smogon Sword/Shield Sprite Project
-        Gen 9: All Contributors To Smogon Scarlet/Violet Sprite Project
-        Contributors to the original "Sprites Animados" spanish plugin:
-        Tenshi of War, DPertierra, Skyflyer, Hellfire_raptor, Antiant, AshnixsLaw, AyanoCloud, Azrita, BR0DE0, Caruban, Creobnil, DanEx, Diegotoon20, dimbly, ekurepu, Ebaru, EricLostie, Falcon7, Federico97_ez, Fleimer_, Franark122k, Hellfire0raptor, HM100, HyperactiveFlummi, iametrine, Involuntary-Twitch, ItsYugen, jinta, justnyxnow, KingOfThe-X-Roads, kiriaura, Legitimate Username, localghost, lucasomi, MallowOut, mangalos810, MCH4R1Z4RD, N-Kin, NoelleMBrooks, Noobiess, Nolo33, OldSoulja, OmegalingYT, PKMarioG, PomPomKing, Poki Papillon, PumpkinPastel, RetroNC, RadicalCharizard, seleccion, SelenaArmorclaw, SkidMarc25, Snivy101, Sopita_Yorita, SoulWardenInfinity, TheAetherPlayer, TheCynicalPoet, Typhlito, uppababy
-        Other Contributors: Lucidious89, Regis, Rod, kayzering
-
-    Icon Sprites
-
-        Gen 1-6: Alaguesia, harveydentmd
-        Gen 7: Marin, MapleBranchWing, Contributors to the DS Styled Gen 7+ Repository
-        Gen 8: Larry Turbo, Leparagon
-        Gen 1-8 (Shiny): StarrWolf, Pokemon Shattered Light Team
-        PLA Icons: LuigiTKO
-        Gen 9: ezerart, JordanosArt
-        Resource Compilation: Golisopod User, UberDunsparce, Caruban
-
-
-    Footprint Sprites
-
-        Gen 6: भाग्य ज्योति
-        Gen 7-8: WolfPP
-        Gen 9 & PLA: Caruban
-        Resource Compilation: komeiji514
-
 
 ==============================================================
 ## CREDITS: Gen 9 Pack
@@ -132,23 +92,10 @@ PBS:
 -DJChaos (TM Items)
 -Futuresushi (Shortened abilities and moves description)
 
-Pokemon Battler Sprites:
--Gen 1-5 Pokemon Sprites	- veekun
--Gen 6 Pokemon Sprites		- All Contributors To Smogon X/Y Sprite Project
--Gen 7 Pokemon Sprites		- All Contributors To Smogon Sun/Moon Sprite Project
--Gen 8 Pokemon Sprites		- All Contributors To Smogon Sword/Shield Sprite Project
--PLA Pokemon Sprites		- Smogon Gen8 Sprite Project
-(https://www.smogon.com/forums/threads/smogon-sprite-project.3647722/)
-Blaquaza, KingOfThe-X-Roads, KattenK, Travis, G.E.Z., SpheX, Hematite, SelenaArmorclaw
--Gen 9 Pokemon Sprites		- KingOfThe-X-Roads, Mak, Caruban, jinxed, leParagon, Sopita_Yorita, Azria, Mashirosakura,
-JordanosArt, Abnayami, OldSoulja, Katten, Divaruta 666, Clara, Skyflyer, AshnixsLaw, ace_stryfe
--Gen 9 Vanilla style sprites	- KingOfThe-X-Roads, Mak, Caruban, jinxed, leParagon, Sopita_Yorita, Azria, Mashirosakura, JordanosArt, Scept, NanaelJustice, SoyChim, KRLW890, AnonAlpaca, PokeJminer, Red7246, Carmanekko, Eduar, Lykeron, GriloKapu10, Mesayas, Erkey830, QDylm, PorousMist, OldSoulja, AlexandreV2.0, Z-nogyroP, lennybitao, Ruben1986, GRAFAIAIMX
-Blaquaza, KattenK, Travis, G.E.Z., SpheX, Hematite
-
 Pokemon Icon Sprites:
 -Gen 1-6 Pokemon Icon Sprites	- Alaguesia, harveydentmd
 -Gen 7 Pokemon Icon Sprites	- Marin, MapleBranchWing, Contributors to the DS Styled Gen 7+ Repository
--Gen 8 Icon Sprites		- Larry Turbo, Leparagon
+-Gen 8 Icon Sprites		- Larry Turbo, Leparagon, magnusbanette
 -Shiny Icon Sprites		- StarrWolf, Pokemon Shattered Light Team
 -PLA Pokemon Icon Sprites	- LuigiTKO
 -Shiny PLA Pokemon Icon Sprites	- StarrWolf (recolored from LuigiTKO icons)
@@ -161,6 +108,7 @@ Pokémon Icons Act 2.9 - Teracristalizando
 -Gen 9 Vanilla Icon Sprites	- Vent, Katten, leParagon, Cesare_CBass, AlexandreV2.0, Carmanekko, GRAFAIAIMX
 also thanks to Axel Loquendo, CarmaNekko, Divaruta 666, Okyo, JLauz735, and ClaraDragon for
 Iconos 9na Gen gba completos (https://whackahack.com/foro/threads/iconos-9na-gen-gba-completos-act-04-03-2023.67908/)
+-PLZA Icon Sprites		- ezerart, camiloveso, Caruban
 
 Pokemon Gen 9 Overworld sprites:
 -Gen 1-5 Pokemon Overworlds	- MissingLukey, help-14, Kymoyonian, cSc-A7X, 2and2makes5, Pokegirl4ever, Fernandojl, Silver-Skies, TyranitarDark, Getsuei-H, Kid1513, Milomilotic11, Kyt666, kdiamo11, Chocosrawlooid, Syledude, Gallanty, Gizamimi-Pichu, 2and2makes5, Zyon17,LarryTurbo, spritesstealer, LarryTurbo
@@ -170,6 +118,7 @@ Pokemon Gen 9 Overworld sprites:
 -Gen 8 Pokemon Overworlds	- SageDeoxys, Wolfang62, LarryTurbo, tammyclaydon
 -PLA Pokemon Overworlds		- Boonzeet, DarkusShadow, princess-phoenix, Ezeart, WolfPP
 -Gen 9 Pokemon Overworlds	- Azria, DarkusShadow, EduarPokeN, Carmanekko, StarWolff, Caruban
+-PLZA Pokemon Overworlds        - DarkusShadow
 
 Pokemon Footprints :
 -Gen PLA-9 Pokemon Footprints	- Caruban
@@ -188,10 +137,14 @@ Edited from HeroLinik's Pokemon Scarlet and Violet - All Teal Mask Cries video
 https://www.youtube.com/watch?v=pQr9z4ryE40
 Edited from Joya in UK's Indigo Disk Cries video
 https://www.youtube.com/watch?v=2Qqr9IzgcKE
+-Mega Pokemon Cries (PLZA)		- 
+Edited by DarkWolf13 from HeroLinik's Pokemon Legends Z-A - ALL MEGA EVOLUTION CRIES (Includes MEGA DIMENSION) video
+https://www.youtube.com/watch?v=RICm--Uowf8
 
 Item sprites:
 -Gen 9 item sprites	- lichenprincess, Caruban, jinxed
 -PLA item sprites	- AztecCroc, 3DJackArt, Caruban, lichenprincess
+-PLZA item sprites	- Caruban
 
 Pokeballs battle animation and summary icon:
 -Caruban
@@ -208,30 +161,165 @@ https://docs.google.com/spreadsheets/d/1T-KC-4XDOeFKq0Z6tfN6Sz4JIlpaK7B8A0lbmBg9
 And let me know if there is someone that I forget to mentions here.
 
 ==============================================================
+## CREDITS: Animated Pokemon Sprites
+https://eeveeexpo.com/resources/1544/
+
+    Plugin Credits:
+
+    Creator: Lucidious89
+    Based on the Generation 8 Pack by Golisopod User and EBDX by Luka S.J.
+
+
+    Sprite Credits:
+    Battler Sprites
+
+        Gen 1-5: Luka S.J.
+        Gen 6: All Contributors To Smogon X/Y Sprite Project
+        Gen 7: All Contributors To Smogon Sun/Moon Sprite Project
+        Gen 8: All Contributors To Smogon Sword/Shield Sprite Project
+        Gen 9: All Contributors To Smogon Scarlet/Violet Sprite Project
+        Contributors to the original "Sprites Animados" spanish plugin:
+        Luka S.J., Tenshi of War, DPertierra, Skyflyer, Hellfire_raptor, Adrix, Antiant, arinoelle, Aronousqui,
+		AshnixsLaw, AyanoCloud, Azrita, Batin, BR0DE0, Caruban, Creobnil, DanEx, Diegotoon20, dimbly, EBaru, Ebaru,
+		ekurepu, EricLostie, Esneider, Falcon7, Federico97_ez, Fleimer_, flea_alex, Franark122k, Hellfire0raptor,
+		hexagonereal, HM100, HyperactiveFlummi, iametrine, Involuntary-Twitch, ItsYugen, jinta, justnyxnow, kayzering,
+		KingOfThe-X-Roads, kiriaura, Legitimate Username, localghost, lucasomi, Lucidious89, Lucifer, Luis, MallowOut,
+		mangalos810, Marty, MCBMechachu, MCH4R1Z4RD, Miguel, MizterBubu, N-Kin, NoelleMBrooks, Noobiess, Nolo33,
+		OldSoulja, OmegalingYT, Pepsiman, PKMarioG, Pokepachito, Poki Papillon, PomPomKing, PumpkinPastel,
+		RadicalCharizard, Regis, RetroNC, Robert, Rod, seleccion, SelenaArmorclaw, SkidMarc25, Snivy101, Sopita_Yorita,
+		SoulWardenInfinity, The King, TheAetherPlayer, TheCynicalPoet, Tinkatooni, Turi, Typhlito, uppababy.
+
+    Icon Sprites
+
+        Gen 1-6: Alaguesia, harveydentmd
+        Gen 7: Marin, MapleBranchWing, Contributors to the DS Styled Gen 7+ Repository
+        Gen 8: Larry Turbo, Leparagon
+        Gen 1-8 (Shiny): StarrWolf, Pokemon Shattered Light Team
+        PLA Icons: LuigiTKO
+        Gen 9: ezerart, JordanosArt
+        Resource Compilation: Golisopod User, UberDunsparce, Caruban
+
+
+    Footprint Sprites
+
+        Gen 6: भाग्य ज्योति
+        Gen 7-8: WolfPP
+        Gen 9 & PLA: Caruban
+        Resource Compilation: komeiji514
+
+# Shadow Lugia Colors, Overworld sprite, & Icons from Pokemon Bushido Dev Team
+- Link to Pokemon Bushido: https://eeveeexpo.com/bushido/
+
+# GIF to PNG Sprite Sheet converter tool by @dragonnite (Lucy)
+
+# All Mega Evolution sprites (except Manectric) are by Aronousqui:
+# Link to Aronousqui DeviantArt: https://www.deviantart.com/aronousqui20/gallery
+
+# Link to mangalos810 sprites: https://www.deviantart.com/mangalos810/gallery/103628774/new-work
+- Charizard G-Max
+- Delphox
+- Lapras G-Max
+- Manectric Mega
+- Moltres-Galar
+- Mr.Mime-Galar
+- Palkia-Origin
+- Slowking-Galar
+- Slowpoke-Galar
+- Snorlax G-Max
+- Tauros-Paldea-Combat
+- Tauros-Paldea-Aqua
+- Weezing-Galar
 
 ## CREDITS: Animated Sprites by Ghasty001
 - [Link](https://github.com/Ghasty001/Animated_sprites_by_Ghasty001)
 - "original" refers to Ghasty_001's work :)
 
-**Armarouge**
-Base front sprites by *KingOfThe-X-Roads*. Credit to *lennybitao* for that second frame with the cannon arms. Good Charcadet and ceruledge sprite animations can be found in the Deluxe Battle Kit, but I can't link you the name of the creator.
+**Nacli - Naclstack - Garganacl**
+The front of Nacli has an animation currently Smogon's Sprite Project, made by *hexagonereal*, while the rest of the sprites used as a base the sprites made available by the talented *Kyledove*.
 
-**Mega Ampharos**
-Base sprites was made by *Branflakes325, Layell, Wyverii* on Smogon's Sprite Project.
-
-**Mega Beedrill (back)**
-Basecksprite by *Sleet* on Smogon's Sprite Project.
-
-**Mega Victreebel (front)**
+**Smoliv - Dolliv - Arboliva**
 All original animations and sprites!
 
-**Mega Absol Z**
-All original animations and sprites! Back might need touchups.
+**Fuecoco - Crocalor - Skeledirge**
+Fuecoco's front and back was edited from a sprite by *Bloxable*. Skeledirge front sprite was also made by *Bloxable*. both Skeli and Crocalor's back come from *KingOfThe*. Crocalor's front is original!
 
-**Mega Meganium**
-The base front was made by *kiriaura* over on its Deviant-Art, while the back is original.
+**Hisuian Braviary**
+Base sprites from Smogon's Sprite Project by *G.E.Z and KingOfThe-X-Roads*.
 
-## CREDITS: Legends Z-A base game and Mega Dimension sprites from Spanish / La Base de Sky
-- Animated battle sprites: specified in "Créditos_Sprites_Megas ZA_y_DLC_Actualizado.xlsx" (RetroNC, Pepsiman, Robert, Aronousqui, and more)
-- icons Z-A base game: Créditos a Luis779 por los iconos y Incluye las versiones shiny de los iconos de Pokémon Showdown de las megas de Dragonite, Victreebel, Hawlucha, Malamar y los iniciales de Kalos (créditos a Ezerart)
-- icons Mega Dimension: Créditos a Rauru (Pepsiman) por el icono de mega absol Z y Luis779 por los demas
+**Hisuian Qwilfish**
+Base sprites from Smogon's Sprite Project by *KingOfThe-X-Roads and Katten*. Overqwil animation is also on Smogon, by *hexagonereal*
+
+**Oricorio Baile (Fire type)**
+Base sprites from Smogon's Sprite Project by *aXl*. All the other 3 forms are made on Smogon by *Antiant*.
+
+**Clauncher - Clawitzer**
+All original animations and sprites!
+
+**Skrelp - Dragalgea**
+All original animations and sprites!
+
+**Golisopod**
+Base sprites from Smogon's Sprite Project by *leParagon*. Wimpod can be found always on Smogon by *Antiant*.
+
+**Gossifleur**
+All original animations and sprites! Eldegoss's animations can be found on Smogon's Sprite Project by  *PumpkinPastel and DanEx*.
+
+**Clodsire**
+Base sprites from Smogon's Sprite Project by *KingOfThe-X-Roads*. The Front can be found on Smogon made by *uppa*. A great Paldean Wooper animation was made by *AshnixsLaw* (you just need to adjust the color of the shiny ahah).
+
+**Gholdengo**
+Base sprites by *KingOfThe-X-Roads*. Fron on Smogon's Sprite project by *uppa*. Fun fact unrelated to credits, it's literally the same back for both normal and shiny variant. Screw this shiny.
+
+**Wyrdeer**
+Backsprite from Smogon's Sprite Project by *G.E.Z.*. Front animation always on Smogon by *hexagonereal*.
+
+**Hisuian Voltorb - Electrode**
+Base sprites from Smogon's Sprite Project by *Blaquaza and G.E.Z.*. The only one animated was Voltorb's Front by *Katten*.
+
+**Hisuian Sliggoo**
+Base sprites from Smogon's Sprite Project by *G.E.Z.*. In there there's also front, along with H.Goodra's assets.
+
+**Hisuian Avalugg**
+Base sprites from Smogon's Sprite Project by *Katten*. Front animations with decent quality where made by *hellfire0raptor*.
+
+**Hisuian Sneasel and Sneasler**
+Base sprites from Smogon's Sprite Project by *Blaquaza, G.E.Z. and KattenK*. Unrelated: these base sprites they made make Sneasler look good for me.
+
+**Dottler - Orbeetle**
+Base sprites from Smogon's Sprite Project by *KingOfThe-X-Roads and  leParagon*. Except Orbeetle's Front, that one I made myself. Blipbug can be found on Smogon as well by *arionelle*
+
+**Heliolisk**
+All original animations and sprites! Helioptyle's animations can be found on Smogon's Sprite Project by  *hexagonereal*.
+
+**Fidough - Dachsbun**
+Base front sprites by *KingOfThe-X-Roads*. Back sprites by *Kyledove*
+
+**Shroodle - Grafaiai**
+Base sprites by *KingOfThe-X-Roads*. Backs animations by *mangalos810*.
+
+**Flapple - Appletun**
+Base sprites for front and back by *Blaquaza and leParagon*.
+
+**Tarountula - Spidops**
+Base backsprites by *KingOfThe-X-Roads*. The front sprites I suggest are the ones from *hellfire0raptor*, HOWEVER I used their animated sprite as template for the shiny front, since they originally didn't made any.
+
+**Trevenant**
+All original animations and sprites! Phantump's animation can be found on Smogon's Sprite Project by  *arionelle*.
+
+**Armarouge and Ceruledge**
+Base Armarouge front sprites by *KingOfThe-X-Roads*. Credit to *lennybitao* for that second frame with the cannon arms, available also at the 2-frame project.I think the author of Base Ceruledge front either deleted its previous work or I simply couldn't find him. If you happen to know, feel free to share. If you want a good base Ceruledge sprite, look for the ones also by *lennybitao*. Good Charcadet sprite animations can be found in the Deluxe Battle Kit, but I can't link you the name of the creator directly.... yeah this section is quite a mess.
+
+**Dreepy - Drakloak - Dragapult**
+Base sprite by *KingOfThe-X-Roads*. Slightly modified the drakloak and dragapult front sprites, while the backs are mine.
+
+**Kingambit**
+Base sprites by *Anarlaurendil* over on Deviantart.
+
+**Bramblin and Brambleghast**
+Base sprites by *KingOfThe-X-Roads* on Smogon's Sprite Project.
+
+**Rotom dj**
+Base sprites by *KingOfThe-X-Roads*. It's a bonus addition because some people asked me to.
+
+**Annihilape**
+All original animations and sprites!

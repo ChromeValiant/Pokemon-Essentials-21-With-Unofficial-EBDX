@@ -1,7 +1,7 @@
 #===============================================================================
-#  Common Animation: HEALTHUP
+#  Common Animation: EATERRY
 #===============================================================================
-EliteBattle.defineCommonAnimation(:USEITEM) do
+EliteBattle.defineCommonAnimation(:EATBERRY) do
   #-----------------------------------------------------------------------------
   #  configure variables
   @scene.wait(16, true) if @scene.afterAnim

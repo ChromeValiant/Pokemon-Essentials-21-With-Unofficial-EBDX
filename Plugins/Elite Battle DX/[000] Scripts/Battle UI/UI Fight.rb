@@ -34,13 +34,11 @@ class Battle::Scene
           buttons[i] = @fightWindow.button["#{i}"]
         end
         
-        # Check Mega Evolution button click first
-        if megaEvoPossible && @fightWindow.megaButton #&& @fightWindow.megaButton.y < Graphics.height
-          if Mouse.click?(@fightWindow.megaButton, :left)
-            @fightWindow.megaButtonTrigger
-            pbSEPlay("EBDX/SE_Select3")
-            break if yield -2
-          end
+        # Mega Evolution button click 
+        if megaEvoPossible && @fightWindow.megaButtonClicked?
+          @fightWindow.megaButtonTrigger
+          pbSEPlay("EBDX/SE_Select3")
+          break if yield -2
         end
 
         action, val = Mouse::UISelection.input_action(buttons, @fightWindow.index)
@@ -360,6 +358,14 @@ class FightWindowEBDX
     @megaButton.src_rect.x += @megaButton.src_rect.width
     @megaButton.src_rect.x = 0 if @megaButton.src_rect.x > @megaButton.src_rect.width
     @megaButton.src_rect.y = -4
+  end
+  #-----------------------------------------------------------------------------
+  #  true when the mega button is shown, finished sliding in, and left-clicked
+  #-----------------------------------------------------------------------------
+  def megaButtonClicked?
+    return false if !@showMega || !@megaButton || @megaButton.disposed? || !@megaButton.visible
+    return false if @megaButton.y > @viewport.height - @background.bitmap.height/2 + 8
+    return Mouse.click?(@megaButton, :left)
   end
   #-----------------------------------------------------------------------------
   #  update fight menu

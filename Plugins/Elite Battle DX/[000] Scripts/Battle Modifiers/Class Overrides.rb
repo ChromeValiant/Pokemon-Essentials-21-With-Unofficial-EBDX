@@ -59,14 +59,19 @@ class WildBattle
     return EliteBattle.wildBattle(wspecies, 1, args[3], args[4]) if wspecies.is_a?(Hash)
     # overrides species and level data if defined
     args[0] = wspecies if !wspecies.nil?
-    args[1] = data[:WILD_LEVEL] if !data.nil? && data.is_a?(Hash) && data.has_key?(:WILD_LEVEL)
+    args[1] = data[:WILD_LEVEL] if !data.nil? && data.is_a?(Hash) && data.has_key?(:WILD_LEVEL) && !args[1].is_a?(Pokemon)
     # caches species number
-    EliteBattle.set(:wildSpecies, args[0])
+    if args[0].is_a?(Pokemon)
+      EliteBattle.set(:wildSpecies, args[0].species)
+      EliteBattle.set(:wildForm, args[0].form)
+      EliteBattle.set(:wildLevel, args[0].level)
+    else
+      EliteBattle.set(:wildSpecies, args[0])
+      EliteBattle.set(:wildLevel, args[1])
+    end
     # try to load the next battle speech
     speech = EliteBattle.get_data(EliteBattle.get(:wildSpecies), :Species, :BATTLESCRIPT, (EliteBattle.get(:wildForm) rescue 0))
     EliteBattle.set(:nextBattleScript, (speech.is_a?(Hash) ? speech : speech.to_sym)) if !speech.nil?
-    # caches species level
-    EliteBattle.set(:wildLevel, args[1])
     # starts battle processing
     ret = pbWildBattle_ebdx(*args, can_override: can_override)
     # returns output

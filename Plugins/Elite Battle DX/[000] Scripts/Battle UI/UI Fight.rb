@@ -10,6 +10,8 @@ class Battle::Scene
     battler = @battle.battlers[idxBattler]
     self.clearMessageWindow
     @fightWindow.battler = battler
+    # preview Mega-dependent move types/stats if Mega Evolution is already registered
+    @fightWindow.megaPreview = @battle.pbRegisteredMegaEvolution?(idxBattler)
     @fightWindow.megaButton if megaEvoPossible && @battle.pbCanMegaEvolve?(idxBattler)
     # last chosen move
     moveIndex = 0
@@ -34,11 +36,14 @@ class Battle::Scene
           buttons[i] = @fightWindow.button["#{i}"]
         end
         
-        # Mega Evolution button click 
+        # Mega Evolution button click
         if megaEvoPossible && @fightWindow.megaButtonClicked?
           @fightWindow.megaButtonTrigger
           pbSEPlay("EBDX/SE_Select3")
-          break if yield -2
+          done = yield -2
+          # the block has toggled the registration- refresh the displayed types
+          @fightWindow.megaPreview = @battle.pbRegisteredMegaEvolution?(idxBattler)
+          break if done
         end
 
         action, val = Mouse::UISelection.input_action(buttons, @fightWindow.index)
@@ -79,12 +84,12 @@ class Battle::Scene
       # play SE
       pbSEPlay("EBDX/SE_Select1") if @fightWindow.index != oldIndex
       # Actions
-      if Input.trigger?(Input::A)                                            # Toggle Mega Evolution
-        if megaEvoPossible
-            @fightWindow.megaButtonTrigger
-            pbSEPlay("EBDX/SE_Select3")
-          end
-          break if yield -2
+      if Input.trigger?(Input::A) && megaEvoPossible                         # Toggle Mega Evolution, same stuff as the mouse click, but for the action key
+        @fightWindow.megaButtonTrigger
+        pbSEPlay("EBDX/SE_Select3")
+        done = yield -2
+        @fightWindow.megaPreview = @battle.pbRegisteredMegaEvolution?(idxBattler)
+        break if done
       end
     end
     # reset parameters
@@ -106,6 +111,7 @@ class FightWindowEBDX
   attr_accessor :index
   attr_accessor :battler
   attr_accessor :refreshpos
+  attr_reader :megaPreview
   attr_reader :nummoves
   attr_reader :button, :megaButton
   #-----------------------------------------------------------------------------
@@ -253,52 +259,116 @@ class FightWindowEBDX
     end
 
     @button = {}
+    refreshPreviewAbility
     for i in 0...@nummoves
-      # get numeric values of required variables
-      movedata = GameData::Move.get(@moves[i].id)
-      category = movedata.physical? ? 0 : (movedata.special? ? 1 : 2)
-      # Display correct type
-      type = GetProperType(@battler, movedata).icon_position
       # create sprite
       @button["#{i}"] = Sprite.new(@viewport)
-      @button["#{i}"].param = category
       @button["#{i}"].z = 102
       @button["#{i}"].bitmap = Bitmap.new(198*2, 74)
-      @button["#{i}"].bitmap.blt(0, 0, @buttonBitmap, Rect.new(0, type*74, 198, 74))
-      @button["#{i}"].bitmap.blt(198, 0, @buttonBitmap, Rect.new(198, type*74, 198, 74))
-      @button["#{i}"].bitmap.blt(65, 46, @catBitmap, Rect.new(0, category*22, 38, 22))
-      @button["#{i}"].bitmap.blt(3, 46, @typebitmap, Rect.new(0, type*22, 72, 22))
-      baseColor = @buttonBitmap.get_pixel(5, 32 + (type*74)).darken(0.4)
-      pbSetSmallFont(@button["#{i}"].bitmap)
-      # move name: white text with a dark outline (BW2 style), identical in the
-      # selected (left half) and unselected (right half) button states
-      pbDrawOutlineText(@button["#{i}"].bitmap, 0, 10, 196, 42, movedata.name, Color.white, baseColor, 1)
-      pbDrawOutlineText(@button["#{i}"].bitmap, 198, 10, 196, 42, movedata.name, Color.white, baseColor, 1)
-	  # Display PP (with correct colouring)
-      pp = "#{@moves[i].pp}/#{@moves[i].total_pp}"
-      ppBase   = [Color.white,                # More than 1/2 of total PP
-            Color.new(248,192,0),    # 1/2 of total PP or less
-            Color.new(248,136,32),   # 1/4 of total PP or less
-            Color.new(248,72,72)]    # Zero PP
-      ppShadow = [baseColor,             # More than 1/2 of total PP
-            Color.new(144,104,0),   # 1/2 of total PP or less
-            Color.new(144,72,24),   # 1/4 of total PP or less
-            Color.new(136,48,48)]   # Zero PP
-      ppfraction = 0
-      if @moves[i].pp==0;                  ppfraction = 3
-      elsif @moves[i].pp*4<=@moves[i].total_pp; ppfraction = 2
-      elsif @moves[i].pp*2<=@moves[i].total_pp; ppfraction = 1
-      end
-	  ppfraction = 0 if @moves[i].pp==0 && @moves[i].total_pp==0 # Shadow moves
-      pbDrawOutlineText(@button["#{i}"].bitmap, 0, 48, 191, 26, pp, ppBase[ppfraction], ppShadow[ppfraction], 2)
+      renderButton(i)
       @button["#{i}"].src_rect.set(198, 0, 198, 74)
       @button["#{i}"].ox = @button["#{i}"].src_rect.width/2
       @button["#{i}"].x = @x[i]
       @button["#{i}"].y = @y[i]
     end
+    @sprites["moveInfo"].dispose if @sprites["moveInfo"] && !@sprites["moveInfo"].disposed?
 	@sprites["moveInfo"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport) # Solar Eclipse
     @sprites["moveInfo"].z = 103
     pbSetSmallFont(@sprites["moveInfo"].bitmap)
+  end
+  #-----------------------------------------------------------------------------
+  #  draws one move button (type colour, name, PP...) into its existing bitmap
+  #  so it can be re-run when the displayed type changes (e.g. Mega preview)
+  #-----------------------------------------------------------------------------
+  def renderButton(i)
+    sprite = @button["#{i}"]
+    bitmap = sprite.bitmap
+    bitmap.clear
+    # get numeric values of required variables
+    movedata = GameData::Move.get(@moves[i].id)
+    category = movedata.physical? ? 0 : (movedata.special? ? 1 : 2)
+    # Display correct type
+    type = GetProperType(@battler, movedata).icon_position
+    sprite.param = category
+    bitmap.blt(0, 0, @buttonBitmap, Rect.new(0, type*74, 198, 74))
+    bitmap.blt(198, 0, @buttonBitmap, Rect.new(198, type*74, 198, 74))
+    bitmap.blt(65, 46, @catBitmap, Rect.new(0, category*22, 38, 22))
+    bitmap.blt(3, 46, @typebitmap, Rect.new(0, type*22, 72, 22))
+    baseColor = @buttonBitmap.get_pixel(5, 32 + (type*74)).darken(0.4)
+    pbSetSmallFont(bitmap)
+    # move name: white text with a dark outline (BW2 style), identical in the
+    # selected (left half) and unselected (right half) button states
+    pbDrawOutlineText(bitmap, 0, 10, 196, 42, movedata.name, Color.white, baseColor, 1)
+    pbDrawOutlineText(bitmap, 198, 10, 196, 42, movedata.name, Color.white, baseColor, 1)
+    # Display PP (with correct colouring)
+    pp = "#{@moves[i].pp}/#{@moves[i].total_pp}"
+    ppBase   = [Color.white,                # More than 1/2 of total PP
+                Color.new(248,192,0),       # 1/2 of total PP or less
+                Color.new(248,136,32),      # 1/4 of total PP or less
+                Color.new(248,72,72)]       # Zero PP
+    ppShadow = [baseColor,                  # More than 1/2 of total PP
+                Color.new(144,104,0),       # 1/2 of total PP or less
+                Color.new(144,72,24),       # 1/4 of total PP or less
+                Color.new(136,48,48)]       # Zero PP
+    ppfraction = 0
+    if @moves[i].pp == 0;                          ppfraction = 3
+    elsif @moves[i].pp*4 <= @moves[i].total_pp;    ppfraction = 2
+    elsif @moves[i].pp*2 <= @moves[i].total_pp;    ppfraction = 1
+    end
+    ppfraction = 0 if @moves[i].pp == 0 && @moves[i].total_pp == 0 # Shadow moves
+    pbDrawOutlineText(bitmap, 0, 48, 191, 26, pp, ppBase[ppfraction], ppShadow[ppfraction], 2)
+  end
+  #-----------------------------------------------------------------------------
+  #  redraws all move buttons (keeps their position/animation state)
+  #-----------------------------------------------------------------------------
+  def refreshButtons
+    return if @moves.nil?
+    for i in 0...@nummoves
+      next if !@button["#{i}"] || @button["#{i}"].disposed?
+      renderButton(i)
+    end
+    @oldindex = -1   # forces the power/accuracy/priority panel to redraw
+  end
+  #-----------------------------------------------------------------------------
+  #  Mega Evolution preview: when Mega Evolution is registered for this turn,
+  #  types/accuracy/priority are shown as they will be AFTER the Mega Evolution
+  #  (the Mega form's ability applies before moves are used)
+  #-----------------------------------------------------------------------------
+  def megaPreview=(val)
+    val = val ? true : false
+    return if val == @megaPreview
+    @megaPreview = val
+    # keep the button graphic in sync with the registration
+    @megaButton.src_rect.x = val ? @megaButton.src_rect.width : 0 if @megaButton
+    return if @battler.nil?
+    refreshPreviewAbility
+    refreshButtons
+  end
+  def refreshPreviewAbility
+    @previewAbility = @megaPreview ? megaFormAbility(@battler) : nil
+  end
+  # ability the battler will have once it Mega Evolves (nil if not applicable)
+  def megaFormAbility(battler)
+    pkmn = battler.respond_to?(:pokemon) ? battler.pokemon : nil
+    return nil if !pkmn || !pkmn.respond_to?(:getMegaForm)
+    form = pkmn.getMegaForm
+    return nil if form.nil? || form <= 0
+    sp = GameData::Species.get_species_form(pkmn.species, form)
+    return nil if !sp
+    idx = pkmn.ability_index || 0
+    ab = nil
+    ab = sp.hidden_abilities[idx - 2] if idx >= 2
+    ab ||= sp.abilities[idx] || sp.abilities[0]
+    return ab
+  end
+  # ability check that honours the Mega preview
+  def abilityIs?(battler, ability)
+    return false if battler.nil?
+    if @previewAbility
+      return false if battler.respond_to?(:abilityActive?) && !battler.abilityActive?
+      return @previewAbility == ability
+    end
+    return battler.respond_to?(:hasActiveAbility?) && battler.hasActiveAbility?(ability)
   end
   #-----------------------------------------------------------------------------
   #  unused
@@ -318,7 +388,7 @@ class FightWindowEBDX
     end
   end
   def showPlay
-    @megaButton.src_rect.x = 0
+    @megaButton.src_rect.x = @megaPreview ? @megaButton.src_rect.width : 0
     @background.y = @viewport.height
     8.times do
       self.show; @scene.wait(1, true)
@@ -360,7 +430,7 @@ class FightWindowEBDX
     @megaButton.src_rect.y = -4
   end
   #-----------------------------------------------------------------------------
-  #  true when the mega button is shown, finished sliding in, and left-clicked
+  #  true when the mega button is shown, finished sliding in, and left clicked
   #-----------------------------------------------------------------------------
   def megaButtonClicked?
     return false if !@showMega || !@megaButton || @megaButton.disposed? || !@megaButton.visible
@@ -473,10 +543,17 @@ class FightWindowEBDX
     return GameData::Type.get(:NORMAL) if movedata == nil
     moveType = movedata.type
 
-    # if movedata.function_code=="TypeDependsOnUserIVs"
-      # #Hidden Power
-      # return GameData::Type.get(pbHiddenPower(battler)[0])
-    # end
+    if movedata.function_code == "TypeDependsOnUserIVs"
+      # Hidden Power (pbHiddenPower needs the Pokemon, not the Battler: Battler has no #iv)
+      pkmn = battler.respond_to?(:pokemon) ? battler.pokemon : battler
+      if pkmn && pkmn.respond_to?(:iv)
+        begin
+          moveType = pbHiddenPower(pkmn)[0]
+        rescue StandardError
+          moveType = movedata.type
+        end
+      end
+    end
     if movedata.id == :JUDGMENT && battler.itemActive?
       return GameData::Type.get(:NORMAL) if battler.item == nil
       case battler.item.id
@@ -545,7 +622,7 @@ class FightWindowEBDX
         return GameData::Type.get(:ELECTRIC)
       when :PSYCHICMEMORY
         return GameData::Type.get(:PSYCHIC)
-      when :ICIMEMORY
+      when :ICEMEMORY
         return GameData::Type.get(:ICE)
       when :DRAGONMEMORY
         return GameData::Type.get(:DRAGON)
@@ -559,7 +636,7 @@ class FightWindowEBDX
       return GameData::Type.get(:NORMAL) if battler.item == nil
       case battler.item.id
       when :SHOCKDRIVE
-        return GameData::Type.get(:ELECRIC)
+        return GameData::Type.get(:ELECTRIC)
       when :BURNDRIVE
         return GameData::Type.get(:FIRE)
       when :CHILLDRIVE
@@ -570,7 +647,7 @@ class FightWindowEBDX
     end
     if movedata.function_code=="TypeAndPowerDependOnWeather"
       # Weather Ball
-	  return GameData::Type.get(:FIRE) if battler.hasActiveAbility?(:MEGASOL)
+	  return GameData::Type.get(:FIRE) if abilityIs?(battler, :MEGASOL)
 	  case battler.effectiveWeather
 	  when :Sun, :HarshSun
 	    return GameData::Type.get(:FIRE)
@@ -650,25 +727,25 @@ class FightWindowEBDX
       end
     end
 
-    if battler.hasActiveAbility?(:AERILATE) && moveType == :NORMAL
+    if abilityIs?(battler, :AERILATE) && moveType == :NORMAL
       return GameData::Type.get(:FLYING)
     end
-    if battler.hasActiveAbility?(:GALVANIZE) && moveType == :NORMAL
+    if abilityIs?(battler, :GALVANIZE) && moveType == :NORMAL
       return GameData::Type.get(:ELECTRIC)
     end
-    if battler.hasActiveAbility?(:LIQUIDVOICE) && movedata.flags[/k/]
+    if abilityIs?(battler, :LIQUIDVOICE) && movedata.flags[/k/]
       return GameData::Type.get(:WATER)
     end
-    if battler.hasActiveAbility?(:NORMALIZE)
+    if abilityIs?(battler, :NORMALIZE)
       return GameData::Type.get(:NORMAL)
     end
-    if battler.hasActiveAbility?(:PIXILATE) && moveType == :NORMAL
+    if abilityIs?(battler, :PIXILATE) && moveType == :NORMAL
       return GameData::Type.get(:FAIRY)
     end
-    if battler.hasActiveAbility?(:REFRIGERATE) && moveType == :NORMAL
+    if abilityIs?(battler, :REFRIGERATE) && moveType == :NORMAL
       return GameData::Type.get(:ICE)
     end
-	if battler.hasActiveAbility?(:DRAGONIZE) && moveType == :NORMAL
+	if abilityIs?(battler, :DRAGONIZE) && moveType == :NORMAL
       return GameData::Type.get(:DRAGON)
     end
 
@@ -784,13 +861,13 @@ class FightWindowEBDX
       moveAcc *= 1.1
     end
 
-    if battler.hasActiveAbility?(:HUSTLE) && movedata.category==0
+    if abilityIs?(battler, :HUSTLE) && movedata.category==0
       moveAcc *= 0.8
-    elsif battler.hasActiveAbility?(:COMPOUNDEYES)
+    elsif abilityIs?(battler, :COMPOUNDEYES)
       moveAcc *= 1.3
-    elsif battler.hasActiveAbility?(:ILLUMINATE)
+    elsif abilityIs?(battler, :ILLUMINATE)
       moveAcc *= 1.2
-    elsif battler.hasActiveAbility?(:NOGUARD)
+    elsif abilityIs?(battler, :NOGUARD)
       return "-"
     end
     
@@ -804,13 +881,13 @@ class FightWindowEBDX
     movePriority = movedata.priority
 
     if battler != nil && battler.respond_to?(:hasActiveAbility?)
-      if battler.hasActiveAbility?(:PRANKSTER) && movedata.category==2
+      if abilityIs?(battler, :PRANKSTER) && movedata.category==2
         movePriority += 1
       end
-      if battler.hasActiveAbility?(:GALEWINGS) && movedata.type == :FLYING && battler.hp == battler.totalhp
+      if abilityIs?(battler, :GALEWINGS) && movedata.type == :FLYING && battler.hp == battler.totalhp
         movePriority += 1
       end
-      if battler.hasActiveAbility?(:TRIAGE) && movedata.healingMove?
+      if abilityIs?(battler, :TRIAGE) && movedata.healingMove?
         movePriority += 3
       end
     end

@@ -11,10 +11,10 @@ DOUBLE
   SCALE            = 342
   ZOOM             = 1
 TRIPLE
-  XY               = 102,408
-  ANGLE            = 32
-  SCALE            = 342
-  ZOOM             = 1
+  XY               = 196,306
+  ANGLE            = 26
+  SCALE            = 242
+  ZOOM             = 0.6
 SENDOUT
   XY               = 234,306
   ANGLE            = 24

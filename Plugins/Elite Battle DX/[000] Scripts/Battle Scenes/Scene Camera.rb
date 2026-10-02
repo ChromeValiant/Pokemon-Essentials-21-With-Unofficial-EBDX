@@ -69,7 +69,7 @@ class Battle::Scene
           @sprites["pokemon_#{i}"].energyUpdate
           @sprites["dataBox_#{i}"].update if @sprites["dataBox_#{i}"] && @sprites["pokemon_#{i}"].loaded
         end
-        if !@orgPos.nil? && @idleTimer > (@lastMotion.nil? ? EliteBattle::BATTLE_MOTION_TIMER*Graphics.frame_rate : EliteBattle::BATTLE_MOTION_TIMER*Graphics.frame_rate*0.5) && @vector.finished? && !@safaribattle
+        if !@orgPos.nil? && @idleTimer > (@lastMotion.nil? ? EliteBattle::BATTLE_MOTION_TIMER*Graphics.frame_rate : EliteBattle::BATTLE_MOTION_TIMER*Graphics.frame_rate*0.5) && @vector.finished? && !@safaribattle && !@battle.triplebattle?   # no idle camera drift in triples (keeps the zoomed-out view)
           @vector.inc = 0.005*(rand(4)+1)
           a = EliteBattle.random_vector(@battle, @lastMotion)
           @lastMotion = rand(a.length)

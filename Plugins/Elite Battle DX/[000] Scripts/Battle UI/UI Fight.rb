@@ -36,12 +36,12 @@ class Battle::Scene
           buttons[i] = @fightWindow.button["#{i}"]
         end
         
-        # Mega Evolution button click
+        # Mega Evolution button click (same behaviour as pressing the A key)
         if megaEvoPossible && @fightWindow.megaButtonClicked?
           @fightWindow.megaButtonTrigger
           pbSEPlay("EBDX/SE_Select3")
           done = yield -2
-          # the block has toggled the registration- refresh the displayed types
+          # the block has toggled the registration: refresh the displayed types
           @fightWindow.megaPreview = @battle.pbRegisteredMegaEvolution?(idxBattler)
           break if done
         end
@@ -84,10 +84,11 @@ class Battle::Scene
       # play SE
       pbSEPlay("EBDX/SE_Select1") if @fightWindow.index != oldIndex
       # Actions
-      if Input.trigger?(Input::A) && megaEvoPossible                         # Toggle Mega Evolution, same stuff as the mouse click, but for the action key
+      if Input.trigger?(Input::A) && megaEvoPossible                         # Toggle Mega Evolution
         @fightWindow.megaButtonTrigger
         pbSEPlay("EBDX/SE_Select3")
         done = yield -2
+        # the block has toggled the registration: refresh the displayed types
         @fightWindow.megaPreview = @battle.pbRegisteredMegaEvolution?(idxBattler)
         break if done
       end
@@ -430,7 +431,8 @@ class FightWindowEBDX
     @megaButton.src_rect.y = -4
   end
   #-----------------------------------------------------------------------------
-  #  true when the mega button is shown, finished sliding in, and left clicked
+  #  true when the mega button is shown, finished sliding in, and left-clicked
+  #  (note: `megaButton` above is the "show" method, so the sprite is @megaButton)
   #-----------------------------------------------------------------------------
   def megaButtonClicked?
     return false if !@showMega || !@megaButton || @megaButton.disposed? || !@megaButton.visible

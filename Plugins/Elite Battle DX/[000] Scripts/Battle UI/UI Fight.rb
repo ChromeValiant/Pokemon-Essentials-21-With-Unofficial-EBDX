@@ -272,7 +272,10 @@ class FightWindowEBDX
       @button["#{i}"].bitmap.blt(3, 46, @typebitmap, Rect.new(0, type*22, 72, 22))
       baseColor = @buttonBitmap.get_pixel(5, 32 + (type*74)).darken(0.4)
       pbSetSmallFont(@button["#{i}"].bitmap)
-      pbDrawOutlineText(@button["#{i}"].bitmap, 198, 10, 196, 42,"#{movedata.real_name}", Color.white, baseColor, 1)
+      # move name: white text with a dark outline (BW2 style), identical in the
+      # selected (left half) and unselected (right half) button states
+      pbDrawOutlineText(@button["#{i}"].bitmap, 0, 10, 196, 42, movedata.name, Color.white, baseColor, 1)
+      pbDrawOutlineText(@button["#{i}"].bitmap, 198, 10, 196, 42, movedata.name, Color.white, baseColor, 1)
 	  # Display PP (with correct colouring)
       pp = "#{@moves[i].pp}/#{@moves[i].total_pp}"
       ppBase   = [Color.white,                # More than 1/2 of total PP
@@ -290,10 +293,6 @@ class FightWindowEBDX
       end
 	  ppfraction = 0 if @moves[i].pp==0 && @moves[i].total_pp==0 # Shadow moves
       pbDrawOutlineText(@button["#{i}"].bitmap, 0, 48, 191, 26, pp, ppBase[ppfraction], ppShadow[ppfraction], 2)
-      pbSetSystemFont(@button["#{i}"].bitmap)
-      selectedMoveNameYPos = 18
-      text = [[movedata.name, 99, selectedMoveNameYPos, 2, baseColor, Color.new(0, 0, 0, 24)]]
-      pbDrawTextPositions(@button["#{i}"].bitmap, text)
       @button["#{i}"].src_rect.set(198, 0, 198, 74)
       @button["#{i}"].ox = @button["#{i}"].src_rect.width/2
       @button["#{i}"].x = @x[i]
@@ -376,30 +375,8 @@ class FightWindowEBDX
 	  # Solar Eclipse
 	  move = @battler.moves[@index]
       # Show move stats
-      bitmap = @sprites["moveInfo"].bitmap
-      bitmap.clear
-      # Get move stats
-      power = GetProperPower(@battler, GameData::Move.get(move.id)).to_s
-      power = "-" if power == "0"
-      acc = (move.accuracy == 0) ? "-" : GetProperAccuracy(@battler, GameData::Move.get(move.id)).to_s + "%"
-      pri = GetProperPriority(@battler, move).to_s
-      lines = [
-        "#{power}",
-        "#{acc}",
-        "#{pri}",
-      ]
-      baseX = Graphics.width - 45
-      baseY = Graphics.height - 60
-      lineHeight = 18
-
-      lines.each_with_index do |line, i|
-        pbDrawOutlineText(
-          bitmap,
-          baseX, baseY + i * lineHeight, Graphics.width, lineHeight,
-          line, Color.white, Color.black, 0
-        )
-      end
-	  # END Solar Eclipse
+      refreshMoveInfo(move)
+      # END Solar Eclipse
       if @showTypeAdvantage && !(@battle.doublebattle? || @battle.triplebattle?)
         move = @battler.moves[@index]
         @modifier = move.pbCalcTypeMod(move.type, @player, @opponent)
@@ -436,6 +413,35 @@ class FightWindowEBDX
         eff = 2   # "Super effective"
       end
       @typeInd.src_rect.y = 24 * eff
+    end
+  end
+  #-----------------------------------------------------------------------------
+  #  draw power / accuracy / priority for the given move
+  #  (never raises: a failed lookup must not take the whole battle down)
+  #-----------------------------------------------------------------------------
+  def refreshMoveInfo(move)
+    return if !@sprites || !@sprites["moveInfo"] || @sprites["moveInfo"].disposed?
+    bitmap = @sprites["moveInfo"].bitmap
+    bitmap.clear
+    return if !move || !move.id
+    user = @battler
+    begin
+      movedata = GameData::Move.get(move.id)
+      power = GetProperPower(user, movedata).to_s
+      power = "-" if power == "0"
+      acc = (move.accuracy == 0) ? "-" : GetProperAccuracy(user, movedata).to_s + "%"
+      pri = GetProperPriority(user, move).to_s
+    rescue StandardError
+      power = (move.power == 0) ? "-" : move.power.to_s
+      acc = (move.accuracy == 0) ? "-" : move.accuracy.to_s + "%"
+      pri = "-"
+    end
+    baseX = Graphics.width - 45
+    baseY = Graphics.height - 60
+    lineHeight = 18
+    [power, acc, pri].each_with_index do |line, i|
+      pbDrawOutlineText(bitmap, baseX, baseY + i * lineHeight, Graphics.width, lineHeight,
+                        line, Color.white, Color.black, 0)
     end
   end
   #-----------------------------------------------------------------------------
@@ -765,8 +771,9 @@ class FightWindowEBDX
   def GetProperAccuracy(battler, movedata)
     return "-" if movedata == nil
     moveAcc = movedata.accuracy
+    return moveAcc.round if battler.nil? || !battler.respond_to?(:hasActiveAbility?)
 
-    if battler.hasActiveItem?(:WIDELENS)
+    if battler.respond_to?(:hasActiveItem?) ? battler.hasActiveItem?(:WIDELENS) : (battler.itemActive? && battler.item == :WIDELENS)
       # No Zoom Lens because it activates afterwards
       moveAcc *= 1.1
     end
@@ -790,7 +797,7 @@ class FightWindowEBDX
     return "-" if movedata == nil
     movePriority = movedata.priority
 
-    if battler != nil
+    if battler != nil && battler.respond_to?(:hasActiveAbility?)
       if battler.hasActiveAbility?(:PRANKSTER) && movedata.category==2
         movePriority += 1
       end

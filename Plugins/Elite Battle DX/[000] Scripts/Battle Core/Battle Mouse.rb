@@ -36,6 +36,23 @@ module Mouse
     end
 
     #---------------------------------------------------------------------------
+    # Returns true only on frames where the mouse cursor actually moved.
+    # Hover highlighting is gated on this so that a stationary cursor resting on
+    # a button no longer overrides keyboard/gamepad navigation every frame.
+    # (State is cached per frame so several callers in one frame agree.)
+    #---------------------------------------------------------------------------
+    def mouse_moved?
+      frame = Graphics.frame_count
+      if @mm_frame != frame
+        @mm_frame = frame
+        mx, my = Mouse.x, Mouse.y
+        @mm_moved = !@mm_x.nil? && (mx != @mm_x || my != @mm_y)
+        @mm_x, @mm_y = mx, my
+      end
+      return @mm_moved
+    end
+
+    #---------------------------------------------------------------------------
     # Check the mouse interactions for a standard UI selection menu.
     #---------------------------------------------------------------------------
     def update_menu(collection, current_index)
@@ -49,11 +66,22 @@ module Mouse
         end
       end
       return [:cancel, nil] if EliteBattle::RIGHT_CLICK_BACK_ACTION && Mouse.click?(nil, :right)
+      moved = mouse_moved?
+      if @pending_select
+        pending, @pending_select = @pending_select, nil
+        return [:select, pending] if pending == current_index
+      end
       hovered = hovered_index(collection)
       if hovered
-        return [:select, hovered] if Mouse.click?(collection[hovered], :left)
-        # 5. Highlight/Hover
-        return [:highlight, hovered] if hovered != current_index
+        if Mouse.click?(collection[hovered], :left)
+          return [:select, hovered] if hovered == current_index
+          # clicked something other than the current selection: highlight it
+          # first, then confirm on the next frame
+          @pending_select = hovered
+          return [:highlight, hovered]
+        end
+        # Highlight/Hover (only when the mouse actually moved)
+        return [:highlight, hovered] if moved && hovered != current_index
       end
       return nil
     end
@@ -67,10 +95,22 @@ module Mouse
         return [:cancel, nil]
       end
       if active? && collection
+        moved = mouse_moved?
+        if @pending_select
+          pending, @pending_select = @pending_select, nil
+          return [:select, pending] if pending == current_index
+        end
         hovered = hovered_index(collection)
         if hovered
-          return [:select, hovered] if Mouse.click?(collection[hovered], :left)
-          return [:highlight, hovered] if hovered != current_index
+          if Mouse.click?(collection[hovered], :left)
+            return [:select, hovered] if hovered == current_index
+            # clicked something other than the current selection: highlight it
+            # first, then confirm on the next frame
+            @pending_select = hovered
+            return [:highlight, hovered]
+          end
+          # Highlight/Hover (only when the mouse actually moved)
+          return [:highlight, hovered] if moved && hovered != current_index
         end
       end
       return [:select, current_index] if Input.trigger?(Input::C)

@@ -189,6 +189,15 @@ class Battle::Scene
     dw = @sprites["messageWindow"]
     dw.text = msg
     cw = ChoiceWindowEBDX.new(@msgview, commands, self)
+    # Essentials passes a boolean "canCancel" here; older EBDX code passed the
+    # index to return on cancel (-1 = cannot cancel). Normalize both forms.
+    if defaultValue == true
+      cancelValue = -1; canCancel = true
+    elsif defaultValue.is_a?(Integer)
+      cancelValue = defaultValue; canCancel = defaultValue >= 0
+    else
+      cancelValue = -1; canCancel = false
+    end
     loop do
       pbUpdate(cw)
       dw.update
@@ -214,7 +223,7 @@ class Battle::Scene
           return cw.index
         end
       when :cancel
-        if defaultValue >= 0
+        if canCancel
           if dw.busy?
             pbPlayDecisionSE() if dw.pausing?
             dw.resume
@@ -223,7 +232,7 @@ class Battle::Scene
             cw.dispose(self)
             dw.text = ""
             pbShowAllDataboxes
-            return defaultValue
+            return cancelValue
           end
         end
       end

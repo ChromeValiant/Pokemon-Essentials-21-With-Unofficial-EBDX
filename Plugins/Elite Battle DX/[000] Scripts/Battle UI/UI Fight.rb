@@ -381,8 +381,8 @@ class FightWindowEBDX
       # Get move stats
       power = GetProperPower(@battler, GameData::Move.get(move.id)).to_s
       power = "-" if power == "0"
-      acc = (move.accuracy == 0) ? "-" : GetProperAccuracy(@player, GameData::Move.get(move.id)).to_s + "%"
-      pri = GetProperPriority(@player, move).to_s
+      acc = (move.accuracy == 0) ? "-" : GetProperAccuracy(@battler, GameData::Move.get(move.id)).to_s + "%"
+      pri = GetProperPriority(@battler, move).to_s
       lines = [
         "#{power}",
         "#{acc}",

@@ -9,7 +9,15 @@ module Mouse
     # Check if mouse is active
     #---------------------------------------------------------------------------
     def active?
-      return defined?(Mouse) && Mouse.active?
+      return Mouse.respond_to?(:active?) && Mouse.respond_to?(:click?) && Mouse.active?
+    end
+
+    #---------------------------------------------------------------------------
+    # Left-click anywhere on screen (used to advance/dismiss text boxes).
+    # Call it once every frame of the waiting loop so the press is tracked.
+    #---------------------------------------------------------------------------
+    def confirm_click?
+      return active? && Mouse.click?(nil, :left)
     end
 
     #---------------------------------------------------------------------------

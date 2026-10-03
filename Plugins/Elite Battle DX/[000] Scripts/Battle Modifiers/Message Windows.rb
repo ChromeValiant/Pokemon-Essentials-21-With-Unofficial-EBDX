@@ -180,6 +180,88 @@ class Battle::Scene
     clearMessageWindow
   end
   #-----------------------------------------------------------------------------
+  #  regular message (same as Essentials, plus left-click to advance/dismiss)
+  #-----------------------------------------------------------------------------
+  def pbDisplayMessage(msg, brief = false)
+    pbWaitMessage
+    pbShowWindow(MESSAGE_BOX)
+    cw = @sprites["messageWindow"]
+    cw.setText(msg)
+    PBDebug.log_message(msg)
+    yielded = false
+    timer_start = nil
+    loop do
+      pbUpdate(cw)
+      clicked = Mouse::UISelection.confirm_click?
+      if !cw.busy?
+        if !yielded
+          yield if block_given?   # For playing SE as soon as the message is all shown
+          yielded = true
+        end
+        if brief
+          @briefMessage = true
+          break
+        end
+        timer_start = System.uptime if !timer_start
+        if System.uptime - timer_start >= MESSAGE_PAUSE_TIME   # Autoclose after 1 second
+          cw.text = ""
+          cw.visible = false
+          break
+        end
+      end
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || clicked || @abortable
+        if cw.busy?
+          pbPlayDecisionSE if cw.pausing? && !@abortable
+          cw.skipAhead
+        elsif !@abortable
+          cw.text = ""
+          cw.visible = false
+          break
+        end
+      end
+    end
+  end
+  #-----------------------------------------------------------------------------
+  #  paused message (same as Essentials, plus left-click to advance/dismiss)
+  #-----------------------------------------------------------------------------
+  def pbDisplayPausedMessage(msg)
+    pbWaitMessage
+    pbShowWindow(MESSAGE_BOX)
+    cw = @sprites["messageWindow"]
+    cw.text = msg + "\1"
+    PBDebug.log_message(msg)
+    yielded = false
+    timer_start = nil
+    loop do
+      pbUpdate(cw)
+      clicked = Mouse::UISelection.confirm_click?
+      if !cw.busy?
+        if !yielded
+          yield if block_given?   # For playing SE as soon as the message is all shown
+          yielded = true
+        end
+        if !@battleEnd
+          timer_start = System.uptime if !timer_start
+          if System.uptime - timer_start >= MESSAGE_PAUSE_TIME * 3   # Autoclose after 3 seconds
+            cw.text = ""
+            cw.visible = false
+            break
+          end
+        end
+      end
+      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || clicked || @abortable
+        if cw.busy?
+          pbPlayDecisionSE if cw.pausing? && !@abortable
+          cw.skipAhead
+        elsif !@abortable
+          cw.text = ""
+          pbPlayDecisionSE
+          break
+        end
+      end
+    end
+  end
+  #-----------------------------------------------------------------------------
   #  choice selection processing
   #-----------------------------------------------------------------------------
   alias pbShowCommands_ebdx pbShowCommands unless self.method_defined?(:pbShowCommands_ebdx)
@@ -207,6 +289,8 @@ class Battle::Scene
         buttons[i] = cw.sprites["choice#{i}"]
       end
       action, val = Mouse::UISelection.input_action(buttons, cw.index)
+      # left-click anywhere advances the question text while it is still printing
+      action = :select if action.nil? && dw.busy? && Mouse::UISelection.confirm_click?
       case action
       when :highlight
         cw.index = val
@@ -284,7 +368,7 @@ class Battle::Scene
       Input.update
       window.update
       animateScene
-      if Input.trigger?(Input::C)
+      if Input.trigger?(Input::C) || Mouse::UISelection.confirm_click?
         break
       end
     end

@@ -38,7 +38,7 @@ HP
 STATUS
   XYZ              = 202,16,1
 MEGA
-  XYZ              = 206,18,1
+  XYZ              = 206,-18,1
 #-------------------------------
 [COMMANDMENU]
 ButtonGraphic      = btnCmd

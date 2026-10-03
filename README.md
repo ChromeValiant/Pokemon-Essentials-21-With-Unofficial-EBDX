@@ -47,6 +47,8 @@ MKXP by Roza
 		Tebited15, WolfPP, Issei Hyoudou, Nasasu, luckygirl88 | B/W styled trainer Red/Leaf sprites
 		WolfPP | B/W styled trainer Leaf sprite
 		Spriters-Resource (redblueyellow), Damien, WolfPP | Gen 5 ball sprites
+		ZUD graphics by Lucidious89, extracted from Pokemon Photon by Catchneko
+		B2W2 icon_numbers ripped by GameMaster12
 
 	Sound Effects:
 		GameFreak | Original sound effects from B/W/2 games
@@ -59,8 +61,10 @@ MKXP by Roza
 		PinkCatDragon | GIF to PNG conversion
 
 	EBDX v21.1 port add-ons & fixes:
+		Issei (LackDeJurane) for UI overhaul + mouse support
 		Aprogergely for the hatching scene fix
 		NikDie for v21.1 performance improvements + attack animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
+		http404error for various optimizations & translation improvements
 		SceoFlash13 for hotfixes while using frame-based animations.
 		Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
 		Ghasty_001 for Weather optimization
@@ -69,6 +73,7 @@ MKXP by Roza
 		Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)
 		Golisopod-User for Mouse Support
 		PetiGogggles (Dev of Pokemon Solar Eclipse) for better UI Fight info, Common Animations, Party Ball Lineup graphics
+
 
 ==============================================================
 ## CREDITS: Pokemon World Tournament

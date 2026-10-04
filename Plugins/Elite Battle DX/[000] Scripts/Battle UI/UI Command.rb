@@ -204,6 +204,71 @@ class CommandWindowEBDX
       @sprites["b#{i}"].y = @viewport.height - 36 + 80
     end
     @sprites["bg"].y = @viewport.height + 40
+    self.drawLineups
+  end
+  #-----------------------------------------------------------------------------
+  #  party lineups shown in the bottom corners while the command menu is up
+  #  (player party: bottom right, opponent trainer party: bottom left)
+  #-----------------------------------------------------------------------------
+  def drawLineups
+    # remove previous lineup sprites
+    for key in @sprites.keys.select { |k| k.to_s.start_with?("lineup") }
+      @sprites[key].dispose
+      @sprites.delete(key)
+    end
+    @lineups = []
+    @lineOff = 1.0   # 1 = fully hidden (off screen), 0 = fully shown
+    return if @safaribattle
+    bar_bmp = pbBitmap(@path + "partyBar")
+    balls_bmp = pbBitmap(@path + "partyBalls")
+    num = Battle::Scene::NUM_BALLS
+    bs = balls_bmp.height
+    barY = @viewport.height - 74
+    for side in [0, 1]
+      next if side == 1 && !@battle.opponent   # wild battle: no opponent party
+      party = @battle.pbParty(side).clone
+      (num - party.length).times { party.push(nil) }
+      party = party[0, num]
+      party.reverse! if side == 1
+      left = (side == 0) ? @viewport.width - bar_bmp.width : 0
+      dir  = (side == 0) ? 1 : -1
+      key = "lineup#{side}"
+      @sprites[key] = Sprite.new(@viewport)
+      @sprites[key].bitmap = bar_bmp.clone
+      @sprites[key].mirror = (side == 0)
+      @sprites[key].z = 10
+      @sprites[key].y = barY
+      @lineups.push([@sprites[key], left, dir])
+      for k in 0...num
+        pty = party[k]
+        if pty.nil?
+          pin = 3
+        elsif pty.hp < 1 || pty.egg?
+          pin = 2
+        elsif EliteBattle.ShowStatusIcon(pty.status)
+          pin = 1
+        else
+          pin = 0
+        end
+        ball = Sprite.new(@viewport)
+        ball.bitmap = Bitmap.new(bs, bs)
+        ball.bitmap.blt(0, 0, balls_bmp, Rect.new(bs*pin, 0, bs, bs))
+        ball.z = 11
+        ball.y = barY - 12
+        @sprites["#{key}_#{k}"] = ball
+        @lineups.push([ball, left + (side == 0 ? 26 : 12) + 24*k, dir])
+      end
+    end
+    bar_bmp.dispose
+    balls_bmp.dispose
+    @lineW = @viewport.width/2
+    self.positionLineups
+  end
+  def positionLineups
+    return if @lineups.nil?
+    for spr, base, dir in @lineups
+      spr.x = base + dir * (@lineOff * 200)
+    end
   end
   #-----------------------------------------------------------------------------
   #  compile command menu
@@ -255,6 +320,10 @@ class CommandWindowEBDX
   def show
     @sprites["sel"].visible = false
     @sprites["bg"].y -= @sprites["bg"].bitmap.height/4
+    if @lineups
+      @lineOff = [@lineOff - 1.0/8, 0].max
+      self.positionLineups
+    end
     for i in 0...@indexes.length
       next if !@sprites["b#{i}"]
       @sprites["b#{i}"].y -= 10
@@ -272,6 +341,10 @@ class CommandWindowEBDX
     return if skip
     @sprites["sel"].visible = false
     @sprites["bg"].y += @sprites["bg"].bitmap.height/4
+    if @lineups
+      @lineOff = [@lineOff + 1.0/8, 1].min
+      self.positionLineups
+    end
     for i in 0...@indexes.length
       next if !@sprites["b#{i}"]
       @sprites["b#{i}"].y += 10

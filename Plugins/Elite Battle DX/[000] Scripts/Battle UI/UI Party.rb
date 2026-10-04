@@ -127,48 +127,138 @@ class BattlePartyWindowEBDX
 
     x = 0; y = 0
     ibmp = pbBitmap(@path + "itemFrame")
-
+    # card size (BW2-style: bigger cards with room for HP bar, HP numbers and gender)
+    # card uses the frame graphic at its native size (192x90); everything is drawn inside it
+    cw = ibmp.width
+    ch = ibmp.height
+    frame = stretchFrame(ibmp, cw, ch)
+    colors_bmp = pbBitmap(@path + "barColors")
+    container_bmp = pbBitmap(@path + "containers")
     @pocket.each_with_index do |data, i|
       pkmn = data[0]
       @items["#{i}"] = Sprite.new(@viewport)
-      @items["#{i}"].bitmap = Bitmap.new(ibmp.width, ibmp.height)
-      @items["#{i}"].bitmap.blt(0, 0, ibmp, ibmp.rect)
-      pbSetSystemFont(@items["#{i}"].bitmap)
-
-      # Pokemon Icon
-      icon = pbBitmap(GameData::Species.icon_filename_from_pokemon(pkmn))
-      icon_rect = Rect.new(0, 0, icon.height, icon.height)
-      # Position the icon on the right side of the item frame, centered vertically
-      icon_x = ibmp.width - icon.height - 4
-      icon_y = (ibmp.height - icon.height)/2
-      @items["#{i}"].bitmap.blt(icon_x, icon_y, icon, icon_rect, 164)
-      icon.dispose
-
-      # Pokemon name and level text
-      y1 = ibmp.height / 8
-      y2 = ibmp.height / 2
-      text = [
-        ["#{pkmn.name}", ibmp.width/2 - 15, y1, 2, @baseColor, Color.new(0, 0, 0, 32)],
-        [_INTL("Lv. {1}", pkmn.level), ibmp.width/2 - 12, y2, 2, @baseColor, Color.new(0, 0, 0, 32)]
-      ]
-      pbDrawTextPositions(@items["#{i}"].bitmap, text)
+      @items["#{i}"].bitmap = Bitmap.new(cw, ch)
+      @items["#{i}"].bitmap.blt(0, 0, frame, frame.rect)
+      drawPartyCard(@items["#{i}"].bitmap, pkmn, cw, ch, colors_bmp, container_bmp)
 
       @items["#{i}"].center!
       @items["#{i}"].x = @viewport.width + (x%2 == 0 ? 1 : -1)*8 + (x*2 + 1)*@viewport.width/4 + (i/6)*@viewport.width
       @xpos.push(@items["#{i}"].x - @viewport.width)
-      @items["#{i}"].y = (y + 1)*@viewport.height/5 + (y*12)
+      @items["#{i}"].y = 24 + ch/2 + y*(ch + 8)
       @items["#{i}"].opacity = 255
 
       x += 1; y += 1 if x > 1
       x = 0 if x > 1
       y = 0 if y > 2
     end
+    frame.dispose
+    colors_bmp.dispose
+    container_bmp.dispose
     ibmp.dispose
     self.name
     @sprites["name"].x = -@sprites["name"].width - @sprites["name"].width%10
 
     # Target selection to current item
     @sprites["sel"].target(@back ? @sprites["pocket5"] : @items["#{@item}"])
+  end
+
+  #-----------------------------------------------------------------------------
+  #  builds a bigger copy of a frame graphic by 9-slicing it (corners untouched)
+  #-----------------------------------------------------------------------------
+  def stretchFrame(src, w, h, cap = 14)
+    bmp = Bitmap.new(w, h)
+    sw, sh = src.width, src.height
+    xs = [0, cap, sw - cap, sw]; xd = [0, cap, w - cap, w]
+    ys = [0, cap, sh - cap, sh]; yd = [0, cap, h - cap, h]
+    3.times do |r|
+      3.times do |c|
+        sr = Rect.new(xs[c], ys[r], xs[c+1] - xs[c], ys[r+1] - ys[r])
+        dr = Rect.new(xd[c], yd[r], xd[c+1] - xd[c], yd[r+1] - yd[r])
+        next if dr.width <= 0 || dr.height <= 0
+        if sr.width == dr.width && sr.height == dr.height
+          bmp.blt(dr.x, dr.y, src, sr)
+        else
+          bmp.stretch_blt(dr, src, sr)
+        end
+      end
+    end
+    return bmp
+  end
+  #-----------------------------------------------------------------------------
+  #  draws one party card: icon, name + gender, level, HP numbers and HP bar
+  #-----------------------------------------------------------------------------
+  def drawPartyCard(bitmap, pkmn, cw, ch, colors_bmp, container_bmp)
+    white  = Color.white
+    shadow = Color.new(0, 0, 0, 160)
+    fainted = pkmn.fainted?
+    left  = 12
+    right = cw - 12
+    # BW-style layout: small icon top-left with the level under it, name + gender
+    # on top, "HP" label + bar in the middle, HP numbers bottom-right
+    icon = pbBitmap(GameData::Species.icon_filename_from_pokemon(pkmn))
+    isz = 44
+    bitmap.stretch_blt(Rect.new(left, 8, isz, isz), icon, Rect.new(0, 0, icon.height, icon.height), fainted ? 140 : 255)
+    icon.dispose
+    tx = left + isz + 6          # text column start
+    # name (shrinks to fit) and right-aligned gender symbol
+    gender = pkmn.male? ? "\u2642" : (pkmn.female? ? "\u2640" : nil)
+    gcol   = pkmn.male? ? Color.new(96, 176, 255) : Color.new(255, 104, 128)
+    pbSetSystemFont(bitmap)
+    bitmap.font.size = 20
+    name_w = right - tx - (gender ? 18 : 0)
+    bitmap.font.size -= 1 while bitmap.font.size > 12 && bitmap.text_size(pkmn.name).width > name_w
+    pbDrawOutlineText(bitmap, tx + 2, 10, name_w, 24, pkmn.name, white, shadow, 0)
+    pbDrawOutlineText(bitmap, right - 16, 8, 16, 24, gender, gcol, shadow, 2) if gender
+    # level under the icon
+    pbSetSmallFont(bitmap)
+    bitmap.font.size = 16
+    pbDrawOutlineText(bitmap, left - 2, 56, 56, 20, _INTL("Lv. {1}", pkmn.level), white, shadow, 0)
+    # "HP" label and bar
+    bar_y = 36
+    pbDrawOutlineText(bitmap, tx + 2 , bar_y, 24, 20, "HP", white, shadow, 0)
+    bar_x = tx + 24
+    bar_w = right - bar_x
+    cap = 4
+    bitmap.blt(bar_x, bar_y, container_bmp, Rect.new(0, 0, cap, 14))
+    bitmap.blt(bar_x + bar_w - cap, bar_y, container_bmp, Rect.new(container_bmp.width - cap, 0, cap, 14))
+    bitmap.stretch_blt(Rect.new(bar_x + cap, bar_y, bar_w - cap*2, 14), container_bmp,
+                       Rect.new(cap, 0, container_bmp.width - cap*2, 14))
+    if pkmn.hp > 0
+      inner = bar_w - 8
+      w = (pkmn.hp * inner / pkmn.totalhp.to_f).round
+      w = 1 if w < 1
+      zone = 0
+      zone = 1 if pkmn.hp <= pkmn.totalhp * 0.50
+      zone = 2 if pkmn.hp <= pkmn.totalhp * 0.25
+      bitmap.stretch_blt(Rect.new(bar_x + 4, bar_y + 2, w, 6), colors_bmp, Rect.new(zone * 2, 0, 2, 6))
+    end
+    # HP numbers, bottom right
+    hp_color = fainted ? Color.new(248, 72, 72) : white
+    pbSetSmallFont(bitmap)
+    bitmap.font.size = 18
+    pbDrawOutlineText(bitmap, tx, 56, right - tx, 22, "#{pkmn.hp}/#{pkmn.totalhp}", hp_color, shadow, 2)
+  end
+
+  #-----------------------------------------------------------------------------
+  #  draws text so that its visible pixels (not the font box) are centered on (cx, cy)
+  #-----------------------------------------------------------------------------
+  def drawInkCentered(bitmap, text, cx, cy, base, shadow)
+    tw = bitmap.text_size(text).width
+    th = bitmap.text_size(text).height
+    tmp = Bitmap.new(tw + 24, th + 24)
+    tmp.font = bitmap.font
+    pbDrawOutlineText(tmp, 8, 8, tw + 8, th + 8, text, base, shadow, 0)
+    x0, x1, y0, y1 = tmp.width, 0, tmp.height, 0
+    tmp.height.times do |yy|
+      tmp.width.times do |xx|
+        next if tmp.get_pixel(xx, yy).alpha == 0
+        x0 = xx if xx < x0; x1 = xx if xx > x1
+        y0 = yy if yy < y0; y1 = yy if yy > y1
+      end
+    end
+    tmp.dispose
+    return pbDrawOutlineText(bitmap, cx + 8 - (x0 + x1 + 1)/2, cy + 8 - (y0 + y1 + 1)/2, tw + 8, th + 8, text, base, shadow, 0) if x1 >= x0
+    pbDrawOutlineText(bitmap, cx - tw/2, cy - th/2, tw + 8, th + 8, text, base, shadow, 0)
   end
 
   def name
@@ -396,76 +486,69 @@ class BattlePartyWindowEBDX
     @pname = msg
     self.name
     has_switch = commands.any? { |c| c == _INTL("Switch In") || c == _INTL("Send to Boxes") }
-    bitmap1 = @sprites["confirm"].bitmap
-    bitmap1.clear
-    bmp1 = pbBitmap(@path + "itemConfirm")
-    bitmap1.blt(0, 0, bmp1, bmp1.rect)
-    bmp1.dispose
     pkmn = @party[@item]
-
-    # Draw Pokemon front sprite on the Confirm button (native size)
-    front_bmp_wrapper = GameData::Species.sprite_bitmap_from_pokemon(pkmn, false)
-    front_bmp = front_bmp_wrapper.bitmap
-    sprite_y = (bitmap1.height - front_bmp.height) / 2
-    bitmap1.blt(sprite_x, sprite_y, front_bmp, front_bmp.rect, 204)
-    front_bmp_wrapper.dispose
-
-    # Draw Pokemon Name, Level, and HP details on Confirm button
-    pbSetSystemFont(bitmap1)
-    pbDrawOutlineText(bitmap1, name_x, name_y, bitmap1.width, 32, pkmn.name, baseColor, shadowColor, 0)
-
-    level_text = "Lv. #{pkmn.level}"
-    pbDrawOutlineText(bitmap1, level_x, level_y, bitmap1.width, 32, level_text, baseColor, shadowColor, 0)
-
-    # Draw HP Bar and Container in EBDX style
-    colors_bmp = pbBitmap(@path + "barColors")
-    container_bmp = pbBitmap(@path + "containers")
-
-    # HP container (height 14 for no EXP)
-    container_rect = Rect.new(0, 0, container_bmp.width, 14)
-    bitmap1.blt(hp_bar_x, hp_bar_y, container_bmp, container_rect)
-
-    # HP bar fill
-    if pkmn.hp > 0
-      w = (pkmn.hp * hp_bar_width / pkmn.totalhp.to_f).round
-      w = 1 if w < 1
-      zone = 0
-      zone = 1 if pkmn.hp <= pkmn.totalhp * 0.50
-      zone = 2 if pkmn.hp <= pkmn.totalhp * 0.25
-      bar_rect = Rect.new(zone * 2, 0, 2, 6)
-      bitmap1.stretch_blt(Rect.new(hp_bar_x + 4, hp_bar_y + 2, w, 6), colors_bmp, bar_rect)
+    # ---- BW-style layout: compact centered panel + smaller button below ----
+    # full-size panel: the original itemConfirm graphic, drawn at native size
+    frame_src = pbBitmap(@path + "itemConfirm")
+    pw, ph = frame_src.width, frame_src.height
+    panel = Bitmap.new(pw, ph)
+    panel.blt(0, 0, frame_src, frame_src.rect)
+    frame_src.dispose
+    pbSetSystemFont(panel)
+    # name + gender, centered at the top
+    panel.font.size = 28
+    gender = pkmn.male? ? "\u2642" : (pkmn.female? ? "\u2640" : nil)
+    gcol   = pkmn.male? ? Color.new(96, 176, 255) : Color.new(255, 104, 128)
+    nw = panel.text_size(pkmn.name).width
+    gw = gender ? 24 : 0
+    nx = (pw - nw - gw)/2
+    pbDrawOutlineText(panel, nx, 14, nw + 4, 32, pkmn.name, baseColor, shadowColor, 0)
+    pbDrawOutlineText(panel, nx + nw + 4, 14, 20, 32, gender, gcol, shadowColor, 0) if gender
+    # small icon, centered
+    icon = pbBitmap(GameData::Species.icon_filename_from_pokemon(pkmn))
+    fs = icon.height                       # first animation frame is fs x fs
+    x0, x1, y0, y1 = fs, 0, fs, 0          # bounding box of the visible pixels
+    fs.times do |yy|
+      fs.times do |xx|
+        next if icon.get_pixel(xx, yy).alpha == 0
+        x0 = xx if xx < x0; x1 = xx if xx > x1
+        y0 = yy if yy < y0; y1 = yy if yy > y1
+      end
     end
-
-    # HP Text (HP/TOTALHP)
-    hp_text = "#{pkmn.hp}/#{pkmn.totalhp}"
-    pbDrawOutlineText(bitmap1, hp_text_x, hp_text_y, bitmap1.width, 32, hp_text, baseColor, shadowColor, 1)
-
+    x0, x1, y0, y1 = 0, fs - 1, 0, fs - 1 if x1 < x0
+    sc = 96.0 / fs
+    ix = (pw/2 - ((x0 + x1 + 1)/2.0) * sc).round
+    iy = (72 - ((y0 + y1 + 1)/2.0) * sc).round
+    panel.stretch_blt(Rect.new(ix, iy, (fs * sc).round, (fs * sc).round), icon, Rect.new(0, 0, fs, fs))
+    icon.dispose
+    # action label at the bottom
+    option_title1 = has_switch ? (commands.include?(_INTL("Switch In")) ? _INTL("SWITCH IN") : _INTL("SEND TO BOXES")) : _INTL("SUMMARY")
+    panel.font.size = 28
+    drawInkCentered(panel, option_title1, pw/2, ph - 28, baseColor, shadowColor)
+    @sprites["confirm"].bitmap.dispose if @sprites["confirm"].bitmap && !@sprites["confirm"].bitmap.disposed?
+    @sprites["confirm"].bitmap = panel
+    @sprites["confirm"].src_rect.set(0, 0, pw, ph)
+    @sprites["confirm"].center!
     if has_switch
-      option_title1 = (commands.include?(_INTL("Switch In"))) ? _INTL("SWITCH IN") : _INTL("SEND TO BOXES")
-      pbDrawOutlineText(bitmap1, 0, cmd_y, sprite_x, 32, option_title1, baseColor, shadowColor, 1)
-
-      bitmap2 = @sprites["cancel"].bitmap
-      bitmap2.clear
-      bmp2 = pbBitmap(@path + "itemCancel")
-      bitmap2.blt(0, 0, bmp2, bmp2.rect)
-      bmp2.dispose
-
-      option_title2 = _INTL("SUMMARY")
-      pbSetSystemFont(bitmap2)
-      pbDrawOutlineText(bitmap2, 0, (bitmap2.height - 24)/2, bitmap2.width, 24, option_title2, baseColor, shadowColor, 1)
-
-      maxh = @sprites["confirm"].height + @sprites["cancel"].height + 8
+      csrc = pbBitmap(@path + "itemCancel")
+      btn = Bitmap.new(csrc.width, csrc.height)
+      btn.blt(0, 0, csrc, csrc.rect)
+      csrc.dispose
+      pbSetSystemFont(btn)
+      btn.font.size = 28
+      sum_txt = _INTL("SUMMARY")
+      drawInkCentered(btn, sum_txt, btn.width/2, btn.height/2 + 8, baseColor, shadowColor)
+      @sprites["cancel"].bitmap.dispose if @sprites["cancel"].bitmap && !@sprites["cancel"].bitmap.disposed?
+      @sprites["cancel"].bitmap = btn
+      @sprites["cancel"].src_rect.set(0, 0, btn.width, btn.height)
+      @sprites["cancel"].center!
+      maxh = ph + btn.height + 8
       @sprites["confirm"].y = (@viewport.height - maxh)/2 + @sprites["confirm"].oy
       @sprites["cancel"].y = (@viewport.height - maxh)/2 + maxh - @sprites["cancel"].oy
-
       @sprites["confirm"].visible = true
       @sprites["cancel"].visible = true
     else
-      option_title1 = _INTL("SUMMARY")
-      pbDrawOutlineText(bitmap1, 0, cmd_y, sprite_x, 32, option_title1, baseColor, shadowColor, 1)
-
-      @sprites["confirm"].y = (@viewport.height - @sprites["confirm"].height)/2 + @sprites["confirm"].oy
-
+      @sprites["confirm"].y = (@viewport.height - ph)/2 + @sprites["confirm"].oy
       @sprites["confirm"].visible = true
       @sprites["cancel"].visible = false
     end

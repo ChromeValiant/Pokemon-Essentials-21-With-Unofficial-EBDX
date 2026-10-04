@@ -203,7 +203,7 @@ class EliteBattle_Pokedex
       Graphics.update
       Input.update
       self.update
-      break if Input.trigger?(Input::C) || Mouse::UISelection.confirm_click?
+      break if Input.trigger?(Input::C)
     end
     # moves Pokemon sprite to middle of screen
     w = (@viewport.width/2 - @sprites["poke"].x)/32

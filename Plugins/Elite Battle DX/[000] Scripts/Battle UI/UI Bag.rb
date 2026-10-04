@@ -200,6 +200,28 @@ class BagWindowEBDX
     end
   end
   #-----------------------------------------------------------------------------
+  #  9-slice scaling of a graphic to an arbitrary size
+  #-----------------------------------------------------------------------------
+  def stretchFrame(src, w, h, cap = 14)
+    bmp = Bitmap.new(w, h)
+    sw, sh = src.width, src.height
+    xs = [0, cap, sw - cap, sw]; xd = [0, cap, w - cap, w]
+    ys = [0, cap, sh - cap, sh]; yd = [0, cap, h - cap, h]
+    3.times do |r|
+      3.times do |c|
+        sr = Rect.new(xs[c], ys[r], xs[c+1] - xs[c], ys[r+1] - ys[r])
+        dr = Rect.new(xd[c], yd[r], xd[c+1] - xd[c], yd[r+1] - yd[r])
+        next if dr.width <= 0 || dr.height <= 0
+        if sr.width == dr.width && sr.height == dr.height
+          bmp.blt(dr.x, dr.y, src, sr)
+        else
+          bmp.stretch_blt(dr, src, sr)
+        end
+      end
+    end
+    return bmp
+  end
+  #-----------------------------------------------------------------------------
   #  draw content of selected pocket
   #-----------------------------------------------------------------------------
   def drawPocket(pocket, index)
@@ -240,33 +262,46 @@ class BagWindowEBDX
     # pocket bitmap
     pbmp = pbBitmap(@path + @cmdImg)
     ibmp = pbBitmap(@path + @frameImg)
+    # larger BW2-style cards (9-sliced from the original graphics)
+    cw = [@viewport.width/2 - 20, pbmp.width].max
+    ch = pbmp.height/4 + 8
+    cell = Bitmap.new(pbmp.width, pbmp.height/4)
+    cell.blt(0, 0, pbmp, Rect.new(0, (pbmp.height/4)*@index, pbmp.width, pbmp.height/4))
+    cardBase = stretchFrame(cell, cw, ch, 16)
+    frameBase = stretchFrame(ibmp, cw - 12, ch - 10, 14)
+    cell.dispose
+    white  = Color.white
+    shadow = Color.new(0, 0, 0, 160)
     for i in 0...@pocket.length
       @items["#{i}"] = Sprite.new(@viewport)
-      # create bitmap and draw all the required contents on it
-      @items["#{i}"].bitmap = Bitmap.new(pbmp.width, pbmp.height/4)
-      @items["#{i}"].bitmap.blt(0, 0, pbmp, Rect.new(0, (pbmp.height/4)*@index, pbmp.width, pbmp.height/4))
-      @items["#{i}"].bitmap.blt((pbmp.width - ibmp.width)/2, (pbmp.height/4 - ibmp.height)/2, ibmp, ibmp.rect)
-      pbSetSystemFont(@items["#{i}"].bitmap)
+      bmp = Bitmap.new(cw, ch)
+      @items["#{i}"].bitmap = bmp
+      bmp.blt(0, 0, cardBase, cardBase.rect)
+      bmp.blt(6, 5, frameBase, frameBase.rect)
+      pbSetSystemFont(bmp)
+      # icon on the left, like Black 2 / White 2
       icon = pbBitmap(GameData::Item.icon_filename(@pocket[i][0]))
-      @items["#{i}"].bitmap.blt(pbmp.width - icon.width - (pbmp.width - ibmp.width)/2 - 4, (pbmp.height/4 - icon.height)/2, icon, icon.rect, 164); icon.dispose
-      # draw texxt
-      text = [
-        ["#{GameData::Item.get(@pocket[i][0]).name}", pbmp.width/2 - 15, 2*pbmp.height/64, 2, @baseColor, Color.new(0, 0, 0, 32)],
-        ["x#{@pocket[i][1]}", pbmp.width/2 - 12, 8*pbmp.height/64, 2, @baseColor, Color.new(0, 0, 0, 32)],
-      ]
-      pbDrawTextPositions(@items["#{i}"].bitmap, text)
+      bmp.blt(14, (ch - icon.height)/2, icon, icon.rect); icon.dispose
+      iname = GameData::Item.get(@pocket[i][0]).name
+      bmp.font.size = 22
+      bmp.font.size -= 2 while bmp.font.size > 14 && bmp.text_size(iname).width > cw - 88 - 14
+      pbDrawShadowText(bmp, 72, 8, cw - 86, 28, iname, white, shadow, 0)
+      bmp.font.size = 20
+      pbDrawShadowText(bmp, 72, ch - 36, 20, 28, "x", white, shadow, 0)
+      pbDrawShadowText(bmp, cw - 24, ch - 36, 0, 28, "#{@pocket[i][1]}", white, shadow, 1)
       # center sprite
       @items["#{i}"].center!
       # position items
       @items["#{i}"].x = @viewport.width + (x%2 == 0 ? 1 : -1)*8 + (x*2 + 1)*@viewport.width/4 + (i/6)*@viewport.width
       @xpos.push(@items["#{i}"].x - @viewport.width)
-      @items["#{i}"].y = (y + 1)*@viewport.height/5 + (y*12)
+      @items["#{i}"].y = (y + 1)*@viewport.height/5 + (y*12) + 2
       @items["#{i}"].opacity = 255
       # increment the position count
       x += 1; y += 1 if x > 1
       x = 0 if x > 1
       y = 0 if y > 2
     end
+    cardBase.dispose; frameBase.dispose
     pbmp.dispose; ibmp.dispose
     self.name
     @sprites["name"].x = -@sprites["name"].width - @sprites["name"].width%10

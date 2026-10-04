@@ -27,47 +27,39 @@ class Battle::Scene
     @fightWindow.showPlay
     loop do
       oldIndex = @fightWindow.index
-      oldMega = @fightWindow.megaSelected
-      toggleMega = false
       # General update
       self.updateWindow(@fightWindow)
-      if megaEvoPossible && @fightWindow.megaButtonClicked?
-        @fightWindow.megaSelected = true
-        toggleMega = true
-      elsif megaEvoPossible && @fightWindow.megaButtonHovered? && Mouse::UISelection.mouse_moved?
-        @fightWindow.megaSelected = true
-      end
-      buttons = {}
-      for i in 0...@fightWindow.nummoves
-        buttons[i] = @fightWindow.button["#{i}"]
-      end
-      current = @fightWindow.megaSelected ? -1 : @fightWindow.index
-      action, val = Mouse::UISelection.input_action(buttons, current)
-      case action
-      when :highlight
-        @fightWindow.index = val
-        @fightWindow.megaSelected = false
-      when :select
-        if @fightWindow.megaSelected
-          toggleMega = true
-        else
+      # Mouse hover and click support
+      if Mouse::UISelection.active?
+        buttons = {}
+        for i in 0...@fightWindow.nummoves
+          buttons[i] = @fightWindow.button["#{i}"]
+        end
+        
+        # Mega Evolution button click (same behaviour as pressing the A key)
+        if megaEvoPossible && @fightWindow.megaButtonClicked?
+          @fightWindow.megaButtonTrigger
+          pbSEPlay("EBDX/SE_Select3")
+          done = yield -2
+          # the block has toggled the registration: refresh the displayed types
+          @fightWindow.megaPreview = @battle.pbRegisteredMegaEvolution?(idxBattler)
+          break if done
+        end
+
+        action, val = Mouse::UISelection.input_action(buttons, @fightWindow.index)
+        case action
+        when :highlight
+          @fightWindow.index = val
+        when :select
           pbSEPlay("EBDX/SE_Select2")
           break if yield @fightWindow.index
+        when :cancel
+          pbPlayCancelSE
+          break if yield -1
         end
-      when :cancel
-        pbPlayCancelSE
-        break if yield -1
       end
       # Update selected command
-      if @fightWindow.megaSelected
-        if Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT) ||
-           Input.trigger?(Input::UP) || Input.trigger?(Input::DOWN)
-          @fightWindow.megaSelected = false
-          @fightWindow.index = 0
-        end
-      elsif Input.trigger?(Input::LEFT) && @fightWindow.index.even? && @fightWindow.megaShown?
-        @fightWindow.megaSelected = true
-      elsif (Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT))
+      if (Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT))
         @fightWindow.index = [0, 1, 2, 3][[1, 0, 3, 2].index(@fightWindow.index)]
         @fightWindow.index = (@fightWindow.nummoves - 1) if @fightWindow.index < 0
         @fightWindow.index = 0 if @fightWindow.index > (@fightWindow.nummoves - 1)
@@ -90,10 +82,9 @@ class Battle::Scene
         end
       end
       # play SE
-      pbSEPlay("EBDX/SE_Select1") if @fightWindow.index != oldIndex || @fightWindow.megaSelected != oldMega
+      pbSEPlay("EBDX/SE_Select1") if @fightWindow.index != oldIndex
       # Actions
-      toggleMega = true if Input.trigger?(Input::A)
-      if toggleMega && megaEvoPossible                                       # Toggle Mega Evolution
+      if Input.trigger?(Input::A) && megaEvoPossible                         # Toggle Mega Evolution
         @fightWindow.megaButtonTrigger
         pbSEPlay("EBDX/SE_Select3")
         done = yield -2
@@ -122,7 +113,6 @@ class FightWindowEBDX
   attr_accessor :battler
   attr_accessor :refreshpos
   attr_reader :megaPreview
-  attr_reader :megaSelected
   attr_reader :nummoves
   attr_reader :button, :megaButton
   #-----------------------------------------------------------------------------
@@ -156,7 +146,7 @@ class FightWindowEBDX
     self.applyMetrics
 
     @buttonBitmap = pbBitmap(@path + @cmdImg)
-
+    
     lang = pbGetSelectedLanguage
     typeBitmapPath = pbResolveBitmap("Graphics/EBDX/Pictures/UI/types_"+lang)
 
@@ -164,8 +154,8 @@ class FightWindowEBDX
       @typebitmap = pbBitmap(typeBitmapPath)
     else
       @typebitmap = pbBitmap(@path + @typImg)
-    end
-
+    end    
+ 
     if !@typebitmap
       @typebitmap = pbBitmap("Graphics/EBDX/Pictures/UI/types")
     end
@@ -185,12 +175,14 @@ class FightWindowEBDX
     @megaButton.center!
     @megaButton.x = 30
     @megaButton.y = @viewport.height - @background.bitmap.height/2 + 100
-    @sel = SelectorSprite.new(@viewport, 4)
-    @sel.filename = @path + @selImg
+
+    @sel = SpriteSheet.new(@viewport,4)
+    @sel.setBitmap(pbSelBitmap(@path + @selImg,Rect.new(0,0,192,68)))
+    @sel.speed = 4
+    @sel.ox = @sel.src_rect.width/2
+    @sel.oy = @sel.src_rect.height/2
     @sel.z = 199
     @sel.visible = false
-    @selTarget = nil
-    @megaSelected = false
 
     @button = {}
     @moved = false
@@ -416,7 +408,6 @@ class FightWindowEBDX
       @button["#{i}"].x -= ((i%2 == 0 ? 1 : -1)*@viewport.width/16)
     end
     @showMega = false
-    @megaSelected = false
     @megaButton.src_rect.x = 0
   end
   def hidePlay
@@ -441,48 +432,18 @@ class FightWindowEBDX
   end
   #-----------------------------------------------------------------------------
   #  true when the mega button is shown, finished sliding in, and left-clicked
+  #  (note: `megaButton` above is the "show" method, so the sprite is @megaButton)
   #-----------------------------------------------------------------------------
   def megaButtonClicked?
-    return false if !Mouse::UISelection.active? || !megaButtonReady?
-    return Mouse.click?(@megaButton, :left)
-  end
-  def megaButtonHovered?
-    return false if !Mouse::UISelection.active? || !megaButtonReady?
-    return Mouse.over?(@megaButton)
-  end
-  def megaButtonReady?
     return false if !@showMega || !@megaButton || @megaButton.disposed? || !@megaButton.visible
-    return @megaButton.y <= @viewport.height - @background.bitmap.height/2 + 8
-  end
-  def megaShown?
-    return @showMega && @megaButton && !@megaButton.disposed?
-  end
-  #-----------------------------------------------------------------------------
-  #  move the selection cursor onto (true) or off (false) the Mega button
-  #-----------------------------------------------------------------------------
-  def megaSelected=(val)
-    val = (val && megaShown?) ? true : false
-    return if val == @megaSelected
-    @megaSelected = val
-    @sprites["moveInfo"].visible = !val if @sprites["moveInfo"] && !@sprites["moveInfo"].disposed?
-  end
-  #-----------------------------------------------------------------------------
-  #  point the selection cursor at a button, re-rendering it only when the
-  #  target changes (6px inside the button, matching the original 192x68 cursor
-  #  on the 198x74 move buttons)
-  #-----------------------------------------------------------------------------
-  def aimSelector(sprite)
-    return if sprite.nil? || sprite.equal?(@selTarget)
-    @selTarget = sprite
-    old = @sel.bitmap
-    @sel.render(Rect.new(0, 0, sprite.width - 6, sprite.height - 6))
-    @sel.anchor = sprite
-    old.dispose if old && !old.disposed?
+    return false if @megaButton.y > @viewport.height - @background.bitmap.height/2 + 8
+    return Mouse.click?(@megaButton, :left)
   end
   #-----------------------------------------------------------------------------
   #  update fight menu
   #-----------------------------------------------------------------------------
   def update
+    @sel.visible = true
     if @showMega
       @megaButton.y -= 10 if @megaButton.y > @viewport.height - @background.bitmap.height/2
       @megaButton.src_rect.y += 1 if @megaButton.src_rect.y < 0
@@ -501,10 +462,10 @@ class FightWindowEBDX
       @oldindex = @index
     end
     for i in 0...@nummoves
-      @button["#{i}"].src_rect.x = 198*((@index == i && !@megaSelected) ? 0 : 1)
+      @button["#{i}"].src_rect.x = 198*(@index == i ? 0 : 1)
       @button["#{i}"].y = @y[i]
       @button["#{i}"].src_rect.y += 1 if @button["#{i}"].src_rect.y < 0
-      next if i != @index || @megaSelected
+      next if i != @index
       if [0,1].include?(i)
         @button["#{i}"].y = @y[i] - ((@nummoves < 3) ? 14 : 30)
       elsif [2,3].include?(i)
@@ -512,11 +473,10 @@ class FightWindowEBDX
         @button["#{i-2}"].y = @y[i-2] - 30
       end
     end
-    aimSelector(@megaSelected ? @megaButton : @button["#{@index}"])
-    @sel.update   # follows the target's position
-    @sel.visible = true
-    @typeInd.visible = false if @megaSelected
-    if @showTypeAdvantage && !(@battle.doublebattle? || @battle.triplebattle?) && !@megaSelected
+    @sel.x = @button["#{@index}"].x
+    @sel.y = @button["#{@index}"].y + @button["#{@index}"].src_rect.height/2 - 1
+    @sel.update
+    if @showTypeAdvantage && !(@battle.doublebattle? || @battle.triplebattle?)
       @typeInd.visible = true
       @typeInd.y = @button["#{@index}"].y
       @typeInd.x = @button["#{@index}"].x
@@ -571,8 +531,6 @@ class FightWindowEBDX
     @typeBitmap.dispose if @typeBitmap
     @background.dispose
     @megaButton.dispose
-    @sel.bitmap.dispose if @sel.bitmap && !@sel.bitmap.disposed?
-    @sel.dispose
     @typeInd.dispose
     pbDisposeSpriteHash(@button)
 	pbDisposeSpriteHash(@sprites)
@@ -882,7 +840,7 @@ class FightWindowEBDX
       end
     return ret
     end
-
+	
 	if movedata.function_code=="OHKO" || movedata.function_code=="OHKOIce" || movedata.function_code=="OHKOHitsUndergroundTarget"
       # OHKO
       return "KO!"
@@ -914,7 +872,7 @@ class FightWindowEBDX
     elsif abilityIs?(battler, :NOGUARD)
       return "-"
     end
-
+    
     return moveAcc.round
   end
   #-----------------------------------------------------------------------------

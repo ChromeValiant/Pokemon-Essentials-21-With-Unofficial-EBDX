@@ -268,7 +268,6 @@ class BagWindowEBDX
     cell = Bitmap.new(pbmp.width, pbmp.height/4)
     cell.blt(0, 0, pbmp, Rect.new(0, (pbmp.height/4)*@index, pbmp.width, pbmp.height/4))
     cardBase = stretchFrame(cell, cw, ch, 16)
-    frameBase = stretchFrame(ibmp, cw - 12, ch - 10, 14)
     cell.dispose
     white  = Color.white
     shadow = Color.new(0, 0, 0, 160)
@@ -277,18 +276,22 @@ class BagWindowEBDX
       bmp = Bitmap.new(cw, ch)
       @items["#{i}"].bitmap = bmp
       bmp.blt(0, 0, cardBase, cardBase.rect)
-      bmp.blt(6, 5, frameBase, frameBase.rect)
       pbSetSystemFont(bmp)
-      # icon on the left, like Black 2 / White 2
-      icon = pbBitmap(GameData::Item.icon_filename(@pocket[i][0]))
-      bmp.blt(14, (ch - icon.height)/2, icon, icon.rect); icon.dispose
+      # Black 2 / White 2 layout: name on top, icon + quantity on the row below
       iname = GameData::Item.get(@pocket[i][0]).name
-      bmp.font.size = 22
-      bmp.font.size -= 2 while bmp.font.size > 14 && bmp.text_size(iname).width > cw - 88 - 14
-      pbDrawShadowText(bmp, 72, 8, cw - 86, 28, iname, white, shadow, 0)
-      bmp.font.size = 20
-      pbDrawShadowText(bmp, 72, ch - 36, 20, 28, "x", white, shadow, 0)
-      pbDrawShadowText(bmp, cw - 24, ch - 36, 0, 28, "#{@pocket[i][1]}", white, shadow, 1)
+      bmp.font.size = 24
+      bmp.font.size -= 1 while bmp.font.size > 14 && bmp.text_size(iname).width > cw - 48
+      name_y = 20                                   # y of the item name (top band)
+      pbDrawShadowText(bmp, 0, name_y, cw, 28, iname, white, shadow, 1)
+      icon = pbBitmap(GameData::Item.icon_filename(@pocket[i][0]))
+      row_cy = 58                                   # vertical center of the icon / quantity row
+      qty = "x#{@pocket[i][1]}"
+      bmp.font.size = 24
+      qw = bmp.text_size(qty).width
+      gap = 10
+      gx = (cw - (icon.width + gap + qw))/2         # icon + quantity block centered in the card
+      bmp.blt(gx, row_cy - icon.height/2, icon, icon.rect); icon.dispose
+      pbDrawShadowText(bmp, gx + 48 + gap, row_cy - 11, qw + 8, 28, qty, white, shadow, 0)
       # center sprite
       @items["#{i}"].center!
       # position items
@@ -301,7 +304,7 @@ class BagWindowEBDX
       x = 0 if x > 1
       y = 0 if y > 2
     end
-    cardBase.dispose; frameBase.dispose
+    cardBase.dispose
     pbmp.dispose; ibmp.dispose
     self.name
     @sprites["name"].x = -@sprites["name"].width - @sprites["name"].width%10

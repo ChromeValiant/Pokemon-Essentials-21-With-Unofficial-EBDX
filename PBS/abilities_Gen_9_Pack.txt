@@ -195,3 +195,7 @@ Description = Powers up Fire-type moves.
 [EELEVATE]
 Name = Eelevate
 Description = Immune to Ground-type moves. Boosts best stat when it deals a KO.
+#-------------------------------
+[AURAGUARD]
+Name = Aura Guard
+Description = Halves the damage from contact moves.

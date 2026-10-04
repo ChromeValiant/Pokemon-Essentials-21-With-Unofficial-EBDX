@@ -306,6 +306,7 @@ Battle::ItemEffects::StatusCure.add(:ASPEARBERRY,
 # Red Card
 #===============================================================================
 # Adds Guard Dog immunity.
+# Adds Run Away effect on ingrained Pokemon.
 #-------------------------------------------------------------------------------
 Battle::ItemEffects::AfterMoveUseFromTarget.add(:REDCARD,
   proc { |item, battler, user, move, switched_battlers, battle|

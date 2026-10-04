@@ -1,11 +1,23 @@
 Name = Generation 9 Pack
-Version = 3.3.7
+Version = 3.3.8
 Essentials = 21.1
 Requires = v21.1 Hotfixes,1.0.9
 Website = https://www.eeveeexpo.com/threads/5817/
 Credits = Caruban
 
 # Change logs
+#############################################
+# 3.3.8
+#############################################
+# - Added the Aura Guard ability
+# - Added the missing Unown K follower sprites
+# - Fixed Electro Shot so it is now affected by Mega Sol ability
+# - Fixed the pbCanChooseMove? error triggered when checking Last Resort
+# - Updated OPTIONAL Champion move for Wish, Strength Sap, Meteor Assault, Slash, Double Shock, and Milk Drink
+# - Updated OPTIONAL Champions movepools
+# - While using Champions Mechanics:
+#   - Fainted Mega form Pokémon now retain their Mega form until the end of the battle
+#   - Run Away: Ignores any effects that would normally prevent switching out
 #############################################
 # 3.3.7
 #############################################

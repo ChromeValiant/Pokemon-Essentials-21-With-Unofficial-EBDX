@@ -96,6 +96,17 @@ Battle::AbilityEffects::OnDealingHit.add(:UNSEENFIST,
 #     mods[:evasion_multiplier] *= 1.25 if target.effectiveWeather == :Hail && !user.hasActiveAbility?(:MEGASOL)
 #   }
 # )
+
+#===============================================================================
+# CertainSwitching handlers (Run Away)
+#===============================================================================
+Battle::AbilityEffects::CertainSwitching.add(:RUNAWAY,
+  proc { |ability, switcher, battle|
+    next true if Settings::CHAMPIONS_MECHANICS
+  }
+)
+
+
 ################################################################################
 # NEW ABILITIES
 ################################################################################
@@ -170,5 +181,14 @@ Battle::AbilityEffects::OnEndOfUsingMove.add(:EELEVATE,
       end
       break
     end
+  }
+)
+
+#===============================================================================
+# Aura Guard
+#===============================================================================
+Battle::AbilityEffects::DamageCalcFromTarget.add(:AURAGUARD,
+  proc { |ability, user, target, move, mults, power, type|
+    mults[:final_damage_multiplier] /= 2 if move.pbContactMove?(user)
   }
 )

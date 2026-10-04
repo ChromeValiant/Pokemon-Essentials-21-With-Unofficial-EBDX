@@ -925,7 +925,8 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackOneTurnInRa
     # Score for user's stat changes
     score = ai.get_score_for_target_stat_raise(score, user, [:SPECIAL_ATTACK, 1], false)
     # In sunny weather this a 1 turn move, the same as a move with no effect
-    next score if [:Rain, :HeavyRain].include?(user.battler.effectiveWeather)
+    next score if [:Rain, :HeavyRain].include?(user.battler.effectiveWeather) && 
+                  !user.has_active_ability?(:MEGASOL)
     # Score for being a two turn attack
     next Battle::AI::Handlers.apply_move_effect_against_target_score("TwoTurnAttack",
        score, move, user, target, ai, battle)

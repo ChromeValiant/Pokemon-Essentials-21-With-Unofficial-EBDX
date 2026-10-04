@@ -149,12 +149,12 @@ end
 #===============================================================================
 # Roar, Whirlwind
 #===============================================================================
-# Adds Guard Dog immunity.
+# Adds Guard Dog immunity and Run Away effect on ingrained Pokemon.
 #-------------------------------------------------------------------------------
 class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
   alias paldea_pbFailsAgainstTarget? pbFailsAgainstTarget?
   def pbFailsAgainstTarget?(user, target, show_message)
-	if target.isCommander?
+	  if target.isCommander?
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -198,6 +198,7 @@ end
 # Circle Throw, Dragon Tail
 #===============================================================================
 # Adds Guard Dog immunity to effect only (may still take damage).
+# Adds Run Away effect on ingrained Pokemon.
 #-------------------------------------------------------------------------------
 class Battle::Move::SwitchOutTargetDamagingMove < Battle::Move
   def pbSwitchOutTargetEffect(user, targets, numHits, switched_battlers)

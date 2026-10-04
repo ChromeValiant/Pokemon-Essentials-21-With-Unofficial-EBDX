@@ -83,7 +83,8 @@ class Battle::Move::TwoTurnAttackOneTurnInRainRaiseUserSpAtk1 < Battle::Move::Tw
   def pbIsChargingTurn?(user)
     ret = super
     if !user.effects[PBEffects::TwoTurnAttack] &&
-       [:Rain, :HeavyRain].include?(user.effectiveWeather)
+       [:Rain, :HeavyRain].include?(user.effectiveWeather) &&
+       !user.hasActiveAbility?(:MEGASOL)
       @powerHerb = false
       @chargingTurn = true
       @damagingTurn = true

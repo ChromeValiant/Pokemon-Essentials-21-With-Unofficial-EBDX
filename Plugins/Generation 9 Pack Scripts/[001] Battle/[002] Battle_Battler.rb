@@ -407,6 +407,10 @@ class Battle::Battler
       end
     end
     isFainted = @fainted
+    if Settings::CHAMPIONS_MECHANICS
+      @isMegaBefore = mega?
+      @isPrimalBefore = primal?
+    end
     paldea_pbFaint(showMessage)
     @battle.pbAddFaintedAlly(self) if !isFainted && @fainted
     if commanderIdx
@@ -424,6 +428,20 @@ class Battle::Battler
     end
   end
   
+  #-----------------------------------------------------------------------------
+  # -Aliased to intercept the mega form reset, because in Champions the fainted pokemon keep their form.
+  #-----------------------------------------------------------------------------
+  alias champions_pbAbilitiesOnFainting pbAbilitiesOnFainting
+  def pbAbilitiesOnFainting
+    if Settings::CHAMPIONS_MECHANICS
+      @pokemon.makeMega   if @isMegaBefore
+      @pokemon.makePrimal if @isPrimalBefore
+      @isMegaBefore = nil
+      @isPrimalBefore = nil
+    end
+    champions_pbAbilitiesOnFainting
+  end
+
   #-----------------------------------------------------------------------------
   # Aliased to run initial checks for effects that would ignore abilities.
   #-----------------------------------------------------------------------------
@@ -563,7 +581,7 @@ class Battle::Battler
         self.eachMove do |m|
           hasThisMove    = true if m.id == @id
           hasOtherMoves  = true if m.id != @id
-          hasUnusedMoves = true if m.id != @id && !user.movesUsed.include?(m.id)
+          hasUnusedMoves = true if m.id != @id && !@movesUsed.include?(m.id)
         end
         if !hasThisMove || !hasOtherMoves || hasUnusedMoves
           msg = _INTL("This move can't be used!", pbThis, move.name) if showMessages

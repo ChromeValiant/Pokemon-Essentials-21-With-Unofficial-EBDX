@@ -222,12 +222,17 @@ https://eeveeexpo.com/resources/1544/
 
 # Link to mangalos810 sprites: https://www.deviantart.com/mangalos810/gallery/103628774/new-work
 - Charizard G-Max
+- Diggersby
 - Delphox
 - Lapras G-Max
 - Manectric Mega
+- Meowstic
+- Meowstic-Female
 - Moltres-Galar
 - Mr.Mime-Galar
+- Palafin-Hero
 - Palkia-Origin
+- Poipole
 - Slowking-Galar
 - Slowpoke-Galar
 - Snorlax G-Max

@@ -69,10 +69,10 @@ MKXP by Roza
 		Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
 		Ghasty_001 for Weather optimization
 		bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
-		EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti (GoggledPetilil)
+		EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti
 		Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)
 		Golisopod-User for Mouse Support
-		PetiGogggles (Dev of Pokemon Solar Eclipse) for better UI Fight info, Common Animations, Party Ball Lineup graphics
+		Peti (Dev of Pokemon Solar Eclipse) for better UI Fight info, Common Animations, Party Ball Lineup graphics
 
 
 ==============================================================

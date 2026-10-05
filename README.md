@@ -61,9 +61,10 @@ MKXP by Roza
 		PinkCatDragon | GIF to PNG conversion
 
 	EBDX v21.1 port add-ons & fixes:
-		Issei (LackDeJurane) for UI overhaul + mouse support
+		Golisopod-User for Mouse Support + new Party UI for battle
+		Issei (LackDeJurane) for UI graphics overhaul + mouse support
 		Aprogergely for the hatching scene fix
-		NikDie for v21.1 performance improvements + attack animation resources for EBDX (https://eeveeexpo.com/resources/1230/)
+		NikDie for v21.1 performance improvements + attack animation resources for EBDX (https://eeveeexpo.com/resources/1230/) + Shadow Pokemon features
 		http404error for various optimizations & translation improvements
 		SceoFlash13 for hotfixes while using frame-based animations.
 		Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
@@ -71,7 +72,6 @@ MKXP by Roza
 		bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
 		EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti
 		Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)
-		Golisopod-User for Mouse Support
 		Peti (Dev of Pokemon Solar Eclipse) for better UI Fight info, Common Animations, Party Ball Lineup graphics
 
 

@@ -98,7 +98,7 @@ module Mouse
     # Unified action helper checking both Mouse and Keyboard triggers for
     # Select, Cancel, Hover, and Scroll.
     #---------------------------------------------------------------------------
-    def input_action(collection, current_index)
+    def input_action(collection, current_index, select_any = false)
       if (active? && EliteBattle::RIGHT_CLICK_BACK_ACTION && Mouse.click?(nil, :right)) || Input.trigger?(Input::B)
         return [:cancel, nil]
       end
@@ -111,7 +111,7 @@ module Mouse
         hovered = hovered_index(collection)
         if hovered
           if Mouse.click?(collection[hovered], :left)
-            return [:select, hovered] if hovered == current_index
+            return [:select, hovered] if hovered == current_index || select_any
             # clicked something other than the current selection: highlight it
             # first, then confirm on the next frame
             @pending_select = hovered

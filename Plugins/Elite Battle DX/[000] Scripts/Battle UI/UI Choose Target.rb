@@ -185,7 +185,7 @@ class Battle::Scene
         next if texts[i].nil?
         buttons[i] = @targetWindow.buttons["#{i}"]
       end
-      action, val = Mouse::UISelection.input_action(buttons, @targetWindow.index)
+      action, val = Mouse::UISelection.input_action(buttons, @targetWindow.index, mode == 1)
       case action
       when :highlight
         if mode == 0

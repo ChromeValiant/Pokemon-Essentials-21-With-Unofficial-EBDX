@@ -21,7 +21,7 @@ class PartyLineupEBDX
     @disposed = false
     # cache bitmaps
     @partyBar = pbBitmap("Graphics/EBDX/Pictures/UI/partyBar")
-    @partyBalls = pbBitmap("Graphics/EBDX/Pictures/UI/partyBalls")
+    @partyBalls = pbBitmap("Graphics/EBDX/Pictures/UI/partyBallsBW")
     # draw main line up bar
     @sprites["partyLine_#{@side}"] = Sprite.new(@viewport)
     @sprites["partyLine_#{@side}"].z = 99999

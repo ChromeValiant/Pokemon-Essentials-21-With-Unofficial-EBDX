@@ -200,8 +200,12 @@ class Battle::Scene
   def pbCommonAnimation(animname, user = nil, targets = nil)
     # skips certain common animations from playing
     return false if ["Rain", "HeavyRain", "Hail", "Sandstorm", "Sun", "HarshSun", "StrongWinds", "ShadowSky", "HealthDown"].include?(animname)
-    $skipMegaChange = true if animname == "MegaEvolution" && !EliteBattle::CUSTOM_COMMON_ANIM
-    return false if ["MegaEvolution", "Shadow"].include?(animname) && !EliteBattle::CUSTOM_COMMON_ANIM
+    # Mega Evolution / Primal Reversion: the first animation plays BEFORE the form
+    # changes, so it is skipped and the form change is deferred; the whole EBDX
+    # animation (MegaEvolution2 / PrimalKyogre2 / PrimalGroudon2) then plays after it
+    pre_change = ["MegaEvolution", "PrimalKyogre", "PrimalGroudon"]
+    $skipMegaChange = true if pre_change.include?(animname) && !EliteBattle::CUSTOM_COMMON_ANIM
+    return false if (pre_change + ["Shadow"]).include?(animname) && !EliteBattle::CUSTOM_COMMON_ANIM
     # plays common animation unless specified to use custom ones
     unless EliteBattle::CUSTOM_COMMON_ANIM || animname.nil? || user.nil?
       symbol = (animname.upcase).to_sym

@@ -214,7 +214,8 @@ class Battle
       :wildForm,
       :setBoss,
       :cachedBattler,
-      :tviewport
+      :tviewport,
+      :damageCap
     )
     EliteBattle.set(:setBoss, false)
     EliteBattle.set(:colorAlpha, 0)

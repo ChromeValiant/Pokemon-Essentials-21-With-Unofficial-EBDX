@@ -62,13 +62,13 @@ MKXP by Roza
 
 	EBDX v21.1 port add-ons & fixes:
 		Golisopod-User for Mouse Support + new Party UI for battle
-		Issei (LackDeJurane) for UI graphics overhaul + mouse support
+		Issei (LackDeJurane) for UI graphics overhaul + mouse support + Electric/Grassy/Misty/Psychic surge effect
+		Ghasty_001 for SOS allies, HP threshold caps, & Weather optimization
 		Aprogergely for the hatching scene fix
 		NikDie for v21.1 performance improvements + attack animation resources for EBDX (https://eeveeexpo.com/resources/1230/) + Shadow Pokemon features
 		http404error for various optimizations & translation improvements
 		SceoFlash13 for hotfixes while using frame-based animations.
 		Lichenprincess for additional Poke Ball animations (https://eeveeexpo.com/resources/909/)
-		Ghasty_001 for Weather optimization
 		bonzairob @ 3dPE for Gen 5 font: "Truth and Ideals - Fighting Ideals"
 		EBDX Stat Change Overlay 1.2 (https://eeveeexpo.com/resources/941/) by phantombass, new graphics / refactor by Peti
 		Rua for Trade Screen: DX(https://eeveeexpo.com/resources/1571/)

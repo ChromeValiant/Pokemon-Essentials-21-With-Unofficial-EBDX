@@ -140,6 +140,8 @@ class BattleSceneRoom
     @fpIndex = 0
     # disposes sprites if they exist
     pbDisposeSpriteHash(@sprites)
+    @terrainCur = nil
+    @terrainInstant = true
     sx, sy = @scene.vector.spoof(@defaultvector)
     # void sprite
     @sprites["void"] = Sprite.new(@viewport)
@@ -267,6 +269,7 @@ class BattleSceneRoom
     end
     # update weather particles
     self.updateWeather
+    self.updateTerrain
     # positions all elements according to the battle backdrop
     self.position
     # updates skyline
@@ -992,6 +995,192 @@ class BattleSceneRoom
         k = [:X, :Y].include?(param) ? "E#{param.to_s}" : param.to_s
         @sprites["battler#{j}"].send("#{k.downcase}=", dat[n])
         @sprites["trainer_#{j}"].send("#{k.downcase}=", dat[m])
+      end
+    end
+  end
+  #-----------------------------------------------------------------------------
+  # terrain overlay: the ground base is replaced by the terrain texture
+  #-----------------------------------------------------------------------------
+  TERRAIN_TEXTURES = {
+    :Electric => "terrain_electric",
+    :Grassy   => "terrain_grassy",
+    :Misty    => "terrain_misty",
+    :Psychic  => "terrain_psychic"
+  }
+  TERRAIN_OVAL_END = 20.0
+  TERRAIN_SPREAD_END = 90.0
+  @@terrainShapes = {}
+  @@terrainBitmaps = {}
+
+  def terrainRect
+    pts = []
+    for i in 0...(@battle.pbMaxSize * 2)
+      s = @sprites["battler#{i}"]
+      pts.push([s.ex, s.ey]) if s && !(s.ex == 0 && s.ey == 0)
+    end
+    return [175, 206, 238, 144, 100] if pts.empty?
+    xs = pts.map { |p| p[0] }
+    ys = pts.map { |p| p[1] }
+    cx = (xs.min + xs.max) / 2
+    cy = (ys.min + ys.max) / 2
+    rx = [[(xs.max - xs.min) / 2 + 60, 90].max, 170].min
+    ry = [[(ys.max - ys.min) / 2 + 22, 50].max, 90].min
+    return [cx, cy, rx * 2, ry * 2, [ys.min - 55, 0].max]
+  end
+
+  def terrainShape(w, h, feather)
+    key = "#{w}x#{h}|#{feather}"
+    return @@terrainShapes[key] if @@terrainShapes[key]
+    clears = []
+    edges = []
+    if feather == :fog
+      for y in 0...h
+        at = [y / (h * 0.5), 1.0].min
+        at = at * at * (3 - 2 * at)
+        for x in 0...w
+          ax = [[x, w - 1 - x].min / (w * 0.2), 1.0].min
+          ax = ax * ax * (3 - 2 * ax)
+          a = ax * at
+          edges.push([x, y, (a * 255).to_i]) if a < 1
+        end
+      end
+      return @@terrainShapes[key] = [clears, edges]
+    end
+    cx = w / 2.0
+    cy = h / 2.0
+    for y in 0...h
+      dy = (y + 0.5 - cy) / cy
+      if dy.abs >= 1
+        clears.push([0, y, w])
+        next
+      end
+      hw = cx * Math.sqrt(1 - dy * dy)
+      x0 = (cx - hw).ceil
+      x1 = (cx + hw).floor
+      clears.push([0, y, x0]) if x0 > 0
+      clears.push([x1 + 1, y, w - x1 - 1]) if x1 < w - 1
+      for x in x0..x1
+        dx = (x + 0.5 - cx) / cx
+        r = Math.sqrt(dx * dx + dy * dy)
+        next if r < 1 - feather
+        a = [(1 - r) / feather, 0].max
+        edges.push([x, y, (a * a * (3 - 2 * a) * 255).to_i])
+      end
+    end
+    return @@terrainShapes[key] = [clears, edges]
+  end
+
+  def terrainBitmap(terrain, w, h, feather)
+    key = "#{terrain}|#{w}x#{h}|#{feather}"
+    bmp = @@terrainBitmaps[key]
+    return bmp if bmp && !bmp.disposed?
+    tex = pbBitmap("Graphics/EBDX/Animations/Weather/" + TERRAIN_TEXTURES[terrain])
+    sw = [(tex.height.to_f * w / h).round, tex.width].min
+    bmp = Bitmap.new(w, h)
+    bmp.stretch_blt(bmp.rect, tex, Rect.new((tex.width - sw) / 2, 0, sw, tex.height))
+    tex.dispose
+    clears, edges = self.terrainShape(w, h, feather)
+    clears.each { |x, y, len| bmp.clear_rect(x, y, len, 1) }
+    edges.each do |x, y, a|
+      c = bmp.get_pixel(x, y)
+      c.alpha = c.alpha * a / 255
+      bmp.set_pixel(x, y, c)
+    end
+    return @@terrainBitmaps[key] = bmp
+  end
+
+  def drawTerrain(terrain, instant)
+    cx, cy, w, h, top = self.terrainRect
+    @terrainGeo = [cx, cy, w, h, top]
+    oval = Sprite.new(@viewport)
+    oval.default!
+    oval.bitmap = self.terrainBitmap(terrain, w, h, 0.3)
+    oval.ox = w / 2
+    oval.oy = h / 2
+    oval.ex = cx
+    oval.ey = cy
+    oval.z = 1 - (@focused ? 0 : 100)
+    oval.opacity = 0
+    @sprites["terrain_base"] = oval
+    bgw = @sprites["bg"].bitmap.width
+    bgh = @sprites["bg"].bitmap.height
+    fogH = bgh - top
+    fogw = (bgw / 2).round
+    fogh = (fogH / 2).round
+    fog = Sprite.new(@viewport)
+    fog.default!
+    fog.bitmap = self.terrainBitmap(terrain, fogw, fogh, :fog)
+    fog.ox = fogw / 2
+    fog.oy = fogh / 2
+    fog.ex = cx
+    fog.ey = cy + 10
+    fog.z = 1 - (@focused ? 0 : 100)
+    fog.opacity = 0
+    @sprites["terrain_base_fog"] = fog
+    @terrainTick = instant ? TERRAIN_SPREAD_END : 0
+  end
+
+  def updateTerrain
+    return if !@battle.field || !@sprites["bg"].bitmap
+    cur = TERRAIN_TEXTURES.has_key?(@battle.field.terrain) ? @battle.field.terrain : nil
+    if cur != @terrainCur
+      for key in ["terrain_base", "terrain_base_fog"]
+        next if !@sprites[key]
+        @sprites[key + "_out"].dispose if @sprites[key + "_out"]
+        @sprites[key + "_out"] = @sprites[key]
+        @sprites.delete(key)
+      end
+      @terrainCur = cur
+      self.drawTerrain(cur, @terrainInstant != false) if cur
+    end
+    @terrainInstant = false
+    oval = @sprites["terrain_base"]
+    fog = @sprites["terrain_base_fog"]
+    if oval && fog
+      @terrainTick += 1.0 / self.delta
+      t = @terrainTick
+      cx, cy, w, h, top = @terrainGeo
+      # phase 1: the oval appears
+      p1 = [t / TERRAIN_OVAL_END, 1.0].min
+      e1 = 1 - (1 - p1)**2
+      # phase 2: the oval spreads out into fog
+      p2 = [[(t - TERRAIN_OVAL_END * 0.7) / (TERRAIN_SPREAD_END - TERRAIN_OVAL_END * 0.7), 0.0].max, 1.0].min
+      e2 = p2 * p2 * (3 - 2 * p2)
+      oval.zx = oval.zy = 0.6 + 0.4 * e1 + 0.5 * e2
+      oval.opacity = 255 * e1 * (1 - e2)
+      oval.color = Color.new(255, 255, 255, 190 * (1 - p1)**2)
+      fogw = fog.bitmap.width
+      fogh = fog.bitmap.height
+      bgw = @sprites["bg"].bitmap.width
+      bgh = @sprites["bg"].bitmap.height
+      fogH = bgh - top
+      fog.zx = (w * 0.6 + (bgw - w * 0.6) * e2) / fogw
+      fog.zy = (h * 0.6 + (fogH - h * 0.6) * e2) / fogh
+      fog.ex = cx + (bgw / 2 - cx) * e2
+      fog.ey = (cy + 10) + (top + fogH / 2 - cy - 10) * e2
+      peak = (@terrainCur == :Misty) ? 215 : 190
+      level = peak
+      if p2 >= 1
+        wave = Math.sin(t * 0.05)
+        case @terrainCur
+        when :Electric
+          level = peak - ((@fpIndex % 3 == 0) ? rand(50) : 0)
+        when :Psychic
+          level = peak - 25 + 25 * wave
+        else
+          level = peak - 18 + 18 * wave
+        end
+        fog.ex = bgw / 2 + 7 * Math.sin(t * 0.02)
+      end
+      fog.opacity = level * e2
+    end
+    for key in ["terrain_base_out", "terrain_base_fog_out"]
+      out = @sprites[key]
+      next if !out
+      out.opacity -= 255 / (TERRAIN_SPREAD_END * 0.5) / self.delta
+      if out.opacity <= 0
+        out.dispose
+        @sprites.delete(key)
       end
     end
   end

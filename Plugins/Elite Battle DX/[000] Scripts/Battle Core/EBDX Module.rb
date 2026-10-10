@@ -41,6 +41,7 @@ module EliteBattle
   @messageDarkShadow = Color.new(32, 32, 32)
   # additional config vars
   @setBoss = false
+  @damageCap = []
   @logger = ErrorLogger.new("errorlogEBDX.txt")
   # cache move animations at game load
   @moveAnimations = (load_data("Data/PkmnAnimations.rxdata") rescue [])
@@ -154,6 +155,7 @@ module EliteBattle
   #-----------------------------------------------------------------------------
   def self.reset(*args)
     for var in args
+      self.set(var, []) if var == :damageCap
       self.set(var, nil)
     end
   end

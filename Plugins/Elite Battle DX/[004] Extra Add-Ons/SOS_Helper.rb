@@ -25,28 +25,35 @@ class Battle
       pokemon = pbGenerateWildPokemon(species, level)
       pokemon.shiny = false;
       pokemon.ability_index = 0;
-      if pbSideSize(0) == 1
-        self.setBattleMode("1v3")
-      elsif pbSideSize(0) == 2
-        self.setBattleMode("2v3")
-      else
-        self.setBattleMode("3v3")
-      end
-      i = (@battlers[1].nil?) ? 1 : (@battlers[3].nil?) ? 3 : 5
+      i = (@battlers[1].fainted?) ? 1 : (@battlers[3].fainted?) ? 3 : 5
+      @battlers[i].pbInitialize(pokemon, @party2.length) if !@battlers[i].nil?
       if i == 5
+        if pbSideSize(0) == 1
+          self.setBattleMode("1v3")
+        elsif pbSideSize(0) == 2
+          self.setBattleMode("2v3")
+        else
+          self.setBattleMode("3v3")
+        end
         pbCreateBattler(5,pokemon,@party2.length)
         @party2.push(pokemon)
         @party2order.push(@party2order.length)
         @abils_triggered[@battlers[5].index & 1].push(@battlers[5].pokemonIndex)
         @rage_hit_count[@battlers[5].index & 1].push(@battlers[5].pokemonIndex)
         @battleAI.create_ai_objects
+      else
+        @party2[i] = pokemon
       end
     when 3
+      i = (@battlers[1].fainted?) ? 1 : (@battlers[3].fainted?) ? 3 : 5
+      if !@battlers[i].fainted?
+        self.pbDisplay(_INTL("...but nobody came!"))
+        return
+      end
       pokemon = pbGenerateWildPokemon(species, level)
       pokemon.shiny = false;
       pokemon.ability_index = 0;
-      i = (@battlers[1].nil?) ? 1 : (@battlers[3].nil?) ? 3 : 5
-      @battlers[i].pbInitialize(pokemon,@party2.length)
+      @battlers[i].pbInitialize(pokemon, @party2.length) if !@battlers[i].nil?
     end
     @scene.pbSOSJoin(i,pokemon)
   end
@@ -62,12 +69,11 @@ class Battle::Scene
     @sprites["pokemon_#{battlerindex}"].setPokemonBitmap(pkmn, false)
     @sprites["pokemon_#{battlerindex}"].tone = Tone.new(-255, -255, -255, -255)
     @sprites["pokemon_#{battlerindex}"].opacity = 0
-    if @sprites["dataBox_#{battlerindex}"].nil?
-      @sprites["dataBox_#{battlerindex}"] = DataBoxEBDX.new(@battle.battlers[battlerindex], @msgview, @battle.pbPlayer, self)
-      @sprites["dataBox_#{battlerindex}"].render
-    else
-      @sprites["dataBox_#{battlerindex}"].render
+    if !@sprites["dataBox_#{battlerindex}"].nil?
+      @sprites["dataBox_#{battlerindex}"].dispose
     end
+    @sprites["dataBox_#{battlerindex}"] = DataBoxEBDX.new(@battle.battlers[battlerindex], @msgview, @battle.pbPlayer, self)
+    @sprites["dataBox_#{battlerindex}"].render
     pkmn = @battle.battlers[battlerindex].effects[PBEffects::Illusion] || pkmn
     pbChangePokemon(battlerindex,pkmn)
     @sprites["battlebg"].adjustMetrics

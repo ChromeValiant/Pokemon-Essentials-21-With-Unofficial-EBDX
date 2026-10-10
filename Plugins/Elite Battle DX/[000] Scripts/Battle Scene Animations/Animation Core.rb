@@ -191,8 +191,10 @@ module EliteBattle
 end
 #===============================================================================
 #  Functional core for playing animations
+#  Additional Damage cap functionality
 #===============================================================================
 class Battle::Scene
+  attr_accessor :hpCapReached
   #-----------------------------------------------------------------------------
   #  Core to play Common Animations
   #-----------------------------------------------------------------------------
@@ -277,6 +279,7 @@ class Battle::Scene
   def pbHitAndHPLossAnimation(targets)
     @briefMessage = false
     self.afterAnim = false
+    hpCapReached = false
     # wait
     self.wait(4, true)
     # prepare soundeffect
@@ -285,6 +288,15 @@ class Battle::Scene
     for t in targets
       effect.push(t[2])
       indexes.push(t[0].index)
+      #damage cap reached
+      @dc = EliteBattle.get(:damageCap)
+      if @dc.is_a?(Array) && !@dc.empty? && !playerBattler?(t[0])
+        damageCap = (t[0].totalhp*(@dc.last()/100.0)).to_i
+        if t[0].hp <= damageCap && t[1] > damageCap
+          t[0].hp = damageCap#.to_i
+          hpCapReached = true
+        end
+      end
       @sprites["dataBox_#{t[0].index}"].damage
       @sprites["dataBox_#{t[0].index}"].animateHP(t[1], t[0].hp)
     end
@@ -314,7 +326,13 @@ class Battle::Scene
     for t in targets
       # displays opposing trainer message if Pokemon falls to low HP
       hpchange = t[0].hp - t[1]
-      handled = pbTrainerBattleSpeech(playerBattler?(t[0]) ? "damage" : "damageOpp") if hpchange.abs/t[0].totalhp.to_f >= 0.6 && hpchange < 0
+
+      @sprites["dataBox_#{t[0].index}"].updateHpBar
+      if hpCapReached
+        handled = pbTrainerBattleSpeech("HPCap#{@dc.pop()}")
+        EliteBattle.set(:damageCap, @dc)
+      end
+      handled = pbTrainerBattleSpeech(playerBattler?(t[0]) ? "damage" : "damageOpp") if hpchange.abs/t[0].totalhp.to_f >= 0.6 && hpchange < 0 && !handled
       handled = pbTrainerBattleSpeech(playerBattler?(t[0]) ? "resist" : "resistOpp") if hpchange.abs/t[0].totalhp.to_f <= 0.1 && hpchange < 0 && !handled
       handled = pbTrainerBattleSpeech(playerBattler?(t[0]) ? "lowHP" : "lowHPOpp") if t[0].hp > 0 && (t[0].hp < t[0].totalhp*0.3) && !handled
       handled = pbTrainerBattleSpeech(playerBattler?(t[0]) ? "halfHP" : "halfHPOpp") if t[0].hp > 0 && (t[0].hp < t[0].totalhp*0.5) && !handled
@@ -369,11 +387,24 @@ class Battle::Scene
       databox.update
       self.wait(1, true)
     end
+    @dc = EliteBattle.get(:damageCap)
+    if @dc.is_a?(Array) && !@dc.empty? && !playerBattler?(battler)
+      damageCap = (battler.totalhp*(@dc.last()/100.0)).to_i
+      #p "@dc = #{@dc}, t[0].totalhp = #{t[0].totalhp} and damagecap = #{damageCap}"
+      if battler.hp <= damageCap && oldhp > damageCap
+        battler.hp = damageCap#.to_i
+        hpCapReached = true
+      end
+    end
     # try set low HP BGM music
     setBGMLowHP(false)
     setBGMLowHP(true)
     # displays opposing trainer message if Pokemon falls to low HP
-    handled = pbTrainerBattleSpeech(playerBattler?(battler) ? "damage" : "damageOpp") if hpchange.abs/battler.totalhp.to_f >= 0.6 && hpchange < 0
+    if hpCapReached
+      handled = pbTrainerBattleSpeech("HPCap#{@dc.pop()}")
+      EliteBattle.set(:damageCap, @dc)
+    end
+    handled = pbTrainerBattleSpeech(playerBattler?(battler) ? "damage" : "damageOpp") if hpchange.abs/battler.totalhp.to_f >= 0.6 && hpchange < 0 && !handled
     handled = pbTrainerBattleSpeech(playerBattler?(battler) ? "resist" : "resistOpp") if hpchange.abs/battler.totalhp.to_f <= 0.1 && hpchange < 0 && !handled
     handled = pbTrainerBattleSpeech(playerBattler?(battler) ? "lowHP" : "lowHPOpp") if battler.hp > 0 && (battler.hp < battler.totalhp*0.3) && !handled
     handled = pbTrainerBattleSpeech(playerBattler?(battler) ? "halfHP" : "halfHPOpp") if battler.hp > 0 && (battler.hp < battler.totalhp*0.5) && !handled

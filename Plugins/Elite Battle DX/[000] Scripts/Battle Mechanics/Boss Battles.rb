@@ -10,6 +10,7 @@ module EliteBattle
     level = data.get_key(:level)
     basestats = data.has_key?(:basestats) ? data.get_key(:basestats) : nil
     boss = data.has_key?(:bossboost) ? data.get_key(:bossboost) : false
+    damageCap = data.has_key?(:damageCap) ? data.get_key(:damageCap) : []
     # raises error if critical data is not present
     EliteBattle.log.error("No species defined for Pokemon!") if !species
     EliteBattle.log.error("No level defined for Pokemon!") if !level
@@ -103,6 +104,8 @@ module EliteBattle
     EliteBattle.set(:wildForm, genwildpoke.form)
     # set boss parameter to true
     EliteBattle.set(:setBoss, true) if data.is_a?(Hash) && data[:setBoss]
+    # Damage Cap for bosses
+    EliteBattle.set(:damageCap, data.get_key(:damageCap)) if data.is_a?(Hash) && data[:damageCap]
     # try to load the next battle speech
     speech = EliteBattle.get_data(genwildpoke.species, :Species, :BATTLESCRIPT, (genwildpoke.form rescue 0))
     EliteBattle.set(:nextBattleScript, (speech.is_a?(Hash) ? speech : speech.to_sym)) if !speech.nil?
@@ -164,6 +167,21 @@ module EliteBattle
     partysize = 3 if partysize > 3; partysize = 1 if partysize < 1
     # run battle
     return self.wildBattle(data, partysize, false, false)
+  end
+  #-----------------------------------------------------------------------------
+  # For Trainer-specific Bosses that need a boss Multiplier
+  #-----------------------------------------------------------------------------
+  def self.defineBoss(battleScript,hpCap = [])
+    EliteBattle.set(:setBoss, true)
+    EliteBattle.set(:nextBattleScript, battleScript)
+    hpCap = hpCap.sort if hpCap.is_a?(Array)
+    EliteBattle.set(:damageCap, hpCap)
+  end
+
+  # Don't even know if it's necessary but best to do it just in case
+  def self.clearBoss
+    EliteBattle.set(:setBoss, false)
+    EliteBattle.set(:damageCap, [])
   end
   #-----------------------------------------------------------------------------
 end

@@ -1025,7 +1025,7 @@ class BattleSceneRoom
     cy = (ys.min + ys.max) / 2
     rx = [[(xs.max - xs.min) / 2 + 60, 90].max, 170].min
     ry = [[(ys.max - ys.min) / 2 + 22, 50].max, 90].min
-    return [cx, cy, rx * 2, ry * 2, [ys.min - 55, 0].max]
+    return [cx, cy, rx * 2, ry * 2, [ys.min - 80, 0].max]
   end
 
   def terrainShape(w, h, feather)
@@ -1035,10 +1035,10 @@ class BattleSceneRoom
     edges = []
     if feather == :fog
       for y in 0...h
-        at = [y / (h * 0.5), 1.0].min
+        at = [y / (h * 0.3), 1.0].min
         at = at * at * (3 - 2 * at)
         for x in 0...w
-          ax = [[x, w - 1 - x].min / (w * 0.2), 1.0].min
+          ax = [[x, w - 1 - x].min / (w * 0.12), 1.0].min
           ax = ax * ax * (3 - 2 * ax)
           a = ax * at
           edges.push([x, y, (a * 255).to_i]) if a < 1
@@ -1147,7 +1147,7 @@ class BattleSceneRoom
       p2 = [[(t - TERRAIN_OVAL_END * 0.7) / (TERRAIN_SPREAD_END - TERRAIN_OVAL_END * 0.7), 0.0].max, 1.0].min
       e2 = p2 * p2 * (3 - 2 * p2)
       oval.zx = oval.zy = 0.6 + 0.4 * e1 + 0.5 * e2
-      oval.opacity = 255 * e1 * (1 - e2)
+      oval.opacity = 255 * e1 * (1 - 0.5 * e2)
       oval.color = Color.new(255, 255, 255, 190 * (1 - p1)**2)
       fogw = fog.bitmap.width
       fogh = fog.bitmap.height
@@ -1158,17 +1158,17 @@ class BattleSceneRoom
       fog.zy = (h * 0.6 + (fogH - h * 0.6) * e2) / fogh
       fog.ex = cx + (bgw / 2 - cx) * e2
       fog.ey = (cy + 10) + (top + fogH / 2 - cy - 10) * e2
-      peak = (@terrainCur == :Misty) ? 215 : 190
+      peak = 250
       level = peak
       if p2 >= 1
         wave = Math.sin(t * 0.05)
         case @terrainCur
         when :Electric
-          level = peak - ((@fpIndex % 3 == 0) ? rand(50) : 0)
+          level = peak - ((@fpIndex % 3 == 0) ? rand(60) : 0)
         when :Psychic
-          level = peak - 25 + 25 * wave
+          level = peak - 30 + 30 * wave
         else
-          level = peak - 18 + 18 * wave
+          level = peak - 22 + 22 * wave
         end
         fog.ex = bgw / 2 + 7 * Math.sin(t * 0.02)
       end

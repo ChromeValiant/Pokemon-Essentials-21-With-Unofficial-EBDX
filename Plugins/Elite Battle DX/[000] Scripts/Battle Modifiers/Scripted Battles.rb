@@ -108,6 +108,15 @@ class Battle::Scene
           end
         end
         next if skip || handled
+		
+		# Every Turn Start/End; courtesy of http404error :)
+		if key.include?('everyTurnStart') || key.include?('everyTurnEnd')
+          pbTrainerSpeak(@battle.midspeech[index][key], nil, index)
+          handled = true
+          ret = true
+          next
+        end
+		
         # turn progression dialogue
         if key.include?("turnStart") || key.include?("turnEnd")
           turn = key.gsub("Start", "")

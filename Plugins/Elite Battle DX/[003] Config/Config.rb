@@ -45,7 +45,7 @@ module EliteBattle
   PERFECT_IV_SUPER = 3
 
   # Show player line up during wild battles
-  SHOW_LINEUP_WILD = false
+  SHOW_LINEUP_WILD = true
 
   # Adjust the player sendout animations based on whether or not the
   # Following Pokemon EX system is present

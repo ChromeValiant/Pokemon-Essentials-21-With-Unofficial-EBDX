@@ -224,7 +224,8 @@ class CommandWindowEBDX
     bs = balls_bmp.height
     barY = @viewport.height - 7
     for side in [0, 1]
-      next if !@battle.opponent   # wild battle: no party lineup
+      next if !@battle.opponent && !EliteBattle::SHOW_LINEUP_WILD
+	  next if !@battle.opponent && side == 1
       party = @battle.pbParty(side).clone
       (num - party.length).times { party.push(nil) }
       party = party[0, num]

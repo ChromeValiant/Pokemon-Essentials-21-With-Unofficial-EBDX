@@ -262,7 +262,7 @@ class DataBoxEBDX  <  SpriteWrapper
     @sprites["base"] = Sprite.new(@viewport)
 	@baseBitmap = "dataBox"
 	@baseBitmap = "dataBoxShadow" if @pokemon.shadowPokemon?
-	@baseBitmap = "dataBoxBoss" if EliteBattle.get(:setBoss) && !@playerpoke
+	@baseBitmap = "dataBoxBoss" if EliteBattle.get(:setBoss) && (@battler.index == 1)
     @sprites["base"].bitmap = pbBitmap(@path+@baseBitmap)
     @sprites["base"].mirror = @playerpoke
     @sprites["status"] = Sprite.new(@viewport)
@@ -310,7 +310,7 @@ class DataBoxEBDX  <  SpriteWrapper
     @sprites["caught"].bitmap = pbBitmap(@path + "battleBoxOwned") if !@playerpoke && @battler.owned? && !@scene.battle.opponent
     @sprites["caught"].z = @sprites["container"].z
     @sprites["caught"].ex = @sprites["container"].ex - 18
-    @sprites["caught"].ey = @sprites["container"].ey - 2
+    @sprites["caught"].ey = @sprites["container"].ey - 25
 
     @sprites["textHP"] = Sprite.new(@viewport)
     @sprites["textHP"].bitmap = Bitmap.new(@sprites["container"].bitmap.width, @sprites["base"].bitmap.height + 8 + @hpTextYBitmap)
@@ -434,7 +434,7 @@ class DataBoxEBDX  <  SpriteWrapper
 	#@sprites["base"].bitmap.clear
 	@baseBitmap = "dataBox"
 	@baseBitmap = "dataBoxShadow" if @pokemon.shadowPokemon?
-	@baseBitmap = "dataBoxBoss" if EliteBattle.get(:setBoss) && !@playerpoke
+	@baseBitmap = "dataBoxBoss" if EliteBattle.get(:setBoss) && (@battler.index == 1)
     @sprites["base"].bitmap = pbBitmap(@path+@baseBitmap)
     @sprites["base"].mirror = @playerpoke
 	#debug shadow pokemon bar
@@ -456,12 +456,12 @@ class DataBoxEBDX  <  SpriteWrapper
     str += " "
     color = (@pokemon.shiny?) ? Color.new(222,197,95) : Color.white # Gold Text
 	outline = (@pokemon.shadowPokemon?) ? Color.new(96, 50, 135) : Color.new(0,0,0) # Changes outline text to purple if Shadow Pokemon
-	outline = Color.new(162,26,36) if EliteBattle.get(:setBoss) && !@playerpoke # Changes outline text to red if Boss Pokemon
+	outline = Color.new(162,26,36) if EliteBattle.get(:setBoss) && (@battler.index == 1) # Changes outline text to red if Boss Pokemon
 	if EliteBattle::BW_DATABOX_FONT
 		@sprites["textName"].bitmap.font.name = "Truth And Ideals - Fighting Ideals" # H3 edit
 		@sprites["textName"].bitmap.font.size = 23 # H3 edit
 	end
-	align = (EliteBattle.get(:setBoss) && !@playerpoke) ? 1 : 0
+	align = (EliteBattle.get(:setBoss) && (@battler.index == 1)) ? 1 : 0
     pbDrawOutlineText(@sprites["textName"].bitmap,20-o,y,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,outline,align)
     # writes the Pokemon's gender
     x = @sprites["textName"].bitmap.text_size(str).width + 18
@@ -469,9 +469,9 @@ class DataBoxEBDX  <  SpriteWrapper
     str = _INTL("♂") if @pokemon.gender == 0 && !@hidden
     str = _INTL("♀") if @pokemon.gender == 1 && !@hidden
     color = (@pokemon.gender == 0) ? Color.new(0,186,243) : Color.new(251,48,65)
-    pbDrawOutlineText(@sprites["textName"].bitmap,x-o,y,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,outline,align)
+    pbDrawOutlineText(@sprites["textName"].bitmap,x-o,y,@sprites["textName"].bitmap.width-40,@sprites["textName"].bitmap.height,str,color,outline,align) unless (EliteBattle.get(:setBoss) && (@battler.index == 1)) # Hide gender for Boss battles
     # writes the Pokemon's level
-    str = "Lv.#{@battler.level}" unless (EliteBattle.get(:setBoss) && !@playerpoke) # Hide level for Boss battles
+    str = "Lv.#{@battler.level}" unless (EliteBattle.get(:setBoss) && (@battler.index == 1)) # Hide level for Boss battles
 	color = (@pokemon.shiny?) ? Color.new(222,197,95) : Color.white # Gold Text
 	o -= 20
 	o -= 8 if (@battler.level >= 100)

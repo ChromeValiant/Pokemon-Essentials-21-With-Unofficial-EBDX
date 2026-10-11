@@ -3,7 +3,7 @@
 #  It gets to be called by a Battle Script
 #===============================================================================
 class Battle
-  def pbGenerateAllyBattler(species, level)
+  def pbGenerateAllyBattler(species, level, ability_index=0, shiny=false)
     case pbSideSize(1)
     when 1
       if pbSideSize(0) == 1
@@ -13,8 +13,8 @@ class Battle
       end
       i = 3
       pokemon = pbGenerateWildPokemon(species, level)
-      pokemon.shiny = false;
-      pokemon.ability_index = 0;
+      pokemon.shiny = shiny;
+      pokemon.ability_index = ability_index;
       pbCreateBattler(3,pokemon,@party2.length)
       @party2.push(pokemon)
       @party2order.push(@party2order.length)
@@ -23,8 +23,8 @@ class Battle
       @battleAI.create_ai_objects
     when 2 
       pokemon = pbGenerateWildPokemon(species, level)
-      pokemon.shiny = false;
-      pokemon.ability_index = 0;
+      pokemon.shiny = shiny;
+      pokemon.ability_index = ability_index;
       i = (@battlers[1].fainted?) ? 1 : (@battlers[3].fainted?) ? 3 : 5
       @battlers[i].pbInitialize(pokemon, @party2.length) if !@battlers[i].nil?
       if i == 5
@@ -51,8 +51,8 @@ class Battle
         return
       end
       pokemon = pbGenerateWildPokemon(species, level)
-      pokemon.shiny = false;
-      pokemon.ability_index = 0;
+      pokemon.shiny = shiny;
+      pokemon.ability_index = ability_index;
       @battlers[i].pbInitialize(pokemon, @party2.length) if !@battlers[i].nil?
     end
     @scene.pbSOSJoin(i,pokemon)

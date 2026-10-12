@@ -1177,6 +1177,7 @@ class ClassicVSSequence
   #  construct the necessary elements
   #-----------------------------------------------------------------------------
   def initialize(viewport, trainer)
+	echoln "classic vs sequence for trainers"
     @viewport = viewport
     @trainer = trainer
     @disposed = false
@@ -1197,12 +1198,8 @@ class ClassicVSSequence
     @sprites["backdrop"].opacity = 0
     # set up overlay
     @sprites["overlay"] = Sprite.new(@viewport)
-    @sprites["overlay"].full_rect(Color.white)
-    @sprites["overlay"].bitmap.fill_rect(0, 85, @viewport.width, 175, Color.new(0, 0, 0, 0))
-	#
-	@sprites["overlay"].bitmap.fill_rect(0, 0, @viewport.width, 77, Color.new(0, 0, 0, 0))
-    @sprites["overlay"].bitmap.fill_rect(0, 267, @viewport.width, 999, Color.new(0, 0, 0, 0))																					  
-	#																						 
+    @sprites["overlay"].full_rect(Color.black)
+    @sprites["overlay"].bitmap.fill_rect(0, 92, @viewport.width, 128, Color.new(0, 0, 0, 0))
     @sprites["overlay"].z = 999
     @sprites["overlay"].visible = false
     # set up text overlay
@@ -1211,7 +1208,7 @@ class ClassicVSSequence
 	#pbSetSystemFontBig(@sprites["txtol"].bitmap)
     pbSetSystemFont(@sprites["txtol"].bitmap)
 	#ebdx debug text
-    t = [[@trainer.name, @viewport.width - 40 - (bmp.width/2), 216, 2, Color.white, Color.black]]
+    t = [[@trainer.name, @viewport.width - 40 - (bmp.width/2), 236, 2, Color.white, Color.black]]
     pbDrawTextPositions(@sprites["txtol"].bitmap, t)
     pbDrawTextPositions(@sprites["txtol"].bitmap, t)
     @sprites["txtol"].z = 999
@@ -1233,8 +1230,7 @@ class ClassicVSSequence
     str = sprintf("classicBar%03d", trainerNumber) if !pbResolveBitmap("Graphics/EBDX/Transitions/Common/#{str}")
     str = "classicBar" if !pbResolveBitmap("Graphics/EBDX/Transitions/Common/#{str}")
     @sprites["bg"].setBitmap("Graphics/EBDX/Transitions/Common/#{str}")
-    #@sprites["bg"].y = 92
-    @sprites["bg"].y = 85
+    @sprites["bg"].y = 92
     @sprites["bg"].visible = false
     @sprites["bg"].z = 90
     # draws lightning
@@ -1257,8 +1253,7 @@ class ClassicVSSequence
     # draws trainer accent
     @sprites["trainer_a"] = Sprite.new(@viewport)
     @sprites["trainer_a"].bitmap = bmp
-    #@sprites["trainer_a"].color = Color.new(65,190,226,255*0.8)
-	@sprites["trainer_a"].color = Color.new(150,150,150,150*0.8)									 
+    @sprites["trainer_a"].color = Color.new(65,190,226,255*0.8)									 
     @sprites["trainer_a"].visible = false
     @sprites["trainer_a"].ox = @sprites["trainer_a"].width
     @sprites["trainer_a"].x = (@viewport.width - 18)

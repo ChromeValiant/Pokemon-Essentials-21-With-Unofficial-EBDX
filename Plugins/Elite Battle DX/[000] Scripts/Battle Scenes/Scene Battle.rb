@@ -379,30 +379,18 @@ class Battle::Scene
   #-----------------------------------------------------------------------------
   #  get victory themes
   #-----------------------------------------------------------------------------
+  # This method is called when the player wins a wild Pokémon battle.
+  # This method can change the battle's music for example.
   def pbWildBattleSuccess
-    # default victory themes
-    bgm = "EBDX/Victory Against Wild"
-    bgm = $PokemonGlobal.nextBattleVictoryBGM if $PokemonGlobal.nextBattleVictoryBGM
-    if !@battle.opponent
-      s = EliteBattle.get_data(@battlers[1].species, :Species, :VICTORYTHEME, (@battlers[1].form rescue 0))
-      bgm = s if !s.nil?
-    end
-    # try to resolve BGM for capturing battlers
-    if @caughtBattler
-      try = EliteBattle.get_data(@caughtBattler.species, :Species, :CAPTUREBGM)
-      bgm = try if !try.nil?
-    end
-    # play BGM
-    pbBGMPlay(bgm)
+    @battleEnd = true
+    pbBGMPlay(pbGetWildVictoryBGM)
   end
+
+  # This method is called when the player wins a trainer battle.
+  # This method can change the battle's music for example.
   def pbTrainerBattleSuccess
-    bgm = "EBDX/Victory Against Trainer"
-    bgm = $PokemonGlobal.nextBattleVictoryBGM.clone if $PokemonGlobal.nextBattleVictoryBGM
-    if @battle.opponent
-      s = EliteBattle.get_trainer_data(@battle.opponent[0].trainer_type, :VICTORYTHEME, @battle.opponent[0])
-      bgm = s if !s.nil?
-    end
-    pbBGMPlay(bgm)
+    @battleEnd = true
+    pbBGMPlay(pbGetTrainerVictoryBGM(@battle.opponent))
   end
   #-----------------------------------------------------------------------------
   #  handle the sending out animations

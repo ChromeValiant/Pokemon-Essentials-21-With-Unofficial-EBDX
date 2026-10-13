@@ -4,6 +4,10 @@
 #===============================================================================
 class Battle
   def pbGenerateAllyBattler(species, level, ability_index=0, shiny=false)
+    if trainerBattle?
+        self.pbDisplay(_INTL("...but nobody came!"))
+        return
+    end
     case pbSideSize(1)
     when 1
       if pbSideSize(0) == 1
@@ -18,7 +22,6 @@ class Battle
       pbCreateBattler(3,pokemon,@party2.length)
       @party2.push(pokemon)
       @party2order.push(@party2order.length)
-      @abils_triggered[@battlers[3].index & 1].push(@battlers[3].pokemonIndex)
       @rage_hit_count[@battlers[3].index & 1].push(@battlers[3].pokemonIndex)
       @battleAI.create_ai_objects
     when 2 
@@ -38,7 +41,6 @@ class Battle
         pbCreateBattler(5,pokemon,@party2.length)
         @party2.push(pokemon)
         @party2order.push(@party2order.length)
-        @abils_triggered[@battlers[5].index & 1].push(@battlers[5].pokemonIndex)
         @rage_hit_count[@battlers[5].index & 1].push(@battlers[5].pokemonIndex)
         @battleAI.create_ai_objects
       else
@@ -55,7 +57,9 @@ class Battle
       pokemon.ability_index = ability_index;
       @battlers[i].pbInitialize(pokemon, @party2.length) if !@battlers[i].nil?
     end
+    pbSetAbilityTrigger(@battlers[i], false)
     @scene.pbSOSJoin(i,pokemon)
+    @battlers[i].pbTriggerAbilityOnGainingIt
   end
 end
 #===============================================================================
@@ -81,5 +85,6 @@ class Battle::Scene
 
     EliteBattle.playCommonAnimation(:APPEAR, self, battlerindex)
     @sprites["dataBox_#{battlerindex}"].appear
+    pbShowAllDataboxes
   end
 end

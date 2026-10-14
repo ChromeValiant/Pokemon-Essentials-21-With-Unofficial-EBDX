@@ -1,4 +1,22 @@
 #-------------------------------------------------------------------------------
+#  FRIGHTWAIL
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:FRIGHTWAIL) do
+  EliteBattle.playMoveAnimation(:HYPERVOICE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+#-------------------------------------------------------------------------------
+#  SUBWOOFER
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SUBWOOFER) do
+  EliteBattle.playMoveAnimation(:HYPERVOICE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+#-------------------------------------------------------------------------------
+#  PRIMALREVERB
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:PRIMALREVERB) do
+  EliteBattle.playMoveAnimation(:HYPERVOICE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+#-------------------------------------------------------------------------------
 #  SYNCHRONOISE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:SYNCHRONOISE) do
@@ -36,10 +54,7 @@ EliteBattle.defineMoveAnimation(:HYPERVOICE) do
     dx.push(0)
     dy.push(0)
   end
-  # setup help counter
-  cntHlp = []
   for i in 0...72
-	cntHlp[i] = 0
     fp["#{i}2"] = Sprite.new(@viewport)
     fp["#{i}2"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb612_0")
     fp["#{i}2"].ox = fp["#{i}2"].bitmap.width/2
@@ -68,7 +83,7 @@ EliteBattle.defineMoveAnimation(:HYPERVOICE) do
     fp["#{i}s"].opacity = 255 - rand(101)
     fp["#{i}s"].z = 50
   end
-  shake = 4
+  shake = [2,2]
   # start animation
   @sprites["battlebg"].defocus
   @vector.set(vector2)
@@ -93,6 +108,7 @@ EliteBattle.defineMoveAnimation(:HYPERVOICE) do
   for i in 0...96
     ax, ay = @userSprite.getAnchor
     cx, cy = @targetSprite.getCenter(true)
+    cx += (@targetIsPlayer ? 1 : -1) * 30 if @opposingTargets.length > 1
     for j in 0...72
       if fp["#{j}"].opacity == 0 && fp["#{j}"].tone.gray == 0
         dx[j] = ax - 8*@userSprite.zoom_x*0.5 + rndx[j]*@userSprite.zoom_x*0.5
@@ -102,18 +118,17 @@ EliteBattle.defineMoveAnimation(:HYPERVOICE) do
       end
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
       next if j>(i)
-	  cntHlp[j] += 1
+      if i>32 && i < 60
+        dx[j] = ax - 8*@userSprite.zoom_x*0.5 + rndx[j]*@userSprite.zoom_x*0.5
+        dy[j] = ay - 8*@userSprite.zoom_y*0.5 + rndy[j]*@userSprite.zoom_y*0.5
+      end
       x0 = dx[j]
       y0 = dy[j]
       x2 = cx - 8*@targetSprite.zoom_x*0.5 + rndx[j]*@targetSprite.zoom_x*0.5
       y2 = cy - 8*@targetSprite.zoom_y*0.5 + rndy[j]*@targetSprite.zoom_y*0.5
       fp["#{j}"].x += (x2 - x0)*0.1
       fp["#{j}"].y += (y2 - y0)*0.1
-	  if cntHlp[j] > 15
-		fp["#{j}"].opacity -= 51 
-	  else
-		fp["#{j}"].opacity += 51
-      end
+      fp["#{j}"].opacity += 51
       fp["#{j}"].angle = -Math.atan(1.0*(y2-y0)/(x2-x0))*180/Math::PI + (rand(4)==0 ? 180 : 0)
       nextx = fp["#{j}"].x# + (x2 - x0)*0.1
       nexty = fp["#{j}"].y# + (y2 - y0)*0.1
@@ -125,12 +140,14 @@ EliteBattle.defineMoveAnimation(:HYPERVOICE) do
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
     end
     if i >= 64
-      @targetSprite.ox += shake
-      shake = -4 if @targetSprite.ox > @targetSprite.bitmap.width/2 + 2
-      shake = 4 if @targetSprite.ox < @targetSprite.bitmap.width/2 - 2
-      @targetSprite.still
+      for m in 0...@opposingTargets.length
+        @opposingTargets[m].ox += shake[m]
+        shake[m] = -2 if @opposingTargets[m].ox > @opposingTargets[m].bitmap.width/2 + 2
+        shake[m] = 2 if @opposingTargets[m].ox < @opposingTargets[m].bitmap.width/2 - 2
+        @opposingTargets[m].still
+      end
     end
-	pbSEPlay("Cries/#{@userSprite.species}",100) if i == 5
+	  @userSprite.pokemon.play_cry if i == 5
     pbSEPlay("Anim/Comet Punch") if i == 64
     fp["cir"].x, fp["cir"].y = ax, ay
     fp["cir"].angle += 32

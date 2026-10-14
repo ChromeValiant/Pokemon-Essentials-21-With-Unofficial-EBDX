@@ -1,4 +1,28 @@
 #-------------------------------------------------------------------------------
+#  BRUISINGBASH
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:BRUISINGBASH) do | args |
+  EliteBattle.playMoveAnimation(:NIGHTSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  Knock off
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:FALSESURRENDER) do | args |
+  EliteBattle.playMoveAnimation(:NIGHTSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  Knock off
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:KNOCKOFF) do | args |
+  EliteBattle.playMoveAnimation(:NIGHTSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  SUCKERPUNCH
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SUCKERPUNCH) do | args |
+  EliteBattle.playMoveAnimation(:NIGHTSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  Night Slash
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:NIGHTSLASH) do

@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  COPYCAT
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:COPYCAT) do
+  EliteBattle.playMoveAnimation(:STOCKPILE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  STOCKPILE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:STOCKPILE) do

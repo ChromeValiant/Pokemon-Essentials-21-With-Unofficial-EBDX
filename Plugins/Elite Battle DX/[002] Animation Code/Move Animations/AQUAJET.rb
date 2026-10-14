@@ -5,6 +5,12 @@ EliteBattle.defineMoveAnimation(:LIQUIDATION) do | args |
   EliteBattle.playMoveAnimation(:AQUAJET, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
 end
 #-------------------------------------------------------------------------------
+#  FISHIOUSREND
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:FISHIOUSREND) do | args |
+  EliteBattle.playMoveAnimation(:AQUAJET, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  AQUAJET
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:AQUAJET) do | args |

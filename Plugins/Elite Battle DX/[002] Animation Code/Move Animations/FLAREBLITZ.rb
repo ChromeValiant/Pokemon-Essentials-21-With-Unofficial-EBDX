@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  Heat Crash
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:HEATCRASH) do
+  EliteBattle.playMoveAnimation(:FLAREBLITZ, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+#-------------------------------------------------------------------------------
 #  Flare Blitz
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:FLAREBLITZ) do

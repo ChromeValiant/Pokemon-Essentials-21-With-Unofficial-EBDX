@@ -1,4 +1,16 @@
 #-------------------------------------------------------------------------------
+#  ASSURANCE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:ASSURANCE) do
+  EliteBattle.playMoveAnimation(:DARKPULSE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  NIGHTDAZE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:NIGHTDAZE) do
+  EliteBattle.playMoveAnimation(:DARKPULSE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  DARKPULSE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:DARKPULSE) do

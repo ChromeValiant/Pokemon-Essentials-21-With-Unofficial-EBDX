@@ -1,4 +1,11 @@
 #-------------------------------------------------------------------------------
+#  Frost breath
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:FROSTBREATH) do
+    EliteBattle.playMoveAnimation(:ICEBEAM, @scene, @userIndex, @targetIndex)
+end
+
+#-------------------------------------------------------------------------------
 #  Ice Beam
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:ICEBEAM) do
@@ -47,6 +54,10 @@ EliteBattle.defineMoveAnimation(:ICEBEAM) do
         fp["#{j}"].y = dy[j]
       end
       next if j>(i)
+      if i>32 && i < 60
+        dx[j] = ax - 8*@userSprite.zoom_x*0.5 + rndx[j]*@userSprite.zoom_x*0.5
+        dy[j] = ay - 8*@userSprite.zoom_y*0.5 + rndy[j]*@userSprite.zoom_y*0.5
+      end
       x2 = cx - 8*@targetSprite.zoom_x*0.5 + rndx[j]*@targetSprite.zoom_x*0.5
       y2 = cy - 8*@targetSprite.zoom_y*0.5 + rndy[j]*@targetSprite.zoom_y*0.5
       x0 = dx[j]

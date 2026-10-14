@@ -1,4 +1,16 @@
 #-------------------------------------------------------------------------------
+#  RAGEFIST
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:RAGEFIST) do
+  EliteBattle.playMoveAnimation(:SHADOWPUNCH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  WICKEDBLOW
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:WICKEDBLOW) do
+  EliteBattle.playMoveAnimation(:SHADOWPUNCH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  SHADOWPUNCH
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:SHADOWPUNCH) do | args |

@@ -1,10 +1,17 @@
 #-------------------------------------------------------------------------------
+#  FIERYDANCE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:FIERYDANCE) do
+  EliteBattle.playMoveAnimation(:FIRESPIN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+#-------------------------------------------------------------------------------
 #  FIRESPIN
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:FIRESPIN) do
   #-----------------------------------------------------------------------------
   #  configure variables
-  @scene.wait(16, true) if @scene.afterAnim
+  @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer))
+  @scene.wait(16, true)
   fp = {}; k = -1; flames = 8 ; shake = 2
   factor = @targetSprite.zoom_x
   reversed = []; cx, cy = @targetSprite.getCenter(true)
@@ -35,7 +42,7 @@ EliteBattle.defineMoveAnimation(:FIRESPIN) do
   end
   vol = 80
   for i in 0...70
-    k = i if i < 16
+    k = i*0.5 if i < 64
     pbSEPlay("Anim/Fire2",80) if i%12==0
     pbSEPlay("Anim/Smokescreen",120) if i==50
     vol -= 5 if i%8 == 0
@@ -43,13 +50,13 @@ EliteBattle.defineMoveAnimation(:FIRESPIN) do
       reversed[j] = true if fp["#{j}"].x <= cx - 64*factor
       reversed[j] = false if fp["#{j}"].x >= cx + 64*factor
       fp["#{j}"].z = reversed[j] ? @targetSprite.z - 1 : @targetSprite.z + 1
-      fp["#{j}"].y = cy - 48*factor - k*2*factor - (reversed[j] ? 4*factor : 0) + 120 if !@targetIsPlayer
-      fp["#{j}"].y = cy - 48*factor - k*2*factor - (reversed[j] ? 4*factor : 0) + 200 if @targetIsPlayer
+      fp["#{j}"].y = cy - 48*factor - k*1.5*factor - (reversed[j] ? 4*factor : 0) + 120 if !@targetIsPlayer
+      fp["#{j}"].y = cy - 48*factor - k*1.5*factor - (reversed[j] ? 4*factor : 0) + 200 if @targetIsPlayer
       fp["#{j}"].x -= reversed[j] ? -4*factor : 4*factor
-	  next if j>(i/4)
+	    next if j>(i/4)
       fp["#{j}"].opacity += 16 if fp["#{j}"].opacity < 150
       fp["#{j}"].opacity -= 25 if i >= 48
-	  fp["#{j}"].src_rect.x += 53 if j%4==0
+	    fp["#{j}"].src_rect.x += 53 if j%4==0
       fp["#{j}"].src_rect.x = 0 if fp["#{j}"].src_rect.x >= fp["#{j}"].bitmap.width
     end
     if i >= 30
@@ -57,7 +64,7 @@ EliteBattle.defineMoveAnimation(:FIRESPIN) do
       shake = -2 if @targetSprite.ox > @targetSprite.bitmap.width/2 + 2
       shake = 2 if @targetSprite.ox < @targetSprite.bitmap.width/2 - 2
       @targetSprite.still
-	end
+	  end
     @scene.wait(1,true)
   end
   20.times do

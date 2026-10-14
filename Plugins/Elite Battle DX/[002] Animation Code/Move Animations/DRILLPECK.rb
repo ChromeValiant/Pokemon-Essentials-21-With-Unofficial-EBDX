@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  Pluck
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:PLUCK) do
+  EliteBattle.playMoveAnimation(:DRILLPECK, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  DRILLPECK
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:DRILLPECK) do | args |
@@ -56,7 +62,7 @@ EliteBattle.defineMoveAnimation(:DRILLPECK) do | args |
   for i in 1..20
 	if i.between?(1,15)
 		fp["horn"].opacity += 20
-		fp["horn"].x += hornMoveHit 
+		fp["horn"].x += hornMoveHit
 		fp["horn"].y -= hornMoveHit
 	else
 		fp["horn"].opacity -= 50

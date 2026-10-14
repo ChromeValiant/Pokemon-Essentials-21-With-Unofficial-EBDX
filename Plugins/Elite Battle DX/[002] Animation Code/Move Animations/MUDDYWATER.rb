@@ -8,7 +8,7 @@ EliteBattle.defineMoveAnimation(:MUDDYWATER) do
   factorY = @userIsPlayer ? 0.992 : 1.01#1.01
   BubbleSplash = @userIsPlayer ? 15 : -15
   splash = 30
-  shake = 8
+  shake = [8,8]
   # graphic ini
   fp = {};
   fp["surf"] = Sprite.new(@viewport)
@@ -40,49 +40,51 @@ EliteBattle.defineMoveAnimation(:MUDDYWATER) do
   @scene.wait(4,true)
   for i in 0...75
 	pbSEPlay("Anim/Water1") if i%25 == 0
-    fp["surf"].opacity += 25 if fp["surf"].opacity <= 125
+	fp["surf"].opacity += 25 if fp["surf"].opacity <= 125
 	fp["surf"].x += moveX
 	fp["surf"].y += moveY
 	fp["surf"].zoom_y = factorY * fp["surf"].zoom_y
-	if i == 35
-		for v in 0...splash
-			fp["p#{v}"] = Sprite.new(@viewport)
-			fp["p#{v}"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb624_2")
-			fp["p#{v}"].center!
-			fp["p#{v}"].x, fp["p#{v}"].y = @targetSprite.getCenter(true)
-			r = (40 + rand(24))*@targetSprite.zoom_x
-			x, y = randCircleCord(r)
-			fp["p#{v}"].end_x = fp["p#{v}"].x - r + x
-			fp["p#{v}"].end_y = fp["p#{v}"].y - r + y
-			fp["p#{v}"].zoom_x = 0
-			fp["p#{v}"].zoom_y = 0
-			fp["p#{v}"].angle = rand(360)
-			fp["p#{v}"].z = @targetSprite.z + 1
-		  end
+  	for m in 0...@opposingTargets.length
+		if i == 35
+			for v in 0...splash
+				fp["p#{v}_#{m}"] = Sprite.new(@viewport)
+				fp["p#{v}_#{m}"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb624_2")
+				fp["p#{v}_#{m}"].center!
+				fp["p#{v}_#{m}"].x, fp["p#{v}_#{m}"].y = @opposingTargets[m].getCenter(true)
+				r = (40 + rand(24))*@opposingTargets[m].zoom_x
+				x, y = randCircleCord(r)
+				fp["p#{v}_#{m}"].end_x = fp["p#{v}_#{m}"].x - r + x
+				fp["p#{v}_#{m}"].end_y = fp["p#{v}_#{m}"].y - r + y
+				fp["p#{v}_#{m}"].zoom_x = 0
+				fp["p#{v}_#{m}"].zoom_y = 0
+				fp["p#{v}_#{m}"].angle = rand(360)
+				fp["p#{v}_#{m}"].z = @opposingTargets[m].z + 1
+			end
+			end
+		if i.between?(40,70)
+		for j in 0...splash
+			next if j > (i-8)*2
+			fp["p#{j}_#{m}"].zoom_x += (1.6 - fp["p#{j}_#{m}"].zoom_x)*0.1
+			fp["p#{j}_#{m}"].zoom_y += (1.6 - fp["p#{j}_#{m}"].zoom_y)*0.1
+			fp["p#{j}_#{m}"].x += (fp["p#{j}_#{m}"].end_x - fp["p#{j}_#{m}"].x)*0.1 + BubbleSplash
+			fp["p#{j}_#{m}"].y += (fp["p#{j}_#{m}"].end_y - fp["p#{j}_#{m}"].y)*0.1 - BubbleSplash
+			if fp["p#{j}_#{m}"].zoom_x >= 0.5
+				fp["p#{j}_#{m}"].opacity -= 16
+			end
+			fp["p#{j}_#{m}"].color.alpha -= 8
 		end
-	if i.between?(40,70)
-      for j in 0...splash
-		  next if j > (i-8)*2
-		  fp["p#{j}"].zoom_x += (1.6 - fp["p#{j}"].zoom_x)*0.1
-		  fp["p#{j}"].zoom_y += (1.6 - fp["p#{j}"].zoom_y)*0.1
-		  fp["p#{j}"].x += (fp["p#{j}"].end_x - fp["p#{j}"].x)*0.1 + BubbleSplash
-		  fp["p#{j}"].y += (fp["p#{j}"].end_y - fp["p#{j}"].y)*0.1 - BubbleSplash
-		  if fp["p#{j}"].zoom_x >= 0.5
-			fp["p#{j}"].opacity -= 16
-		  end
-		  fp["p#{j}"].color.alpha -= 8
-	  end
-      @targetSprite.ox += shake
-      shake = -8 if @targetSprite.ox > @targetSprite.bitmap.width/2 + 2
-      shake = 8 if @targetSprite.ox < @targetSprite.bitmap.width/2 - 2
-	  if i < 55
-		@userSprite.color.alpha += 10
-	  else
-		@userSprite.color.alpha -= 16
-	  end
-	  @userSprite.still
-	  @userSprite.anim = true
-    end
+		@opposingTargets[m].ox += shake[m]
+		shake[m] = -8 if @opposingTargets[m].ox > @opposingTargets[m].bitmap.width/2 + 2
+		shake[m] = 8 if @opposingTargets[m].ox < @opposingTargets[m].bitmap.width/2 - 2
+		if i < 55
+			@userSprite.color.alpha += 10
+		else
+			@userSprite.color.alpha -= 16
+		end
+		@userSprite.still
+		@userSprite.anim = true
+		end
+	end
 	@scene.wait(1,true)
   end
   @userSprite.ox = @userSprite.bitmap.width/2

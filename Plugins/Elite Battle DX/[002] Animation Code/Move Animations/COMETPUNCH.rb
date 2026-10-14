@@ -5,6 +5,12 @@ EliteBattle.defineMoveAnimation(:BELLYDRUM) do
   EliteBattle.playMoveAnimation(:COMETPUNCH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
 end
 #-------------------------------------------------------------------------------
+#  METEORPUNCH
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:METEORPUNCH) do
+  EliteBattle.playMoveAnimation(:COMETPUNCH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  COMETPUNCH
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:COMETPUNCH) do

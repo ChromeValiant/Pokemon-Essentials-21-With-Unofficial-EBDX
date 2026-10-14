@@ -1,4 +1,16 @@
 #-------------------------------------------------------------------------------
+#  HYPERFANG
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SUPERFANG) do | args |
+  EliteBattle.playMoveAnimation(:RETALIATE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  HYPERFANG
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:HYPERFANG) do | args |
+  EliteBattle.playMoveAnimation(:RETALIATE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  RETALIATE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:RETALIATE) do

@@ -30,16 +30,16 @@ EliteBattle.defineMoveAnimation(:FIREPUNCH) do | args |
     rndx.push(rand(144))
     rndy.push(rand(144))
   end
-  fp["punch"] = Sprite.new(@viewport)
-  fp["punch"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb#{kick ? 137 : 108}")
-  fp["punch"].ox = fp["punch"].bitmap.width/2
-  fp["punch"].oy = fp["punch"].bitmap.height/2
-  fp["punch"].opacity = 0
-  fp["punch"].z = 40
-  fp["punch"].angle = 180
-  fp["punch"].zoom_x = @targetIsPlayer ? 6 : 4
-  fp["punch"].zoom_y = @targetIsPlayer ? 6 : 4
-  fp["punch"].tone = Tone.new(48,16,6)
+  fp["hit"] = Sprite.new(@viewport)
+  fp["hit"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb#{kick ? 137 : 108}")
+  fp["hit"].ox = fp["hit"].bitmap.width/2
+  fp["hit"].oy = fp["hit"].bitmap.height/2
+  fp["hit"].opacity = 0
+  fp["hit"].z = 40
+  fp["hit"].angle = 180
+  fp["hit"].zoom_x = @targetIsPlayer ? 6 : 4
+  fp["hit"].zoom_y = @targetIsPlayer ? 6 : 4
+  fp["hit"].tone = Tone.new(48,16,6)
   shake = 4
   # start animation
   @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer))
@@ -47,16 +47,16 @@ EliteBattle.defineMoveAnimation(:FIREPUNCH) do | args |
   @sprites["battlebg"].defocus
   for i in 0...72
     cx, cy = @targetSprite.getCenter(true)
-    fp["punch"].x = cx
-    fp["punch"].y = cy
-    fp["punch"].angle -= 45 if i < 40
-    fp["punch"].zoom_x -= @targetIsPlayer ? 0.2 : 0.15 if i < 40
-    fp["punch"].zoom_y -= @targetIsPlayer ? 0.2 : 0.15 if i < 40
-    fp["punch"].opacity += 8 if i < 40
+    fp["hit"].x = cx
+    fp["hit"].y = cy
+    fp["hit"].angle -= 45 if i < 40
+    fp["hit"].zoom_x -= @targetIsPlayer ? 0.2 : 0.15 if i < 40
+    fp["hit"].zoom_y -= @targetIsPlayer ? 0.2 : 0.15 if i < 40
+    fp["hit"].opacity += 8 if i < 40
     if i >= 40
-      fp["punch"].tone = Tone.new(255,255,255) if i == 40
-      fp["punch"].tone.all -= 25.5
-      fp["punch"].opacity -= 25.5
+      fp["hit"].tone = Tone.new(255,255,255) if i == 40
+      fp["hit"].tone.all -= 25.5
+      fp["hit"].opacity -= 25.5
     end
     pbSEPlay("Anim/Fire3") if i==40
     for j in 0...12

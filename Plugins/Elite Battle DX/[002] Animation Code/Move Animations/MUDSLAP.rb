@@ -5,6 +5,12 @@ EliteBattle.defineMoveAnimation(:SANDATTACK) do
   EliteBattle.playMoveAnimation(:MUDSLAP, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
 end
 #-------------------------------------------------------------------------------
+#  SCORCHINGSANDS
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SCORCHINGSANDS) do
+  EliteBattle.playMoveAnimation(:MUDSLAP, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  MUDSLAP
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:MUDSLAP) do | args |

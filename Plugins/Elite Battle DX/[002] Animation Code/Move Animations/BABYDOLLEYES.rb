@@ -23,9 +23,9 @@ EliteBattle.defineMoveAnimation(:BABYDOLLEYES) do
     # fp["l"].y = 245
 	fp["l"].x = cx + 100
     fp["l"].y = cy - 50
-  else 
+  else
 	# fp["l"].x = 230
-    # fp["l"].y = 200	
+    # fp["l"].y = 200
 	fp["l"].x = cx - 65
     fp["l"].y = cy + 58
   end
@@ -40,7 +40,7 @@ EliteBattle.defineMoveAnimation(:BABYDOLLEYES) do
   # fp["r"].y = cy - @userSprite.height/2 - 5
 	fp["r"].x = fp["l"].x + 40
     fp["r"].y = fp["l"].y
-  else 
+  else
 	fp["r"].x = fp["l"].x + 40
     fp["r"].y = fp["l"].y
   end
@@ -56,13 +56,15 @@ EliteBattle.defineMoveAnimation(:BABYDOLLEYES) do
   end
   #
   shake = 6
+  alternate = true
   for i in 0...19
 	pbSEPlay("Anim/Leer",80) if i == 5
     @userSprite.still
     if i.between?(4,12)
       @userSprite.ox += shake
-      shake = -6 if @userSprite.ox > @userSprite.bitmap.width/2 + 2
-      shake = 6 if @userSprite.ox < @userSprite.bitmap.width/2 - 2
+      shake = -6 if alternate
+      shake = 6 if !alternate
+      alternate = !alternate
     end
 	if i.between?(2,10)
 		fp["l"].opacity += 20
@@ -71,7 +73,7 @@ EliteBattle.defineMoveAnimation(:BABYDOLLEYES) do
 	if i.between?(11,19)
 		fp["l"].opacity -= 20
 		fp["r"].opacity -= 20
-	end	
+	end
 	fp["l"].angle += 15
 	fp["r"].angle += 15
 	if i.between?(2,10)

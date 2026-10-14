@@ -5,12 +5,6 @@ EliteBattle.defineMoveAnimation(:THUNDERSHOCK) do
   EliteBattle.playMoveAnimation(:THUNDERWAVE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
 end
 #-------------------------------------------------------------------------------
-#  FLASH
-#-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:FLASH) do
-  EliteBattle.playMoveAnimation(:THUNDERWAVE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
-end
-#-------------------------------------------------------------------------------
 #  THUNDERWAVE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:THUNDERWAVE) do | args |

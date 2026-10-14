@@ -1,6 +1,12 @@
 #-------------------------------------------------------------------------------
 #  HAIL
 #-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SNOWSCAPE) do
+    EliteBattle.playMoveAnimation(:HAIL, @scene, @userIndex, @targetIndex)
+end
+#-------------------------------------------------------------------------------
+#  HAIL
+#-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:HAIL) do
   factor = @targetIsPlayer ? 2 : 1.5
   vector = @scene.getRealVector(@userIndex, @userIsPlayer)
@@ -49,7 +55,7 @@ EliteBattle.defineMoveAnimation(:HAIL) do
     fp["dnt"].angle -= 16
     @scene.wait(1,true)
   end
-  @vector.set(vector[0],vector[1]+128,vector[2],vector[3],vector[4],vector[5])
+  @vector.set(vector[0],vector[1]+78,vector[2],vector[3],vector[4],vector[5])
   for i in 0...20
     @scene.wait(1,true)
     cx, cy = @userSprite.getCenter

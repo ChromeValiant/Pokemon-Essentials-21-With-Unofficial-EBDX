@@ -35,7 +35,7 @@ EliteBattle.defineMoveAnimation(:AURASPHERE) do
     end
     if i == 8
       @vector.set(vector2)
-      pbSEPlay("Anim/eb_grass2",80)
+      pbSEPlay("EBDX/Anim/grass2",80)
     end
     fp["bg"].update
     @scene.wait(1,true)

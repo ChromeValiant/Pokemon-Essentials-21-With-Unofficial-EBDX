@@ -1,6 +1,18 @@
 #-------------------------------------------------------------------------------
 #  Psychic
 #-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:CONFUSION) do
+  EliteBattle.playMoveAnimation(:PSYCHIC, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+
+EliteBattle.defineMoveAnimation(:EXTRASENSORY) do
+  EliteBattle.playMoveAnimation(:PSYCHIC, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+
+EliteBattle.defineMoveAnimation(:PSYCHICNOISE) do
+  EliteBattle.playMoveAnimation(:PSYCHIC, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
+end
+
 EliteBattle.defineMoveAnimation(:PSYCHIC) do
   vector = @scene.getRealVector(@targetIndex, @targetIsPlayer)
   factor = @targetIsPlayer ? 2 : 1.5

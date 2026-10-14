@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  ELECTROSHOT
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:ELECTROSHOT) do | args |
+  EliteBattle.playMoveAnimation(:ZAPCANNON, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  ZAPCANNON
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:ZAPCANNON) do
@@ -48,7 +54,7 @@ EliteBattle.defineMoveAnimation(:ZAPCANNON) do
   fp["circle"].zoom_x = 0
   fp["circle"].zoom_y = 0
   fp["circle"].z = 20
-  pbSEPlay("Anim/Heal4")
+  pbSEPlay("Heal4")
   #start animation
   #
   16.times do

@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  No retreat
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:NORETREAT) do
+  EliteBattle.playMoveAnimation(:FOCUSENERGY, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  FOCUSENERGY
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:FOCUSENERGY) do

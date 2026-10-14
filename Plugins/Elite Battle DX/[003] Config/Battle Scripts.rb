@@ -95,6 +95,21 @@ module BattleScripts
       end
   }
   #-----------------------------------------------------------------------------
+  # Infinite loop to test move animations
+  #-----------------------------------------------------------------------------
+  MOVETEST = {
+    "turnStart0" => proc do
+      loop do
+        ret = pbEnterText("Choose Move", 0, 30)
+        ret = ret.upcase
+        @scene.pbHideAllDataboxes
+          EliteBattle.playMoveAnimation(ret.to_sym, @scene, 1, 0)
+          EliteBattle.playMoveAnimation(ret.to_sym, @scene, 0, 1)
+        @scene.pbShowAllDataboxes
+      end
+    end,
+  }
+  #-----------------------------------------------------------------------------
   DEOXYS = {
     'everyTurnStart' =>
       proc do

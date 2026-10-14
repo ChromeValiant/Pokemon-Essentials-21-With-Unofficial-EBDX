@@ -16,7 +16,7 @@ end
 EliteBattle.defineMoveAnimation(:DAZZLINGGLEAM) do
   @vector.set(@scene.getRealVector(@userIndex, @userIsPlayer))
   fp = {}
-  shake = [2,2]
+  shake = Array.new(@opposingTargets.length, 2)
   fp["bg"] = Sprite.new(@viewport)
   fp["bg"].create_rect(@viewport.width,@viewport.height,Color.black)
   fp["bg"].opacity = 0

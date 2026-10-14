@@ -56,7 +56,7 @@ EliteBattle.defineMoveAnimation(:AVALANCHE) do
       fp["d#{m}#{j}"].zoom_y = zoom*factors[m]
     end
   end
-  k = [-1,-1]
+  k = Array.new(@opposingTargets.length, -1)
   # start animation
   for i in 0...80
     pbSEPlay("EBDX/Anim/rock2",70) if i%8==0

@@ -32,7 +32,7 @@ EliteBattle.defineMoveAnimation(:BUBBLE) do
       rndy.push(rand(64))
     end
   end
-  shake = [2,2]
+  shake = Array.new(@opposingTargets.length, 2)
   # start animation
   @sprites["battlebg"].defocus
   for i in 0...132

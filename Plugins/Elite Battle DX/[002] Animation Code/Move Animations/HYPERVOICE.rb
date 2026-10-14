@@ -83,7 +83,7 @@ EliteBattle.defineMoveAnimation(:HYPERVOICE) do
     fp["#{i}s"].opacity = 255 - rand(101)
     fp["#{i}s"].z = 50
   end
-  shake = [2,2]
+  shake = Array.new(@opposingTargets.length, 2)
   # start animation
   @sprites["battlebg"].defocus
   @vector.set(vector2)

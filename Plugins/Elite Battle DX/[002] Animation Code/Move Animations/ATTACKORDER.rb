@@ -71,7 +71,7 @@ EliteBattle.defineMoveAnimation(:ATTACKORDER) do |args|
     if type == "attack"
       pbSEPlay("EBDX/Anim/bug1",100) if i%4==0 && i >= 40
     elsif type == "defense"
-      pbSEPlay("EBDX/Anim/iron5",100) if i == 40 && i == 50
+      pbSEPlay("EBDX/Anim/iron5",100) if i == 20 || i == 35
     else
       pbSEPlay("Anim/Absorb2",100) if i == 40
       pbSEPlay("Anim/Saint8",70) if i == 40

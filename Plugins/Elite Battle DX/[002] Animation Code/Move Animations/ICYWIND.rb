@@ -17,8 +17,8 @@ end
 EliteBattle.defineMoveAnimation(:ICYWIND) do
   # set up animation
   fp = {}
-  rndx = [[],[]]; rndy = [[],[]]
-  irndx = [[],[]]; irndy = [[],[]]
+  rndx = Array.new(@opposingTargets.length, []); rndy = Array.new(@opposingTargets.length, [])
+  irndx = Array.new(@opposingTargets.length, []); irndy = Array.new(@opposingTargets.length, [])
   fp["bg"] = Sprite.new(@viewport)
   fp["bg"].bitmap = Bitmap.new(@viewport.width,@viewport.height)
   fp["bg"].bitmap.fill_rect(0,0,fp["bg"].bitmap.width,fp["bg"].bitmap.height,Color.new(100,128,142))
@@ -51,7 +51,7 @@ EliteBattle.defineMoveAnimation(:ICYWIND) do
       irndy[m].push(rand(128))
     end
   end
-  shake = [2,2]
+  shake = Array.new(@opposingTargets.length, 2)
   @sprites["battlebg"].defocus
   # start animation
   for i in 0...102

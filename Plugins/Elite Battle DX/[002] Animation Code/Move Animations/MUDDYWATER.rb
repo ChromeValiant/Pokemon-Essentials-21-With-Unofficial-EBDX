@@ -8,7 +8,7 @@ EliteBattle.defineMoveAnimation(:MUDDYWATER) do
   factorY = @userIsPlayer ? 0.992 : 1.01#1.01
   BubbleSplash = @userIsPlayer ? 15 : -15
   splash = 30
-  shake = [8,8]
+  shake = Array.new(@opposingTargets.length, 8)
   # graphic ini
   fp = {};
   fp["surf"] = Sprite.new(@viewport)

@@ -23,7 +23,7 @@ EliteBattle.defineMoveAnimation(:DISCHARGE) do
   # set up animation
   @scene.wait(5,true)
   EliteBattle.playMoveAnimation(:CHARGE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false, true)
-  vector = @scene.getRealVector(@targetIndex, @targetIsPlayer)
+  vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
   q = 0
   # set up animation
   fp = {}

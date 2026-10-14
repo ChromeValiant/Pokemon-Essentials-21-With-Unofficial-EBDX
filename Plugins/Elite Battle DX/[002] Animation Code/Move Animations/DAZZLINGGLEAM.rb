@@ -139,7 +139,8 @@ EliteBattle.defineMoveAnimation(:DAZZLINGGLEAM) do
     pbSEPlay("EBDX/Anim/move2") if i == 132
     pbSEPlay("EBDX/Anim/normal5",80) if i == 132
     # shooting at the target
-    @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer)) if i == 132
+    vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
+    @vector.set(vector) if i == 132
     fp["circle"].z = @targetSprite.z + 1 if i == 132
     if i >= 132
       cx, cy = @userSprite.getCenter(true)
@@ -244,7 +245,7 @@ EliteBattle.defineMoveAnimation(:DAZZLINGGLEAM) do
   fp.clear
 end
 #-------------------------------------------------------------------------------
-#  DAZZLINGGLEAM
+#  LUMINACRASH
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:LUMINACRASH) do
   @vector.set(@scene.getRealVector(@userIndex, @userIsPlayer))
@@ -372,7 +373,8 @@ EliteBattle.defineMoveAnimation(:LUMINACRASH) do
     pbSEPlay("EBDX/Anim/move2") if i == 132
     pbSEPlay("EBDX/Anim/normal5",80) if i == 132
     # shooting at the target
-    @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer)) if i == 132
+    vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
+    @vector.set(vector) if i == 132
     fp["circle"].z = @targetSprite.z + 1 if i == 132
     if i >= 132
       cx, cy = @userSprite.getCenter(true)

@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:MUDDYWATER) do
   # def ini
-  vector = @scene.getRealVector(@targetIndex, @targetIsPlayer)
+  vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
   factor = @userIsPlayer ? 1 : 0.75
   factorY = @userIsPlayer ? 0.992 : 1.01#1.01
   BubbleSplash = @userIsPlayer ? 15 : -15

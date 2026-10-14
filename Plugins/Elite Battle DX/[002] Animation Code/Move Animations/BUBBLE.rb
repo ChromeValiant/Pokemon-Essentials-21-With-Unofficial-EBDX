@@ -2,7 +2,6 @@
 #  BUBBLE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:BUBBLE) do
-  
   # set up animation
   fp = {}
   rndx = []

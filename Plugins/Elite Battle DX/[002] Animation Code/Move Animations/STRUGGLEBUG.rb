@@ -50,7 +50,8 @@ EliteBattle.defineMoveAnimation(:STRUGGLEBUG) do
     end
     @scene.wait
   end
-  @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer))
+  vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
+  @vector.set(vector)
   @scene.wait(16,true)
   for m in 0...@opposingTargets.length
     factor = @opposingTargets[m].zoom_x

@@ -2,6 +2,7 @@
 #  DRAGONDARTS
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:DRAGONDARTS) do | args |
+    vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
     factorHorn = @userIsPlayer ? 1.9 : 2.5
     hornXMove = @userIsPlayer ? 2 : -2
     hornYMove = @userIsPlayer ? 10 : -10
@@ -12,8 +13,7 @@ EliteBattle.defineMoveAnimation(:DRAGONDARTS) do | args |
     userOX = @userSprite.ox
     # set up animation
     fp = {}
-    rndx = []
-    rndy = []
+    rndx = Array.new(@opposingTargets.length, []); rndy = Array.new(@opposingTargets.length, [])
     fp["bg"] = Sprite.new(@viewport)
     fp["bg"].bitmap = Bitmap.new(@viewport.width,@viewport.height)
     fp["bg"].bitmap.fill_rect(0,0,fp["bg"].bitmap.width,fp["bg"].bitmap.height,Color.blue)
@@ -30,8 +30,8 @@ EliteBattle.defineMoveAnimation(:DRAGONDARTS) do | args |
             fp["#{m}_#{i}"].zoom_x = (@opposingTargets[m].zoom_x)*(r==0 ? 1 : 0.5)
             fp["#{m}_#{i}"].zoom_y = (@opposingTargets[m].zoom_y)*(r==0 ? 1 : 0.5)
             fp["#{m}_#{i}"].tone = Tone.new(60,60,60)
-            rndx.push(rand(128))
-            rndy.push(rand(64))
+            rndx[m].push(rand(128))
+            rndy[m].push(rand(64))
         end
     end
     # phase 1
@@ -54,7 +54,7 @@ EliteBattle.defineMoveAnimation(:DRAGONDARTS) do | args |
         end
     end
     # phase 2
-    @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer))
+    @vector.set(vector)
     @scene.wait(12,true)
     pbSEPlay("EBDX/Anim/normal1",80)
     for m in 0...@opposingTargets.length
@@ -123,8 +123,8 @@ EliteBattle.defineMoveAnimation(:DRAGONDARTS) do | args |
                 fp["#{m}_#{j}"].x = cx
                 fp["#{m}_#{j}"].y = cy
                 end
-                x2 = cx - 64*@opposingTargets[m].zoom_x + rndx[j]*@opposingTargets[m].zoom_x
-                y2 = cy - 64*@opposingTargets[m].zoom_y + rndy[j]*@opposingTargets[m].zoom_y
+                x2 = cx - 64*@opposingTargets[m].zoom_x + rndx[m][j]*@opposingTargets[m].zoom_x
+                y2 = cy - 64*@opposingTargets[m].zoom_y + rndy[m][j]*@opposingTargets[m].zoom_y
                 x0 = fp["#{m}_#{j}"].x
                 y0 = fp["#{m}_#{j}"].y
                 fp["#{m}_#{j}"].x += (x2 - x0)*0.2
@@ -142,6 +142,9 @@ EliteBattle.defineMoveAnimation(:DRAGONDARTS) do | args |
                 fp["#{m}_#{j}"].visible = false if fp["#{m}_#{j}"].opacity <= 0
             end
             @scene.wait
+        end
+        if i.between?(0,15)
+            @userSprite.ox += hornXMove
         end
     end
     16.times do

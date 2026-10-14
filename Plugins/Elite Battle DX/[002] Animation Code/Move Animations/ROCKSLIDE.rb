@@ -2,7 +2,7 @@
 #  Rockslide
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:ROCKSLIDE) do
-  vector = @scene.battle.doublebattle? ? EliteBattle.get_vector(:BATTLER, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
+  vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
   @vector.set(vector)
   @scene.wait(16, true)
   # set up animation

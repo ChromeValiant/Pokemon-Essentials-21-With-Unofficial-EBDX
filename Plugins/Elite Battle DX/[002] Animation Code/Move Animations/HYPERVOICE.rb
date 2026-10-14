@@ -26,7 +26,7 @@ end
 #  HYPERVOICE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:HYPERVOICE) do
- vector = @scene.getRealVector(@targetIndex, @targetIsPlayer)
+  vector = (@scene.battle.triplebattle?) ? EliteBattle.get_vector(:TRIPLE, @targetIsPlayer) : @scene.getRealVector(@targetIndex, @targetIsPlayer)
   vector2 = @scene.getRealVector(@userIndex, @userIsPlayer)
   factor = @userIsPlayer ? 2 : 1
   # set up animation

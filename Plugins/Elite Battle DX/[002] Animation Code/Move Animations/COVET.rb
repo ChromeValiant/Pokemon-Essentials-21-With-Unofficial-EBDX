@@ -1,19 +1,7 @@
 #-------------------------------------------------------------------------------
-#  LOVETAP
-#-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:LOVETAP) do
-    EliteBattle.playMoveAnimation(:SNUGGLE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, true)
-end
-#-------------------------------------------------------------------------------
 #  COVET
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:COVET) do
-  EliteBattle.playMoveAnimation(:SNUGGLE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
-end
-#-------------------------------------------------------------------------------
-#  SNUGGLE
-#-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:SNUGGLE) do
   @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer))
   @scene.wait(20,true)
   EliteBattle.playMoveAnimation(:TACKLE, @scene, @userIndex, @targetIndex, @hitNum, true, nil, false)

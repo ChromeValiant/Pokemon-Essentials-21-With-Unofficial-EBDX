@@ -14,7 +14,7 @@ EliteBattle.defineMoveAnimation(:FLASH) do
   @scene.wait(16,true)
   # start animation
   for i in 0...62
-    pbSEPlay("Flash4",100) if i == 20
+    pbSEPlay("Anim/Flash2",100) if i == 20
     if i < 10
       fp["bg"].opacity += 25.5
     elsif i < 30

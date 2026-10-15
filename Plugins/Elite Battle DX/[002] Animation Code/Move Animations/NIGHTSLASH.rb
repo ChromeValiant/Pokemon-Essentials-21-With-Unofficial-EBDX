@@ -1,10 +1,4 @@
 #-------------------------------------------------------------------------------
-#  BRUISINGBASH
-#-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:BRUISINGBASH) do | args |
-  EliteBattle.playMoveAnimation(:NIGHTSLASH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
-end
-#-------------------------------------------------------------------------------
 #  Knock off
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:FALSESURRENDER) do | args |

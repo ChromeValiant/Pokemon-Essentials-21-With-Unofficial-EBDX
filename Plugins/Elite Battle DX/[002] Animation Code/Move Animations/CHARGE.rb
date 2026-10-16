@@ -41,7 +41,7 @@ EliteBattle.defineMoveAnimation(:CHARGE) do | args |
   fp["circle"].zoom_x = 0.5
   fp["circle"].zoom_y = 0.5
   # start animation
-  @vector.set(@scene.getRealVector(@userIndex, !@targetIsPlayer))
+  @vector.set(@scene.getRealVector(@userIndex, @userIsPlayer))
   @sprites["battlebg"].defocus
   for i in 0...112
     pbSEPlay("Anim/Flash3",90) if i == 32

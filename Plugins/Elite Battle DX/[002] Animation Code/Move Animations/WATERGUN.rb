@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  Chilling Water
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:CHILLINGWATER) do | args |
+  EliteBattle.playMoveAnimation(:WATERGUN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  Water Gun
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:WATERGUN) do

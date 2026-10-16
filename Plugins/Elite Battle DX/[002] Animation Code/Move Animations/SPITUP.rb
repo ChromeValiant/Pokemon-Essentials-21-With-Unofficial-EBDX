@@ -81,6 +81,10 @@ EliteBattle.defineMoveAnimation(:SPITUP) do
       end
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
       next if j>(i)
+      if i>32 && i < 60
+        dx[j] = ax - 8*@userSprite.zoom_x*0.5 + rndx[j]*@userSprite.zoom_x*0.5
+        dy[j] = ay - 8*@userSprite.zoom_y*0.5 + rndy[j]*@userSprite.zoom_y*0.5
+      end
       x0 = dx[j]
       y0 = dy[j]
       x2 = cx - 8*@targetSprite.zoom_x*0.5 + rndx[j]*@targetSprite.zoom_x*0.5

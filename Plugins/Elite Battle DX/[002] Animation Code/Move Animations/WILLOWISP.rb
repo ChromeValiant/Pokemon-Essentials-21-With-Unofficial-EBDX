@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  GRUDGE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:GRUDGE) do | args |
+  EliteBattle.playMoveAnimation(:WILLOWISP, @scene, @userIndex, @userIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  WILLOWISP
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:WILLOWISP) do
@@ -72,16 +78,18 @@ EliteBattle.defineMoveAnimation(:WILLOWISP) do
     @vector.inc = 0.1 if i == 24
     @scene.wait(1,true)
   end
-  20.times do
-    @targetSprite.tone.red -= 2.4*2
-    @targetSprite.tone.green += 1.2*2
-    @targetSprite.tone.blue += 2.4*2
-    @targetSprite.ox += shake
-    shake = -2 if @targetSprite.ox > @targetSprite.bitmap.width/2 + 2
-    shake = 2 if @targetSprite.ox < @targetSprite.bitmap.width/2 - 2
-    @targetSprite.still
-    fp["bg"].opacity -= 15
-    @scene.wait(1,true)
+  if @userIndex != @targetIndex
+    20.times do
+      @targetSprite.tone.red -= 2.4*2
+      @targetSprite.tone.green += 1.2*2
+      @targetSprite.tone.blue += 2.4*2
+      @targetSprite.ox += shake
+      shake = -2 if @targetSprite.ox > @targetSprite.bitmap.width/2 + 2
+      shake = 2 if @targetSprite.ox < @targetSprite.bitmap.width/2 - 2
+      @targetSprite.still
+      fp["bg"].opacity -= 15
+      @scene.wait(1,true)
+    end
   end
   @sprites["battlebg"].focus
   @targetSprite.ox = @targetSprite.bitmap.width/2

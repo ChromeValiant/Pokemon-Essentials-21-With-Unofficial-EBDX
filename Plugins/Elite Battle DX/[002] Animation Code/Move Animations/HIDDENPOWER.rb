@@ -24,11 +24,37 @@ EliteBattle.defineMoveAnimation(:HIDDENPOWER) do
     dx.push(0)
     dy.push(0)
   end
+  userReference = @battlers[@userIndex].pokemon
+  #p userReference.species
+  typeColor = Color.new(0,0,0,0)
+  hp = pbHiddenPower(userReference)[0]
+  case hp
+  when :NORMAL    then typeColor = Color.new(169,168,160,230)
+    when :FIGHTING  then typeColor = Color.new(209,53,86,230)
+    when :FLYING    then typeColor = Color.new(178,195,226,230)
+    when :FIRE      then typeColor = Color.new(246,170,68,230)
+    when :WATER     then typeColor = Color.new(97,159,209,230)
+    when :GRASS     then typeColor = Color.new(105,178,69,230)
+    when :ELECTRIC  then typeColor = Color.new(244,220,61,230)
+    when :GROUND    then typeColor = Color.new(224,125,67,230)
+    when :ROCK      then typeColor = Color.new(210,194,136,230)
+    when :STEEL     then typeColor = Color.new(86,150,162,230)
+    when :FAIRY     then typeColor = Color.new(220,156,194,230)
+    when :SOUND     then typeColor = Color.new(67,79,107,230)
+    when :BUG       then typeColor = Color.new(155,185,15,230)
+    when :DARK      then typeColor = Color.new(91,87,95,230)
+    when :GHOST     then typeColor = Color.new(98,107,171,230)
+    when :DRAGON    then typeColor = Color.new(35,100,170,230)
+    when :POISON    then typeColor = Color.new(171,99,162,230)
+    when :PSYCHIC   then typeColor = Color.new(239,131,128,230)
+    when :ICE       then typeColor = Color.new(136,202,187,230)
+  end
   for i in 0...72
     fp["#{i}2"] = Sprite.new(@viewport)
-    fp["#{i}2"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb263_3_4")
+    fp["#{i}2"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb263_3_blank")
     fp["#{i}2"].ox = fp["#{i}2"].bitmap.width/2
     fp["#{i}2"].oy = fp["#{i}2"].bitmap.height/2
+    fp["#{i}2"].color = typeColor
     fp["#{i}2"].opacity = 0
     fp["#{i}2"].z = 19
   end
@@ -80,7 +106,13 @@ EliteBattle.defineMoveAnimation(:HIDDENPOWER) do
         fp["#{j}"].y = dy[j]
       end
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
+
+      fp["#{j}2"].color = typeColor
       next if j>(i)
+      if i>32 && i < 60
+        dx[j] = ax - 8*@userSprite.zoom_x*0.5 + rndx[j]*@userSprite.zoom_x*0.5
+        dy[j] = ay - 8*@userSprite.zoom_y*0.5 + rndy[j]*@userSprite.zoom_y*0.5
+      end
       x0 = dx[j]
       y0 = dy[j]
       x2 = cx - 8*@targetSprite.zoom_x*0.5 + rndx[j]*@targetSprite.zoom_x*0.5
@@ -97,6 +129,7 @@ EliteBattle.defineMoveAnimation(:HIDDENPOWER) do
         fp["#{j}"].z = @targetSprite.z + 1 if nextx < cx && nexty > cy
       end
       @scene.applySpriteProperties(fp["#{j}"],fp["#{j}2"])
+      fp["#{j}2"].color = typeColor
     end
     if i >= 64
       @targetSprite.ox += shake

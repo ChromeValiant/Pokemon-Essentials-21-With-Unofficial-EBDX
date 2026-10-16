@@ -1,10 +1,4 @@
 #-------------------------------------------------------------------------------
-#  QUIVERDANCE
-#-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:QUIVERDANCE) do | args |
-  EliteBattle.playMoveAnimation(:CALMMIND, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
-end
-#-------------------------------------------------------------------------------
 #  MEDITATE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:MEDITATE) do

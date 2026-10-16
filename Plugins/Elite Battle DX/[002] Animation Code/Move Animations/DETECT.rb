@@ -11,6 +11,12 @@ EliteBattle.defineMoveAnimation(:WIDEGUARD) do
   EliteBattle.playMoveAnimation(:DETECT, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
 end
 #-------------------------------------------------------------------------------
+#  DISABLE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:DISABLE) do
+  EliteBattle.playMoveAnimation(:DETECT, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  DETECT
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:DETECT) do

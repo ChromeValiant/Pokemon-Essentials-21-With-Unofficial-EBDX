@@ -1,8 +1,7 @@
 #-------------------------------------------------------------------------------
 #  PINMISSILE
 #-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:PINMISSILE) do | args |
-  bomb = args[0]; bomb = true if bomb.nil?
+EliteBattle.defineMoveAnimation(:PINMISSILE) do 
   shake = 6
   fp = {}
   fp["bg"] = Sprite.new(@viewport)
@@ -63,5 +62,5 @@ EliteBattle.defineMoveAnimation(:PINMISSILE) do | args |
   @targetSprite.ox = @targetSprite.bitmap.width/2
   @scene.wait(1,true)
   pbDisposeSpriteHash(fp)
-  @vector.reset
+  @vector.reset if !@multiHit
 end

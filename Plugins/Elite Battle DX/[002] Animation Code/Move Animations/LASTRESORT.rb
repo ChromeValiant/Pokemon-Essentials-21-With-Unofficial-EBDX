@@ -114,7 +114,7 @@ EliteBattle.defineMoveAnimation(:LASTRESORT) do
   @vector.inc = 0.2
   @scene.wait(16,true)
   pbSEPlay("Anim/psychic3",60) #change
-  pbSEPlay("Anim/superdamage",60) #change
+  pbSEPlay("Battle Damage Super",60) #change
   @sprites["battlebg"].defocus
   for i in 0...10
     fp["bg"].opacity += 14

@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------
 #  ROAROFTIME
 #-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:ROAROFTIME) do
+EliteBattle.defineMoveAnimation(:BELCH) do
   vector = @scene.getRealVector(@targetIndex, @targetIsPlayer)
   # set up animation
   fp = {}

@@ -1,7 +1,26 @@
 #-------------------------------------------------------------------------------
 #  Vine Whip
 #-------------------------------------------------------------------------------
-EliteBattle.defineMoveAnimation(:VINEWHIP) do
+EliteBattle.defineMoveAnimation(:FRENZYPLANT) do
+  EliteBattle.playMoveAnimation(:VINEWHIP, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, 2)
+end
+#-------------------------------------------------------------------------------
+#  Vine Whip
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:POWERWHIP) do
+  EliteBattle.playMoveAnimation(:VINEWHIP, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, 1)
+end
+#-------------------------------------------------------------------------------
+#  Branch Poke
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:BRANCHPOKE) do
+  EliteBattle.playMoveAnimation(:VINEWHIP, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, 0)
+end
+#-------------------------------------------------------------------------------
+#  Vine Whip
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:VINEWHIP) do | args |
+  type = args[0]; type = 0 if type.nil?
   vector = @scene.getRealVector(@targetIndex, @targetIsPlayer)
   # set up animation
   @vector.set(vector)
@@ -13,12 +32,13 @@ EliteBattle.defineMoveAnimation(:VINEWHIP) do
   fp["whip"].ox = fp["whip"].bitmap.width*0.75
   fp["whip"].oy = fp["whip"].bitmap.height*0.5
   fp["whip"].angle = 315
-  fp["whip"].zoom_x = @targetSprite.zoom_x*1.5
-  fp["whip"].zoom_y = @targetSprite.zoom_y*1.5
+  fp["whip"].zoom_x = @targetSprite.zoom_x*(type > 0 ? 2 : 1.5)
+  fp["whip"].zoom_y = @targetSprite.zoom_y*(type > 0 ? 2 : 1.5)
   fp["whip"].color = Color.new(255,255,255,0)
   fp["whip"].opacity = 0
   fp["whip"].x = cx + 32*@targetSprite.zoom_x
   fp["whip"].y = cy - 48*@targetSprite.zoom_y
+  fp["whip"].y -= 30 if type > 0
   fp["whip"].z = @targetIsPlayer ? 29 : 19
   fp["imp"] = Sprite.new(@viewport)
   fp["imp"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb244_2")
@@ -51,10 +71,40 @@ EliteBattle.defineMoveAnimation(:VINEWHIP) do
     zoom.push(z)
     fp["#{j}"].opacity = (155+rand(100))
   end
+  if type == 2
+    fp["bg"] = ScrollingSprite.new(@viewport)
+    fp["bg"].speed = 64
+    fp["bg"].setBitmap("Graphics/EBDX/Animations/Moves/eb639_bg")
+    fp["bg"].color = Color.new(0,0,0,255)
+    fp["bg"].opacity = 0
+    for i in 0...20
+      if i < 10
+        fp["bg"].opacity += 25.5
+      else
+        fp["bg"].color.alpha -= 25.5
+      end
+      fp["bg"].update
+      @scene.wait(1,true)
+    end
+  end
   # start animation
   k = 1
+
+  if type == 2
+    dust = EBDustParticle.new(@viewport, @targetSprite, 2)
+  end
   for i in 0...32
-    pbSEPlay("EBDX/Anim/normal4",80) if i == 4
+
+    if i == 4
+      case type
+      when 1
+        pbSEPlay("EBDX/Anim/normal3",90)
+      when 2
+        pbSEPlay("Drop_Heavy",80)
+      else
+        pbSEPlay("EBDX/Anim/normal4",90)
+      end
+    end
     if i < 16
       fp["whip"].opacity += 128 if i < 4
       fp["whip"].angle += 16
@@ -77,6 +127,10 @@ EliteBattle.defineMoveAnimation(:VINEWHIP) do
       @targetSprite.tone.blue -= 51 if @targetSprite.tone.blue > 0
       k *= -1 if (i-4)%6==0
     end
+    if type == 2
+      dust.update if i < 24
+      dust.dispose if i == 24
+    end
     cx, cy = @targetSprite.getCenter(true)
     for j in 0...12
       next if i < 4
@@ -86,7 +140,19 @@ EliteBattle.defineMoveAnimation(:VINEWHIP) do
       fp["#{j}"].y = cy - posy[j]*@targetSprite.zoom_y*zoom[j] - 48*@targetSprite.zoom_y*zoom[j]# - (i-4)*2*@targetSprite.zoom_y
       fp["#{j}"].angle += angl[j]
     end
+    fp["bg"]&.update
     @scene.wait
+  end
+  if type == 2
+    for i in 0...20
+      if i < 10
+        fp["bg"].color.alpha += 25.5
+      else
+        fp["bg"].opacity -= 25.5
+      end
+      fp["bg"].update
+      @scene.wait
+    end
   end
   @vector.reset if !@multiHit
   for i in 0...16

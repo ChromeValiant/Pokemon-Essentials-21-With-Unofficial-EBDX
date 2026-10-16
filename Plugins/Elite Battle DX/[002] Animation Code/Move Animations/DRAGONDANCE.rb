@@ -6,6 +6,8 @@ EliteBattle.defineMoveAnimation(:DRAGONDANCE) do
   vector2 = @scene.getRealVector(@userIndex, @userIsPlayer)
   # set up animation
   fp = {}
+  r1 = 50
+  r2 = 12
   speed = []
   for j in 0...32
     fp["#{j}"] = Sprite.new(@viewport)
@@ -31,13 +33,26 @@ EliteBattle.defineMoveAnimation(:DRAGONDANCE) do
     #fp["s#{j}"].zoom_y = z
     fp["s#{j}"].opacity = 0
   end
+
   @userSprite.color = Color.new(255,0,0,0)
   # start animation
   @vector.set(vector2)
   @vector.inc = 0.1
-  oy = @userSprite.oy
+  @scene.wait(8,true)
+
   k = -1
-  for i in 0...64
+  cx, cy = @userSprite.getCenter(true)
+  ex, ey = @userSprite.ox, @userSprite.oy
+  for i in 0..72
+    @userSprite.still
+    #default movement
+    if i > 3
+      factor = i * Math::PI*10 / 180.0;
+      @userSprite.ox = ex + r1 * Math.cos(factor)
+      @userSprite.oy = ey + r2 * Math.sin(factor)
+    else
+      @userSprite.ox += 5
+    end
     k *= -1 if i%4==0
     pbSEPlay("EBDX/Anim/dragon2") if i == 12
     cx, cy = @userSprite.getCenter(true)
@@ -82,8 +97,8 @@ EliteBattle.defineMoveAnimation(:DRAGONDANCE) do
     @userSprite.anim = true
     @scene.wait(1,true)
   end
-  @userSprite.oy = oy
-  @targetSprite.ox = @targetSprite.bitmap.width/2
+  @userSprite.ox = ex
+  @userSprite.oy = ey
   @vector.reset if !@multiHit
   pbDisposeSpriteHash(fp)
 end

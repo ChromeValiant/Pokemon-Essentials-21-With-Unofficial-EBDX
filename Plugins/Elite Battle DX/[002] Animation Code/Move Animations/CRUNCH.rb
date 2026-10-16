@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  JAW LOCK
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:JAWLOCK) do
+  EliteBattle.playMoveAnimation(:CRUNCH, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  Crunch
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:CRUNCH) do

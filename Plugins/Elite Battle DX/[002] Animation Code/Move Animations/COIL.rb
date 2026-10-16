@@ -2,7 +2,7 @@
 #  ACIDARMOR
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:ACIDARMOR) do
-  EliteBattle.playMoveAnimation(:COIL, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+  EliteBattle.playMoveAnimation(:COIL, @scene, @userIndex, @userIndex, @hitNum, @multiHit, nil, false)
 end
 #-------------------------------------------------------------------------------
 #  COIL
@@ -31,14 +31,14 @@ EliteBattle.defineMoveAnimation(:COIL) do
   fp["wrap2"].angle = 90
   shake = 4
   # start animation
-  @vector.set(@scene.getRealVector(@targetIndex, @targetIsPlayer))
+  @vector.set(@scene.getRealVector(@userIndex, @userIsPlayer))
   @sprites["battlebg"].defocus
   for i in 0...80
-    cx, cy = @targetSprite.getCenter(true)
+    cx, cy = @userSprite.getCenter(true)
     fp["wrap1"].x = cx; fp["wrap1"].y = cy
-    fp["wrap1"].zoom_x = 1.5*@targetSprite.zoom_x; fp["wrap1"].zoom_y = 1.5*@targetSprite.zoom_y
+    fp["wrap1"].zoom_x = 1.5*@userSprite.zoom_x; fp["wrap1"].zoom_y = 1.5*@userSprite.zoom_y
     fp["wrap2"].x = cx; fp["wrap2"].y = cy
-    fp["wrap2"].zoom_x = 1.5*@targetSprite.zoom_x; fp["wrap2"].zoom_y = 1.5*@targetSprite.zoom_y
+    fp["wrap2"].zoom_x = 1.5*@userSprite.zoom_x; fp["wrap2"].zoom_y = 1.5*@userSprite.zoom_y
     if i.between?(20,35)
       fp["wrap1"].opacity += 5
       fp["wrap1"].oy += 2
@@ -59,15 +59,15 @@ EliteBattle.defineMoveAnimation(:COIL) do
     fp["bg"].opacity += 4 if  i < 40
     if i >= 40
       fp["bg"].opacity -= 10 if i >= 56
-      @targetSprite.ox += shake
-      shake = -4 if @targetSprite.ox > @targetSprite.bitmap.width/2 + 2
-      shake = 4 if @targetSprite.ox < @targetSprite.bitmap.width/2 - 2
-      @targetSprite.still
+      @userSprite.ox += shake
+      shake = -4 if @userSprite.ox > @userSprite.bitmap.width/2 + 2
+      shake = 4 if @userSprite.ox < @userSprite.bitmap.width/2 - 2
+      @userSprite.still
     end
     @scene.wait(1,true)
   end
   @sprites["battlebg"].focus
-  @targetSprite.ox = @targetSprite.bitmap.width/2
+  @userSprite.ox = @userSprite.bitmap.width/2
   @vector.reset if !@multiHit
   pbDisposeSpriteHash(fp)
 end

@@ -49,13 +49,15 @@ EliteBattle.defineMoveAnimation(:SNARL) do
     @scene.wait(1,true)
   end
   shake = 6
+  alternate = true
   for i in 0...12
     @userSprite.still
-	 pbSEPlay("Cries/#{@userSprite.species}",85) if i == 4
+	   @userSprite.pokemon.play_cry if i == 4
     if i.between?(4,12)
       @userSprite.ox += shake
-      shake = -6 if @userSprite.ox > @userSprite.bitmap.width/2 + 2
-      shake = 6 if @userSprite.ox < @userSprite.bitmap.width/2 - 2
+      shake = -6 if alternate
+      shake = 6 if !alternate
+      alternate = !alternate
     end
     @scene.wait(1,true)
   end

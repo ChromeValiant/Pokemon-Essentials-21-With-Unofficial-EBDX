@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  Hyper Drill
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:HYPERDRILL) do
+  EliteBattle.playMoveAnimation(:DRILLRUN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  DRILLRUN
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:DRILLRUN) do | args |
@@ -56,7 +62,7 @@ EliteBattle.defineMoveAnimation(:DRILLRUN) do | args |
   for i in 1..20
 	if i.between?(1,15)
 		fp["horn"].opacity += 20
-		fp["horn"].x += hornMoveHit 
+		fp["horn"].x += hornMoveHit
 		fp["horn"].y -= hornMoveHit
 	else
 		fp["horn"].opacity -= 50

@@ -18,6 +18,15 @@ module EliteBattle
   #  function used to run Move Animations with implicit variables
   #-----------------------------------------------------------------------------
   def self.withMoveParams(anim, id, scene, userindex, targetindex, hitnum, multihit, *args)
+    #targets 
+    indexes = []
+    max = scene.battle.pbSideSize(targetindex%2 == 0 ? 0 : 1)
+    for i in 0...max
+      i = (targetindex%2 == 0 ? i*2 : (i*2 + 1))
+      next if (!scene.sprites["pokemon_#{i}"] || scene.sprites["pokemon_#{i}"].disposed? || 
+              !scene.sprites["pokemon_#{i}"].actualBitmap || scene.sprites["pokemon_#{i}"].fainted || !scene.sprites["pokemon_#{i}"].visible)
+      indexes.push(scene.sprites["pokemon_#{i}"])
+    end
     # initialize wrapper and pass instance variables
     scene.inMoveAnim = 0 if !anim.nil?
     wrapper = CallbackWrapper.new
@@ -26,6 +35,7 @@ module EliteBattle
                  :targetSprite => scene.sprites["pokemon_#{targetindex}"],
                  :userDatabox => scene.sprites["dataBox_#{userindex}"],
                  :targetDatabox => scene.sprites["dataBox_#{targetindex}"],
+                 :opposingTargets => indexes, #multi-hit moves
                  :multiHit => multihit, :hitNum => hitnum, :itself => (userindex == targetindex),
                  :userIsPlayer => (userindex%2 == 0), :targetIsPlayer => (targetindex%2 == 0),
                  :vector => scene.vector, :battlers => scene.battlers, :opponent => scene.battle.opponent,
@@ -50,6 +60,13 @@ module EliteBattle
   #  function used to run Common Animations with implicit variables
   #-----------------------------------------------------------------------------
   def self.withCommonParams(anim, id, scene, userindex, targetindex, hitnum, *args)
+    #targets 
+    indexes = []
+    max = scene.battle.pbSideSize(targetindex%2 == 0 ? 0 : 1)
+    for i in 0...max
+      i = (targetindex%2 == 0 ? i*2 : (i*2 + 1))
+      indexes.push(scene.sprites["pokemon_#{i}"]) if scene.sprites["pokemon_#{i}"] && scene.sprites["pokemon_#{i}"].actualBitmap
+    end
     # initialize wrapper and pass instance variables
     wrapper = CallbackWrapper.new
     system  =   { :scene => scene, :battle => scene.battle, :sprites => scene.sprites,
@@ -57,6 +74,7 @@ module EliteBattle
                  :targetSprite => scene.sprites["pokemon_#{targetindex}"],
                  :userDatabox => scene.sprites["dataBox_#{userindex}"],
                  :targetDatabox => scene.sprites["dataBox_#{targetindex}"],
+                 :opposingTargets => indexes,
                  :hitNum => hitnum, :itself => (userindex == targetindex),
                  :userIsPlayer => (userindex%2 == 0), :targetIsPlayer => (targetindex%2 == 0),
                  :vector => scene.vector, :battlers => scene.battlers, :opponent => scene.battle.opponent,

@@ -11,6 +11,12 @@ EliteBattle.defineMoveAnimation(:IRONDEFENSE) do
   EliteBattle.playMoveAnimation(:HARDEN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
 end
 #-------------------------------------------------------------------------------
+#  IRONDEFENSE
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SHELTER) do
+  EliteBattle.playMoveAnimation(:HARDEN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  HARDEN
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:HARDEN) do

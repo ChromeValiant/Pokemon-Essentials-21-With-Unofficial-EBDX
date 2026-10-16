@@ -11,8 +11,21 @@ EliteBattle.defineMoveAnimation(:WEATHERBALL_UP) do
   vector = @scene.getRealVector(@userIndex, @userIsPlayer)
   # set up animation
   fp = {}
+
+  case @battle.field.weather
+  when :Rain, :HeavyRain, :AcidRain
+    ball = "eb156_4"
+  when :Sun, :HarshSun
+    ball = "eb156_9"
+  when :Sandstorm
+    ball = "eb156_6"
+  when :Hail, :Snow
+    ball = "eb156_11"
+  else
+    ball = "eb156_13"
+  end
   fp["fly"] = Sprite.new(@viewport)
-  fp["fly"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb156_13")
+  fp["fly"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/#{ball}")
   fp["fly"].ox = fp["fly"].bitmap.width/2
   fp["fly"].oy = fp["fly"].bitmap.height/2
   fp["fly"].z = 50
@@ -54,7 +67,7 @@ EliteBattle.defineMoveAnimation(:WEATHERBALL_UP) do
     fp["dnt"].angle -= 16
     @scene.wait(1,true)
   end
-  @vector.set(vector[0],vector[1]+128,vector[2],vector[3],vector[4],vector[5])
+  @vector.set(vector[0],vector[1]+78,vector[2],vector[3],vector[4],vector[5])
   for i in 0...20
     @scene.wait(1,true)
     cx, cy = @userSprite.getCenter
@@ -88,15 +101,28 @@ EliteBattle.defineMoveAnimation(:WEATHERBALL_DOWN) do
   fp["bg"].bitmap = Bitmap.new(@viewport.width,@viewport.height)
   fp["bg"].bitmap.fill_rect(0,0,fp["bg"].bitmap.width,fp["bg"].bitmap.height,Color.black)
   fp["bg"].opacity = 0
+
+  case @battle.field.weather
+  when :Rain, :HeavyRain, :AcidRain
+    ball = "eb156_4"
+  when :Sun, :HarshSun
+    ball = "eb156_9"
+  when :Sandstorm
+    ball = "eb156_6"
+  when :Hail, :Snow
+    ball = "eb156_11"
+  else
+    ball = "eb156_13"
+  end
   fp["drop"] = Sprite.new(@viewport)
-  fp["drop"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/eb156_3")
+  fp["drop"].bitmap = pbBitmap("Graphics/EBDX/Animations/Moves/#{ball}")
   fp["drop"].ox = fp["drop"].bitmap.width/2
   fp["drop"].oy = fp["drop"].bitmap.height/2
   fp["drop"].y = 0
   fp["drop"].z = 50
   fp["drop"].visible = false
   # start animation
-  @vector.set(defaultvector[0], defaultvector[1]+128, defaultvector[2], defaultvector[3], defaultvector[4], defaultvector[5])
+  @vector.set(defaultvector[0], defaultvector[1]+78, defaultvector[2], defaultvector[3], defaultvector[4], defaultvector[5])
   @sprites["battlebg"].defocus
   32.times do
     fp["bg"].opacity += 2

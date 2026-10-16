@@ -1,4 +1,11 @@
 #-------------------------------------------------------------------------------
+#  CORROSIVEACID
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:CORROSIVEGAS) do | args |
+  EliteBattle.playMoveAnimation(:CLEARSMOG, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+
+#-------------------------------------------------------------------------------
 #  CLEARSMOG
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:CLEARSMOG) do

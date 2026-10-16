@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  DUALWINGBEAT
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:DUALWINGBEAT) do
+  EliteBattle.playMoveAnimation(:WINGATTACK, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  Wing Attack
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:WINGATTACK) do

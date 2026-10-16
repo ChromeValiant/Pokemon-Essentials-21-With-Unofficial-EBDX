@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  BOLTBEAK
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:BOLTBEAK) do | args |
+  EliteBattle.playMoveAnimation(:WILDCHARGE, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  WILDCHARGE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:WILDCHARGE) do

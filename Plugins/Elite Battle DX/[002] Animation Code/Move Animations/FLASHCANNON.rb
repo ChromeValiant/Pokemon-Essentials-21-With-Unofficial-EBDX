@@ -1,3 +1,10 @@
+
+#-------------------------------------------------------------------------------
+#  Flash Cannon
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:STEELBEAM) do
+  EliteBattle.playMoveAnimation(:FLASHCANNON, @scene, @userIndex, @targetIndex, @userIsPlayer, @targetIsPlayer)
+end
 #-------------------------------------------------------------------------------
 #  Flash Cannon
 #-------------------------------------------------------------------------------

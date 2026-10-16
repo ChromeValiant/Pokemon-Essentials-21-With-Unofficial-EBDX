@@ -1,4 +1,10 @@
 #-------------------------------------------------------------------------------
+#  SCORCHEDEARTH
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SCORCHEDEARTH) do
+  EliteBattle.playMoveAnimation(:EARTHPOWER, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  Earth Power
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:EARTHPOWER) do

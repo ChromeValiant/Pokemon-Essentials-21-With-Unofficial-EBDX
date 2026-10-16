@@ -1,4 +1,16 @@
 #-------------------------------------------------------------------------------
+#  SKITTERSMACK
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:SKITTERSMACK) do | args |
+  EliteBattle.playMoveAnimation(:UTURN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
+#  FIRSTIMPRESSION
+#-------------------------------------------------------------------------------
+EliteBattle.defineMoveAnimation(:FIRSTIMPRESSION) do | args |
+  EliteBattle.playMoveAnimation(:UTURN, @scene, @userIndex, @targetIndex, @hitNum, @multiHit, nil, false)
+end
+#-------------------------------------------------------------------------------
 #  LUNGE
 #-------------------------------------------------------------------------------
 EliteBattle.defineMoveAnimation(:LUNGE) do | args |
@@ -38,12 +50,12 @@ EliteBattle.defineMoveAnimation(:UTURN) do | args |
 		@userSprite.ox += shake
 	end
     if i.between?(4,ports)
-		if dir == -1 #move left 
+		if dir == -1 #move left
 			@userSprite.ox -= shake
 		else # move right
 		    @userSprite.ox += shake
 		end
-	  idx += 1 
+	  idx += 1
 	  if idx == 2
 		idx = 0
 		dir = dir * -1
